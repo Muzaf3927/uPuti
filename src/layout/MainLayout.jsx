@@ -7,7 +7,7 @@ function MainLayout() {
   return (
     <div className="flex flex-col h-full ">
       <header className="shadow-[0_4px_6px_-1px_rgba(34,197,94,0.1)] h-20">
-        <div className="flex justify-between items-center w-[600px] mx-auto py-3">
+        <div className="flex justify-between items-center custom-container py-3">
           <div className="flex gap-3">
             <Link className="w-15 h-15 bg-green-700 rounded-2xl p-3" to="/">
               <Car className="text-white size-8" />
@@ -20,7 +20,7 @@ function MainLayout() {
           <LogOut className="cursor-pointer" />
         </div>
       </header>
-      <div className="w-[600px] mx-auto my-5">
+      <div className="custom-container my-5">
         <Navbar />
       </div>
       <main className="grow w-[600px] mx-auto">

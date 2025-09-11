@@ -12,7 +12,7 @@ function Navbar() {
     { path: "/chats", name: "Chats", icon: <MessageCircle size={20} /> },
   ];
   return (
-    <div className="flex justify-between w-[600px] mx-auto">
+    <div className="flex justify-between">
       {links.map((link) => {
         const isActive = location.pathname === link.path;
         return (

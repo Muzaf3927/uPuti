@@ -8,7 +8,7 @@ body,
 }
 
 .custom-container {
-  @apply w-[600px] mx-auto;
+  @apply w-full max-w-[620px] px-5 mx-auto;
 }
 
 @custom-variant dark (&:is(.dark *));
