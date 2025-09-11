@@ -60,7 +60,7 @@ function Trips() {
   };
 
   return (
-    <div className="custom-container">
+    <div className="">
       <div className="w-full flex text-green-600 gap-2.5 mb-5">
         <Dialog className="w-full">
           <DialogTrigger className="w-full cursor-pointer">

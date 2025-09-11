@@ -21,7 +21,7 @@ function Navbar() {
             to={link.path}
             className={`${
               isActive && "bg-green-400 text-white"
-            }text-center flex justify-center items-center flex-col w-[100px] text-sm h-[70px] border-2 border-green-300 rounded-2xl transition-all duration-300 hover:bg-green-400 hover:text-white hover:shadow-[0px_5px_15px_rgba(134,239,172,0.35)]`}
+            }text-center flex justify-center items-center flex-col w-[80px] text-sm h-[70px] border-2 border-green-300 rounded-2xl transition-all duration-300 hover:bg-green-400 hover:text-white hover:shadow-[0px_5px_15px_rgba(134,239,172,0.35)]`}
           >
             {link.icon}
             {link.name}
