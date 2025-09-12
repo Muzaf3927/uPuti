@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 // components
 import TripsCard from "@/components/TripsCard";
@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input";
 // input mask
 import { InputMask } from "@react-input/mask";
 import { Textarea } from "@/components/ui/textarea";
+import TripsSecondCard from "@/components/TripsSecondCard";
 
 function Trips() {
   const trips = [
@@ -66,13 +67,13 @@ function Trips() {
           <DialogTrigger className="w-full cursor-pointer">
             <div className="border-2 w-full px-10 py-4 bg-gray-500/6 rounded-3xl flex flex-col items-center">
               <Route className="md:size-6 size-4" />
-              <h4 className="text-sm md:text-md">Yangi sayohat yaratish</h4>
+              <h4 className="text-sm md:text-md">Yangi safar yaratish</h4>
             </div>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">
-                Sayohat yaratish
+                Safar yaratish
               </DialogTitle>
             </DialogHeader>
             <form
@@ -113,7 +114,7 @@ function Trips() {
                 <Textarea
                   className="pb-5"
                   id="comment"
-                  placeholder="Sayohatni tariflab bering."
+                  placeholder="safarni tariflab bering."
                 />
               </div>
               <div className="flex gap-2">
@@ -152,13 +153,13 @@ function Trips() {
           <DialogTrigger className="w-full cursor-pointer">
             <div className="border-2 w-full px-10 py-4 bg-gray-500/6 rounded-3xl flex flex-col items-center">
               <MapPin className="md:size-6 size-4" />
-              <h4 className="text-sm md:text-md">Sayohat qidirish</h4>
+              <h4 className="text-sm md:text-md">Safar qidirish</h4>
             </div>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">
-                Sayohat qidirish
+                Safar qidirish
               </DialogTitle>
               <form onSubmit={handleSubmit} className="flex flex-col gap-3">
                 <div className="grid w-full items-center gap-3">
@@ -212,8 +213,8 @@ function Trips() {
         <CardContent>
           <Tabs defaultValue="allTrips" className="w-full">
             <TabsList className="px-2 w-full">
-              <TabsTrigger value="allTrips">Barcha sayohatlar</TabsTrigger>
-              <TabsTrigger value="myTrips">Mening sayohatlarim</TabsTrigger>
+              <TabsTrigger value="allTrips">Barcha safarlar</TabsTrigger>
+              <TabsTrigger value="myTrips">Mening safarlarim</TabsTrigger>
             </TabsList>
             <TabsContent value="allTrips">
               <div className="p-4 space-y-4">
@@ -229,9 +230,9 @@ function Trips() {
               <div className="mt-10 bg-gray-500/7 rounded-full w-20 h-20 flex items-center justify-center">
                 <Car size={30} />
               </div>
-              <h2>Hozirda hali sizda sayohatlar yo'q.</h2>
+              <h2>Hozirda hali sizda safarlar yo'q.</h2>
               <Button className="text-white bg-green-600 rounded-2xl cursor-pointer">
-                Sayohat yaratsih
+                Safar yaratsih
               </Button>
             </TabsContent>
           </Tabs>

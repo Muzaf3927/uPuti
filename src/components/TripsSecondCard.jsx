@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,20 +13,10 @@ import {
   Route,
   Users,
 } from "lucide-react";
-import TripsSecondCard from "./TripsSecondCard";
 
-function TripsCard({ trip }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleClick = (e) => {
-    e.stopPropagation();
-  };
-
-  return isOpen ? (
-    <Card
-      className="shadow-md rounded-2xl bg-green-300/5"
-      onClick={() => setIsOpen(false)}
-    >
+function TripsSecondCard({ trip }) {
+  return (
+    <Card className="shadow-md rounded-2xl bg-green-300/5">
       <CardContent className="p-4 space-y-2 flex flex-col items-center gap-3">
         <div className="flex justify-between items-center w-full">
           {/* Driver */}
@@ -82,67 +72,16 @@ function TripsCard({ trip }) {
           Komfort safar, konditsioner
         </p>
         <div className="w-full flex gap-3">
-          <button
-            onClick={handleClick}
-            className="bg-green-700 rounded-2xl text-white w-full"
-          >
+          <button className="bg-green-700 rounded-2xl text-white w-full">
             Bron qilish
           </button>
-          <button
-            onClick={handleClick}
-            className="w-full bg-white border-green-700 text-green-700  border-2 rounded-2xl"
-          >
+          <button className="w-full bg-white border-green-700 text-green-700  border-2 rounded-2xl">
             Narx taklif qilish
           </button>
-        </div>
-      </CardContent>
-    </Card>
-  ) : (
-    <Card className="shadow-md rounded-2xl" onClick={() => setIsOpen(true)}>
-      <CardContent className="p-4 space-y-2 flex items-center justify-between">
-        <div className="flex flex-col gap-2">
-          {/* From → To */}
-          <div className="flex justify-between items-center mb-2">
-            <p className="text-lg font-bold flex items-center">
-              <MapPin className="text-green-400 mr-1" /> {trip.from}{" "}
-              <ArrowRight size={17} /> {trip.to}
-            </p>
-          </div>
-
-          {/* Date / Time / Seats */}
-          <div className="flex items-center gap-4 text-sm text-gray-600">
-            <span className="flex items-center gap-1">
-              <Calendar size={16} /> {trip.date}
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock size={16} /> {trip.time}
-            </span>
-            <span className="flex items-center gap-1">
-              <Users size={16} /> {trip.seats} мест
-            </span>
-          </div>
-
-          {/* Driver */}
-          <div className="flex items-center gap-1 text-sm">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <span>{trip.driver}</span>
-            <span>⭐ {trip.rating}</span>
-          </div>
-        </div>
-
-        <div className="text-right">
-          <p className="text-3xl font-bold">{trip.price}</p>
-          {/* Status */}
-          <span className="inline-block mt-2 text-xs px-3 py-1 rounded-full bg-green-600 text-white">
-            {trip.status}
-          </span>
         </div>
       </CardContent>
     </Card>
   );
 }
 
-export default TripsCard;
+export default TripsSecondCard;
