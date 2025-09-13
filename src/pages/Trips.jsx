@@ -29,6 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 import TripsSecondCard from "@/components/TripsSecondCard";
 
 function Trips() {
+  const [dialog, setDialog] = useState(false);
   const trips = [
     {
       id: 1,
@@ -63,7 +64,7 @@ function Trips() {
   return (
     <div className="">
       <div className="w-full flex text-green-600 gap-2.5 mb-5">
-        <Dialog className="w-full">
+        <Dialog className="w-full" open={dialog} onOpenChange={setDialog}>
           <DialogTrigger className="w-full cursor-pointer">
             <div className="border-2 w-full px-10 py-4 bg-gray-500/6 rounded-3xl flex flex-col items-center">
               <Route className="md:size-6 size-4" />
@@ -231,7 +232,10 @@ function Trips() {
                 <Car size={30} />
               </div>
               <h2>Hozirda hali sizda safarlar yo'q.</h2>
-              <Button className="text-white bg-green-600 rounded-2xl cursor-pointer">
+              <Button
+                onClick={() => setDialog(true)}
+                className="text-white bg-green-600 rounded-2xl cursor-pointer"
+              >
                 Safar yaratsih
               </Button>
             </TabsContent>
