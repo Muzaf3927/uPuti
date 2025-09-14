@@ -45,15 +45,15 @@ function Login() {
   };
 
   return (
-    <div className="py-10 flex gap-5 flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="flex items-center gap-5 text-green-700 font-bold text-4xl">
-        <span className="rounded-full inline-block text-white bg-green-700 w-18 h-18 py-2.5">
+    <div className="py-10 px-2 flex gap-5 flex-col items-center justify-center min-h-screen bg-gray-100">
+      <h1 className="flex items-center gap-5 text-green-700 font-bold text-3xl sm:text-4xl">
+        <span className="rounded-full inline-block text-white bg-green-700 size-15 sm:size-18 py-2">
           <Car className="mx-auto size-12" />
         </span>
-        RideShare{" "}
+        RideShare
       </h1>
       <p>Find travel companions for comfortable trips</p>
-      <div className="flex gap-2 w-[450px] py-1">
+      <div className="flex gap-2 w-full max-w-[450px] py-1">
         <Card className="w-full py-2 h-[80px]">
           <CardHeader>
             <CardTitle className="text-green-700 text-sm text-center flex flex-col items-center gap-1">
@@ -64,7 +64,7 @@ function Login() {
         </Card>
         <Card className="w-full h-[80px] py-2">
           <CardHeader>
-            <CardTitle className="text-green-700 text-center flex flex-col items-center gap-1">
+            <CardTitle className="text-green-700 text-sm text-center flex flex-col items-center gap-1">
               <MapPin />
               <p>Convenient routes</p>
             </CardTitle>

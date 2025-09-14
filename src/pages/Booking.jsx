@@ -11,16 +11,16 @@ function Booking() {
         <CardContent className="flex flex-col gap-5 py-6">
           <div className="flex justify-between items-center">
             <div className="flex gap-2 items-center">
-              <Avatar className="size-10">
+              <Avatar className="size-8 sm:size-10">
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <div>
+              <div className="text-sm sm:text-2xl">
                 <h2 className="font-bold text-green-700">Sergey Volkov</h2>
                 <span>⭐ 4.6</span>
               </div>
             </div>
-            <span className="bg-green-700 text-white py-1 px-2 rounded-2xl">
+            <span className="text-sm sm:text-md bg-green-700 text-white py-1 px-2 rounded-2xl">
               Tasdiqlangan
             </span>
           </div>
@@ -31,7 +31,7 @@ function Booking() {
               <ArrowRight size={17} />
               Farg'ona
             </h2>
-            <div className="flex justify-between mt-2">
+            <div className="flex flex-col sm:flex-row justify-between mt-2">
               <p>20 yanvar 8:00 da</p>
               <h2 className="font-bold">45 000 so'm</h2>
             </div>

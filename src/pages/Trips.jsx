@@ -26,7 +26,6 @@ import { Input } from "@/components/ui/input";
 // input mask
 import { InputMask } from "@react-input/mask";
 import { Textarea } from "@/components/ui/textarea";
-import TripsSecondCard from "@/components/TripsSecondCard";
 
 function Trips() {
   const [dialog, setDialog] = useState(false);
@@ -66,9 +65,9 @@ function Trips() {
       <div className="w-full flex text-green-600 gap-2.5 mb-5">
         <Dialog className="w-full" open={dialog} onOpenChange={setDialog}>
           <DialogTrigger className="w-full cursor-pointer">
-            <div className="border-2 w-full px-10 py-4 bg-gray-500/6 rounded-3xl flex flex-col items-center">
+            <div className="border-2 w-full py-2 sm:px-10 sm:py-4 bg-gray-500/6 rounded-3xl flex flex-col items-center">
               <Route className="md:size-6 size-4" />
-              <h4 className="text-sm md:text-md">Yangi safar yaratish</h4>
+              <h4 className="text-sm md:text-md">Safar yaratish</h4>
             </div>
           </DialogTrigger>
           <DialogContent>
@@ -152,7 +151,7 @@ function Trips() {
         </Dialog>
         <Dialog className="w-full">
           <DialogTrigger className="w-full cursor-pointer">
-            <div className="border-2 w-full px-10 py-4 bg-gray-500/6 rounded-3xl flex flex-col items-center">
+            <div className="border-2 w-full py-2 sm:px-10 sm:py-4 bg-gray-500/6 rounded-3xl flex flex-col items-center">
               <MapPin className="md:size-6 size-4" />
               <h4 className="text-sm md:text-md">Safar qidirish</h4>
             </div>
@@ -210,8 +209,8 @@ function Trips() {
           </DialogContent>
         </Dialog>
       </div>
-      <Card>
-        <CardContent>
+      <Card className="px-0">
+        <CardContent className="px-0">
           <Tabs defaultValue="allTrips" className="w-full">
             <TabsList className="px-2 w-full">
               <TabsTrigger value="allTrips">Barcha safarlar</TabsTrigger>

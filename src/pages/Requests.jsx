@@ -23,23 +23,23 @@ function Requests() {
       </TabsList>
       <TabsContent value="allTrips">
         <Card className="bg-gray-500/5">
-          <CardContent className="flex flex-col gap-5 py-6">
+          <CardContent className="flex flex-col gap-5 sm:py-6">
             <div className="flex justify-between items-center">
               <div className="flex gap-2 items-center">
-                <Avatar className="size-10">
+                <Avatar className="size-8 sm:size-10">
                   <AvatarImage src="https://github.com/shadcn.png" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <div>
+                <div className="text-sm sm:text-2xl">
                   <h2 className="font-bold text-green-700">Sergey Volkov</h2>
                   <span>⭐ 4.6</span>
                 </div>
               </div>
-              <span className="bg-green-700 text-white py-1 px-2 rounded-2xl">
+              <span className="bg-green-700 text-white py-1 px-2 rounded-2xl text-sm sm:text-md">
                 Kutilmoqda
               </span>
             </div>
-            <div className="bg-green-500/5 border border-green-100 p-5 rounded-2xl">
+            <div className="bg-green-500/5 border border-green-100 p-2 sm:p-5 rounded-2xl">
               <h2 className="flex items-center font-bold text-green-700">
                 <MapPin className="mr-2" />
                 Toshkent
@@ -56,7 +56,7 @@ function Requests() {
                 Bron qilingan
               </span>
             </div>
-            <div className="bg-white border border-green-100 p-5 rounded-2xl">
+            <div className="text-sm sm:text-md bg-white border border-green-100 p-3 sm:p-5 rounded-2xl">
               Salom! Men sizning sayohatingizda joy band qilmoqchiman.
             </div>
           </CardContent>
@@ -64,23 +64,23 @@ function Requests() {
       </TabsContent>
       <TabsContent value="myTrips">
         <Card className="bg-gray-500/5">
-          <CardContent className="flex flex-col gap-5 py-6">
+          <CardContent className="flex flex-col gap-5 sm:py-6">
             <div className="flex justify-between items-center">
               <div className="flex gap-2 items-center">
-                <Avatar className="size-10">
+                <Avatar className="size-8 sm:size-10">
                   <AvatarImage src="https://github.com/shadcn.png" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <div>
+                <div className="text-sm sm:text-2xl">
                   <h2 className="font-bold text-green-700">Sergey Volkov</h2>
                   <span>⭐ 4.6</span>
                 </div>
               </div>
-              <span className="bg-green-700 text-white py-1 px-2 rounded-2xl">
+              <p className="bg-green-700 text-white py-1 px-2 rounded-2xl text-sm sm:text-md">
                 Kutilmoqda
-              </span>
+              </p>
             </div>
-            <div className="bg-green-500/5 border border-green-100 p-5 rounded-2xl">
+            <div className="bg-green-500/5 border border-green-100 p-2 sm:p-5 rounded-2xl">
               <h2 className="flex items-center font-bold text-green-700">
                 <MapPin className="mr-2" />
                 Toshkent
@@ -98,7 +98,7 @@ function Requests() {
               </span>
               <h2 className="font-bold">60 000 so'm</h2>
             </div>
-            <div className="bg-white border border-green-100 p-5 rounded-2xl">
+            <div className="bg-white border border-green-100 p-3 sm:p-5 text-sm sm:text-md rounded-2xl">
               Safar uchun 60.000 bersam bo'ladimi
             </div>
             <div className="w-full flex gap-3">

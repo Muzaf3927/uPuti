@@ -34,7 +34,6 @@ function MainLayout() {
       <main className="grow custom-container">
         <Outlet />
       </main>
-      <footer>Footer</footer>
     </div>
   );
 }
