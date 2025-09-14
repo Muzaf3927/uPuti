@@ -7,10 +7,6 @@ body,
   height: 100%;
 }
 
-body {
-  background: #000;
-}
-
 .custom-container {
   @apply w-full max-w-[620px] px-5 mx-auto;
 }
