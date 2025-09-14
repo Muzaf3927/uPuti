@@ -1,9 +1,19 @@
 import Navbar from "@/components/Navbar";
-import { Car, LogOut } from "lucide-react";
+import { Bell, Car, LogOut } from "lucide-react";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 import { logout } from "@/app/userSlice/userSlice";
+
+// shadcn
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function MainLayout() {
   const dispatch = useDispatch();
@@ -25,7 +35,20 @@ function MainLayout() {
               <p>Salom, [User]</p>
             </div>
           </div>
-          <LogOut onClick={handleLogout} className="cursor-pointer" />
+          <div className="flex gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Bell className="cursor-pointer" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel className="w-20 sm:w-[180px] text-center">
+                  Bu yerda sizga kelgan bildirishnomalar ko'rinadi.
+                </DropdownMenuLabel>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <LogOut onClick={handleLogout} className="cursor-pointer" />
+          </div>
         </div>
       </header>
       <div className="custom-container my-5">
