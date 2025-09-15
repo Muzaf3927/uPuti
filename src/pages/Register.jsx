@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+// shadcn ui
 import {
   Card,
   CardHeader,
@@ -10,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+// lucide icons
 import {
   Loader2,
   Eye,
@@ -21,8 +25,9 @@ import {
   Phone,
   Lock,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 
+// others
+import { Link } from "react-router-dom";
 import { InputMask } from "@react-input/mask";
 
 function Register() {
@@ -60,7 +65,6 @@ function Register() {
 
     setLoading(true);
     try {
-      await new Promise((res) => setTimeout(res, 1500));
       setSuccess("Registration successful!");
       setForm({
         name: "",

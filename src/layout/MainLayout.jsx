@@ -1,6 +1,6 @@
+import React from "react";
 import Navbar from "@/components/Navbar";
 import { Bell, Car, LogOut } from "lucide-react";
-import React from "react";
 import { useDispatch } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 import { logout } from "@/app/userSlice/userSlice";

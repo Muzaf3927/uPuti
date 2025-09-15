@@ -27,6 +27,8 @@ import { Input } from "@/components/ui/input";
 import { InputMask } from "@react-input/mask";
 import { Textarea } from "@/components/ui/textarea";
 
+import { useGetData } from "@/api/api";
+
 function Trips() {
   const [dialog, setDialog] = useState(false);
   const trips = [
@@ -59,6 +61,10 @@ function Trips() {
   const handleSubmit = (e) => {
     e.preventDefault();
   };
+
+  const { data } = useGetData("/trip");
+
+  console.log(data);
 
   return (
     <div className="">

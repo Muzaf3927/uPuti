@@ -1,47 +1,55 @@
 import React, { useState } from "react";
+
+// shadcn ui
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Car, MapPin, Users, User, Lock } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
-import { InputMask } from "@react-input/mask";
 
+// redux toolkit
 import { useDispatch } from "react-redux";
 import { login } from "@/app/userSlice/userSlice";
 
+// others
+import { Link } from "react-router-dom";
+import { InputMask } from "@react-input/mask";
+import { postData } from "@/api/api";
+
 function Login() {
-  const [form, setForm] = useState({
-    phoneNumber: "",
-    password: "",
-  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const dispatch = useDispatch();
 
+  const { data } = postData("/login", {
+    phone: "900038989",
+    password: "900038901",
+  });
+
+  console.log(data);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData(e.target);
+
+    const phone = formData.get("phone");
+    const password = formData.get("password");
+
     setLoading(true);
     setError("");
     try {
-      // Save user to localStorage
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ ...form, isLoggedIn: true })
-      );
       // Call login reducer and set user true
-      dispatch(login({ ...form, isLoggedIn: true }));
+
+      dispatch(login(res));
+      // Save user to localStorage
+      localStorage.setItem("user", JSON.stringify(res));
     } catch (err) {
-      setError("Login failed");
+      setError("Login failed", err);
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError("");
   };
 
   return (
@@ -81,7 +89,7 @@ function Login() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid w-full max-w-sm items-center gap-3">
-              <Label htmlFor="phoneNumber">Phone Number</Label>
+              <Label htmlFor="phone">Phone Number</Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                   <User size={20} />
@@ -89,10 +97,8 @@ function Login() {
                 <InputMask
                   mask="(__) ___-__-__"
                   replacement={{ _: /\d/ }}
-                  value={form.phoneNumber}
-                  onChange={handleChange}
-                  id="phoneNumber"
-                  name="phoneNumber"
+                  id="phone"
+                  name="phone"
                   type="tel"
                   inputMode="numeric"
                   placeholder="(90) 123 45 67"
@@ -113,8 +119,6 @@ function Login() {
                   name="password"
                   type="password"
                   placeholder="Password"
-                  value={form.password}
-                  onChange={handleChange}
                   required
                   className="pl-10"
                 />
