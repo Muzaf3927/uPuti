@@ -47,8 +47,8 @@ const refreshAccessToken = async () => {
   }
 };
 
-// Set up automatic refresh every 3 hours
-setInterval(refreshAccessToken, 3 * 60 * 60 * 1000); // 3 hours
+// Set up automatic refresh every 2 hours and 1 minute
+// setInterval(refreshAccessToken, (2 * 60 + 1) * 60 * 1000); // 2 hours and 1 minute
 
 api.interceptors.response.use(
   (response) => response,
