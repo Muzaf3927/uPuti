@@ -5,9 +5,14 @@ import App from "./App.jsx";
 // redux toolkit
 import { Provider } from "react-redux";
 import { store } from "./app/store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </Provider>
 );
