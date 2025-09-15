@@ -22,13 +22,6 @@ function Login() {
 
   const dispatch = useDispatch();
 
-  const { data } = postData("/login", {
-    phone: "900038989",
-    password: "900038901",
-  });
-
-  console.log(data);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
