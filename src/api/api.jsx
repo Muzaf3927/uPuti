@@ -155,184 +155,8 @@ export const useDeleteData = (url) => {
 //   {deleteTrip.isPending ? "Deleting..." : "Delete Trip"}
 // </button>
 
-// 4. PURE AXIOS FUNCTIONS (getData, postData, deleteData)
-
-// GET DATA - Fetch trips list
-// const fetchTrips = async () => {
-//   try {
-//     const trips = await getData("/trips");
-//     console.log("Trips:", trips);
-//     setTrips(trips); // Update state
-//   } catch (error) {
-//     console.error("Error fetching trips:", error);
-//     setError("Failed to load trips");
-//   }
-// };
-
-// GET DATA - Fetch single trip
-// const fetchTrip = async (tripId) => {
-//   try {
-//     const trip = await getData(`/trips/${tripId}`);
-//     console.log("Trip details:", trip);
-//     setTrip(trip);
-//   } catch (error) {
-//     console.error("Error fetching trip:", error);
-//   }
-// };
-
-// GET DATA - Fetch user profile
-// const fetchUserProfile = async () => {
-//   try {
-//     const user = await getData("/user/profile");
-//     console.log("User profile:", user);
-//     setUser(user);
-//   } catch (error) {
-//     console.error("Error fetching profile:", error);
-//   }
-// };
-
-// POST DATA - Create new trip
-// const createTrip = async (tripData) => {
-//   try {
-//     const newTrip = await postData("/trips", {
-//       from: "Tashkent",
-//       to: "Samarkand",
-//       date: "2024-01-15",
-//       time: "09:00",
-//       price: 50000,
-//       seats: 3
-//     });
-//     console.log("Created trip:", newTrip);
-//     // Refresh trips list
-//     fetchTrips();
-//   } catch (error) {
-//     console.error("Error creating trip:", error);
-//   }
-// };
-
-// POST DATA - User login
-// const loginUser = async (credentials) => {
-//   try {
-//     const response = await postData("/auth/login", {
-//       phone: "998901234567",
-//       password: "123456"
-//     });
-//     console.log("Login successful:", response);
-//     localStorage.setItem("token", response.access_token);
-//     localStorage.setItem("user", JSON.stringify(response.user));
-//     // Redirect to dashboard
-//     window.location.href = "/";
-//   } catch (error) {
-//     console.error("Login failed:", error);
-//     setError("Invalid credentials");
-//   }
-// };
-
-// POST DATA - User registration
-// const registerUser = async (userData) => {
-//   try {
-//     const response = await postData("/auth/register", {
-//       name: "John Doe",
-//       phone: "998901234567",
-//       password: "123456",
-//       email: "john@example.com"
-//     });
-//     console.log("Registration successful:", response);
-//     // Auto login after registration
-//     loginUser({ phone: userData.phone, password: userData.password });
-//   } catch (error) {
-//     console.error("Registration failed:", error);
-//   }
-// };
-
-// POST DATA - Update trip status
-// const updateTripStatus = async (tripId, status) => {
-//   try {
-//     const response = await postData(`/trips/${tripId}/status`, {
-//       status: "completed" // or "cancelled", "active"
-//     });
-//     console.log("Status updated:", response);
-//     // Refresh the trip data
-//     fetchTrip(tripId);
-//   } catch (error) {
-//     console.error("Error updating status:", error);
-//   }
-// };
-
-// POST DATA - Send message
-// const sendMessage = async (tripId, message) => {
-//   try {
-//     const response = await postData(`/trips/${tripId}/messages`, {
-//       message: "Hello, I'm interested in this trip",
-//       type: "text"
-//     });
-//     console.log("Message sent:", response);
-//   } catch (error) {
-//     console.error("Error sending message:", error);
-//   }
-// };
-
-// DELETE DATA - Delete trip
-// const removeTrip = async (tripId) => {
-//   try {
-//     await deleteData(`/trips/${tripId}`);
-//     console.log("Trip deleted successfully");
-//     // Remove from local state or refresh list
-//     setTrips(trips.filter(trip => trip.id !== tripId));
-//   } catch (error) {
-//     console.error("Error deleting trip:", error);
-//   }
-// };
-
-// DELETE DATA - Cancel booking
-// const cancelBooking = async (bookingId) => {
-//   try {
-//     await deleteData(`/bookings/${bookingId}`);
-//     console.log("Booking cancelled");
-//     // Refresh bookings list
-//     fetchBookings();
-//   } catch (error) {
-//     console.error("Error cancelling booking:", error);
-//   }
-// };
-
-// DELETE DATA - Delete user account
-// const deleteAccount = async () => {
-//   try {
-//     await deleteData("/user/account");
-//     console.log("Account deleted");
-//     // Clear local storage and redirect
-//     localStorage.clear();
-//     window.location.href = "/login";
-//   } catch (error) {
-//     console.error("Error deleting account:", error);
-//   }
-// };
-
-// USAGE IN COMPONENT WITH LOADING STATES
-// const [loading, setLoading] = useState(false);
-// const [error, setError] = useState("");
-
-// const handleCreateTrip = async (formData) => {
-//   setLoading(true);
-//   setError("");
-//   try {
-//     await createTrip(formData);
-//     setSuccess("Trip created successfully!");
-//   } catch (err) {
-//     setError("Failed to create trip");
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
-// <button onClick={handleCreateTrip} disabled={loading}>
-//   {loading ? "Creating..." : "Create Trip"}
-// </button>
-// {error && <div className="error">{error}</div>}
-
-// 5. LOGIN EXAMPLE (using usePostData)
-// const loginMutation = usePostData("/auth/login");
+// 4. LOGIN EXAMPLE (using usePostData)
+// const loginMutation = usePostData("/login");
 // const handleLogin = async (credentials) => {
 //   try {
 //     const response = await loginMutation.mutateAsync(credentials);
@@ -349,13 +173,13 @@ export const useDeleteData = (url) => {
 //   </button>
 // </form>
 
-// 6. FETCH USER PROFILE (using useGetData)
+// 5. FETCH USER PROFILE (using useGetData)
 // const { data: user, isLoading: userLoading, error: userError } = useGetData("/user/profile");
 // if (userLoading) return <div>Loading profile...</div>;
 // if (userError) return <div>Error loading profile</div>;
 // return <div>Welcome, {user?.name}!</div>;
 
-// 7. UPDATE TRIP STATUS (using usePostData)
+// 6. UPDATE TRIP STATUS (using usePostData)
 // const updateTripStatus = usePostData("/trips/update-status");
 // const handleStatusUpdate = async (tripId, newStatus) => {
 //   try {
