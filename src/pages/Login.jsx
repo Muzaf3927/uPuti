@@ -32,7 +32,7 @@ function Login() {
     const cleanPhone = phone.replace(/\D/g, ""); // Remove all non-digits
     const formattedPhone = cleanPhone.startsWith("998")
       ? cleanPhone
-      : `+998${cleanPhone}`;
+      : `${cleanPhone}`;
 
     //
 
