@@ -15,12 +15,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+// others
+import { usePostData } from "@/api/api";
+
 function MainLayout() {
   const dispatch = useDispatch();
 
-  const handleLogout = () => {
-    dispatch(logout());
-    localStorage.setItem("token", "");
+  const logoutMutation = usePostData("/logout");
+
+  const handleLogout = async () => {
+    try {
+      const res = await logoutMutation.mutateAsync();
+
+      dispatch(logout());
+
+      localStorage.setItem("token", "");
+      toast.success("Muvaffaqiyatli tizimdan chiqdingiz!");
+    } catch {
+      console.log("Failed to connect to API.");
+    }
   };
   return (
     <div className="flex flex-col h-full ">

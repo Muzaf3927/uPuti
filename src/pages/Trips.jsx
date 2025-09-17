@@ -62,6 +62,12 @@ function Trips() {
   ];
 
   const { data, isLoading, error, refetch } = useGetData("/trips");
+  const {
+    data: myTrips,
+    isLoading: myTripsLoading,
+    error: myTripsError,
+    refetch: myTripsRefetch,
+  } = useGetData("/my-trips");
 
   const tripPostMutation = usePostData("/trip");
 
@@ -97,15 +103,10 @@ function Trips() {
     if (res.message === "Поездка создана!") {
       toast.success("Safar yaratildi.");
       setDialog(false);
+      refetch();
+      myTripsRefetch();
     }
   };
-
-  const {
-    data: myTrips,
-    isLoading: myTripsLoading,
-    error: myTripsError,
-    refetch: myTripsRefetch,
-  } = useGetData("/my-trips");
 
   return (
     <div className="">

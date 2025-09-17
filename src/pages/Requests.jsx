@@ -18,8 +18,8 @@ function Requests() {
   return (
     <Tabs defaultValue="allTrips" className="w-full">
       <TabsList className="px-2 w-full  mb-6">
-        <TabsTrigger value="allTrips">Barcha safarlar</TabsTrigger>
-        <TabsTrigger value="myTrips">Mening safarlarim</TabsTrigger>
+        <TabsTrigger value="allTrips">Men yuborgan so'rovlar</TabsTrigger>
+        <TabsTrigger value="myTrips">Menga kelgan so'rovlar</TabsTrigger>
       </TabsList>
       <TabsContent value="allTrips">
         <Card className="bg-gray-500/5">

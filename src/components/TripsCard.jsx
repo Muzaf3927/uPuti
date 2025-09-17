@@ -13,12 +13,23 @@ import {
   Route,
   Users,
 } from "lucide-react";
+import { Link } from "react-router-dom";
+
+import { usePostData } from "@/api/api";
 
 function TripsCard({ trip }) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const tripPostMutation = usePostData(`/trips/${trip?.id}/booking`);
+
   const handleClick = (e) => {
     e.stopPropagation();
+
+    const result = {
+      seats: 1,
+      offered_price: 5000,
+      comment: "boshqa pulim yuq",
+    };
   };
 
   return isOpen ? (
@@ -99,12 +110,13 @@ function TripsCard({ trip }) {
           {trip.note}
         </p>
         <div className="w-full flex gap-3">
-          <button
+          <Link
+            to={`/trips/${trip?.id}/bookings`}
             onClick={handleClick}
             className="bg-green-700 h-10 text-sm  rounded-2xl text-white w-full"
           >
             Bron qilish
-          </button>
+          </Link>
           <button
             onClick={handleClick}
             className="w-full bg-white h-10 text-sm  border-green-700 text-green-700  border-2 rounded-2xl"

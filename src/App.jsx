@@ -22,8 +22,6 @@ function App() {
   const { user, isAuth } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
-  console.log(user);
-
   const routes = createBrowserRouter([
     {
       path: "/login",
@@ -50,7 +48,7 @@ function App() {
           element: <Requests />,
         },
         {
-          path: "/booking",
+          path: "/trips/:tripId/bookings",
           element: <Booking />,
         },
         {
