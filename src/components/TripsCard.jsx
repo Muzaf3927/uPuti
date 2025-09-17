@@ -171,10 +171,10 @@ function TripsCard({ trip }) {
           </div>
         </div>
 
-        <div className="text-right  ss:relative">
+        <div className="text-right flex items-center gap-3 sm:flex-col  ss:relative">
           <p className="sm:text-md md:text-3xl font-bold">{trip.price}</p>
           {/* Status */}
-          <span className="inline-block mt-2 text-xs px-3 py-1 rounded-full bg-green-600 text-white">
+          <span className="inline-block sm:mt-2 text-xs px-3 py-1 rounded-full bg-green-600 text-white">
             {trip.status}
           </span>
         </div>

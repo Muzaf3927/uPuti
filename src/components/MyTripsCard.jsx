@@ -1,18 +1,23 @@
 import React, { useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 import {
   ArrowRight,
   Calendar,
   Car,
+  CircleCheck,
   Clock,
+  Mail,
   MapPin,
   MoveRight,
+  Pencil,
   Route,
+  Trash2,
   Users,
 } from "lucide-react";
+import { Button } from "./ui/button";
 
 function MyTripsCard({ trip }) {
   return (
@@ -41,14 +46,33 @@ function MyTripsCard({ trip }) {
           </div>
         </div>
 
-        <div className="text-right  ss:relative">
+        <div className="text-right flex items-center gap-3 mt-4 sm:flex-col ss:relative">
           <p className="sm:text-md md:text-3xl font-bold">{trip.price}</p>
           {/* Status */}
-          <span className="inline-block mt-2 text-xs px-3 py-1 rounded-full bg-green-600 text-white">
+          <span className="inline-block sm:mt-2 text-xs px-3 py-1 rounded-full bg-green-600 text-white">
             {trip.status}
           </span>
         </div>
       </CardContent>
+      <CardFooter className="w-full">
+        <div className="flex gap-3 items-center justify-end w-full">
+          <Button>
+            <span className="hidden sm:block">Tasdiqlanganlar</span>{" "}
+            <CircleCheck />
+          </Button>
+          <Button>
+            <span className="hidden sm:block">So'rovlar</span> <Mail />
+          </Button>
+          <Button>
+            <span className="hidden sm:block">O'chirish</span>
+            <Trash2 />
+          </Button>
+          <Button>
+            <span className="hidden sm:block">Tahrirlash</span>
+            <Pencil />
+          </Button>
+        </div>
+      </CardFooter>
     </Card>
   );
 }
