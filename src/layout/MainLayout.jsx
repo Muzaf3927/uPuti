@@ -20,7 +20,7 @@ function MainLayout() {
 
   const handleLogout = () => {
     dispatch(logout());
-    localStorage.setItem("user", "");
+    localStorage.setItem("token", "");
   };
   return (
     <div className="flex flex-col h-full ">

@@ -7,6 +7,7 @@ import {
   Chats,
   Booking,
   History,
+  FogotPassword,
 } from "./pages";
 import MainLayout from "./layout/MainLayout";
 import {
@@ -21,10 +22,16 @@ function App() {
   const { user, isAuth } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
+  console.log(user);
+
   const routes = createBrowserRouter([
     {
       path: "/login",
       element: user ? <Navigate to="/" /> : <Login />,
+    },
+    {
+      path: "/fogotPassword",
+      element: user ? <Navigate to="/" /> : <FogotPassword />,
     },
     {
       path: "/register",
@@ -59,7 +66,7 @@ function App() {
   ]);
 
   useEffect(() => {
-    const isUser = localStorage.getItem("user");
+    const isUser = localStorage.getItem("token");
 
     if (isUser) {
       dispatch(login(isUser));

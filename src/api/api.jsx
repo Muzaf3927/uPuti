@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 const { VITE_API_BASE } = import.meta.env;
 
 const api = axios.create({
-  baseURL: VITE_API_BASE || "https://blablajava.vercel.app/api/proxy",
+  baseURL: VITE_API_BASE || "https://blabla-main.laravel.cloud/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,7 +13,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -24,26 +24,26 @@ api.interceptors.request.use(
 
 const refreshAccessToken = async () => {
   try {
-    const refreshToken = sessionStorage.getItem("reFreshToken");
+    const refreshToken = localStorage.getItem("reFreshToken");
     if (!refreshToken) throw new Error("No refresh token available");
 
     const { data } = await axios.post(
       `${
-        VITE_API_BASE || "https://blablajava.vercel.app/api/proxy"
+        VITE_API_BASE || "https://blabla-main.laravel.cloud/api"
       }/refresh-token`,
       {
         refresh_token: refreshToken,
       }
     );
 
-    sessionStorage.setItem("token", data.access_token);
+    localStorage.setItem("token", data.access_token);
     api.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${data.access_token}`;
   } catch (error) {
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("reFreshToken");
-    window.location.href = "/signin";
+    localStorage.removeItem("token");
+    localStorage.removeItem("reFreshToken");
+    window.location.href = "/login";
   }
 };
 
@@ -119,15 +119,15 @@ export const useDeleteData = (url) => {
   });
 };
 
-// HOW TO USE EXAMPLES:
+// ? HOW TO USE EXAMPLES:
 
-// 1. GET DATA (useGetData hook)
+// * 1. GET DATA (useGetData hook)
 // const { data, isLoading, error, refetch } = useGetData("/trips");
 // if (isLoading) return <div>Loading...</div>;
 // if (error) return <div>Error: {error.message}</div>;
 // return <div>{data?.map(trip => <div key={trip.id}>{trip.from} to {trip.to}</div>)}</div>;
 
-// 2. POST DATA (usePostData hook)
+// * 2. POST DATA (usePostData hook)
 // const createTrip = usePostData("/trips");
 // const handleSubmit = async (formData) => {
 //   try {
@@ -141,7 +141,7 @@ export const useDeleteData = (url) => {
 //   {createTrip.isPending ? "Creating..." : "Create Trip"}
 // </button>
 
-// 3. DELETE DATA (useDeleteData hook)
+// * 3. DELETE DATA (useDeleteData hook)
 // const deleteTrip = useDeleteData("/trips");
 // const handleDelete = async (tripId) => {
 //   try {
@@ -155,7 +155,7 @@ export const useDeleteData = (url) => {
 //   {deleteTrip.isPending ? "Deleting..." : "Delete Trip"}
 // </button>
 
-// 4. LOGIN EXAMPLE (using usePostData)
+// * 4. LOGIN EXAMPLE (using usePostData)
 // const loginMutation = usePostData("/login");
 // const handleLogin = async (credentials) => {
 //   try {
@@ -173,13 +173,13 @@ export const useDeleteData = (url) => {
 //   </button>
 // </form>
 
-// 5. FETCH USER PROFILE (using useGetData)
+// * 5. FETCH USER PROFILE (using useGetData)
 // const { data: user, isLoading: userLoading, error: userError } = useGetData("/user/profile");
 // if (userLoading) return <div>Loading profile...</div>;
 // if (userError) return <div>Error loading profile</div>;
 // return <div>Welcome, {user?.name}!</div>;
 
-// 6. UPDATE TRIP STATUS (using usePostData)
+// * 6. UPDATE TRIP STATUS (using usePostData)
 // const updateTripStatus = usePostData("/trips/update-status");
 // const handleStatusUpdate = async (tripId, newStatus) => {
 //   try {

@@ -31,14 +31,20 @@ function TripsCard({ trip }) {
           {/* Driver */}
           <div className="flex items-center gap-1 text-sm">
             <Avatar className="size-10 sm:size-13">
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage
+                src={
+                  trip.driver.avatar
+                    ? trip.driver.avatar
+                    : "https://github.com/shadcn.png"
+                }
+              />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="flex flex-col ml-2">
               <span className="text-md sm:text-xl  font-bold">
-                {trip.driver}
+                {trip.driver.name}
               </span>
-              <span>⭐ {trip.rating}</span>
+              <span>⭐ {trip.driver.rating}</span>
             </div>
           </div>
           <p className="inline-block mt-2 text-sm sm:text-md px-3 py-1 rounded-full bg-green-600 text-white">
@@ -50,13 +56,15 @@ function TripsCard({ trip }) {
           <div className="flex gap-3 items-center">
             <div className="flex flex-col sm:flex-row sm:gap-3">
               <Car className="size-8" />{" "}
-              <span className="font-bold text-sm sm:text-xl">Toyota Camry</span>
+              <span className="font-bold text-sm sm:text-xl">
+                {trip.carModel}
+              </span>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row sm:justify-between sm:gap-10">
-            <span>Oq</span>
+            <span>{trip.carColor}</span>
             <span className="border-2 border-gray-400 px-2 rounded-md">
-              01A123BC
+              {trip.carNumber ? trip.carNumber : "Bo'sh"}
             </span>
           </div>
         </div>
@@ -65,8 +73,8 @@ function TripsCard({ trip }) {
           {/* From → To */}
           <div className="flex justify-between items-center mb-2">
             <p className="text-sm sm:text-lg font-bold flex items-center text-green-700">
-              <MapPin className="text-green-700 mr-1" /> {trip.from}{" "}
-              <ArrowRight size={17} /> {trip.to}
+              <MapPin className="text-green-700 mr-1" /> {trip.from_city}{" "}
+              <ArrowRight size={17} /> {trip.to_city}
             </p>
           </div>
 
@@ -79,7 +87,8 @@ function TripsCard({ trip }) {
               <Clock size={16} className="text-gray-400" /> {trip.time}
             </span>
             <span className="flex items-center gap-1">
-              <Users size={16} className="text-gray-400" /> {trip.seats} мест
+              <Users size={16} className="text-gray-400" /> {trip.seats}{" "}
+              o'rindiq
             </span>
             <p className="text-xs md:text-xl font-bold text-black">
               {trip.price}
@@ -87,7 +96,7 @@ function TripsCard({ trip }) {
           </div>
         </div>
         <p className="rounded-2xl text-sm p-2 sm:p-4 bg-white w-full">
-          Komfort safar, konditsioner
+          {trip.note}
         </p>
         <div className="w-full flex gap-3">
           <button
@@ -115,8 +124,8 @@ function TripsCard({ trip }) {
           {/* From → To */}
           <div className="flex justify-between items-center mb-2">
             <p className="text-lg font-bold flex items-center">
-              <MapPin className="text-green-400 mr-1" /> {trip.from}{" "}
-              <ArrowRight size={17} /> {trip.to}
+              <MapPin className="text-green-400 mr-1" /> {trip.from_city}{" "}
+              <ArrowRight size={17} /> {trip.to_city}
             </p>
           </div>
 
@@ -129,18 +138,24 @@ function TripsCard({ trip }) {
               <Clock size={16} /> {trip.time}
             </span>
             <span className="flex items-center gap-1">
-              <Users size={16} /> {trip.seats} мест
+              <Users size={16} /> {trip.seats} o'rindiq
             </span>
           </div>
 
           {/* Driver */}
           <div className="flex items-center gap-1 text-sm">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage
+                src={
+                  trip.driver.avatar
+                    ? trip.driver.avatar
+                    : "https://github.com/shadcn.png"
+                }
+              />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <span>{trip.driver}</span>
-            <span>⭐ {trip.rating}</span>
+            <span>{trip.driver.name}</span>
+            <span>⭐ {trip.driver.rating}</span>
           </div>
         </div>
 

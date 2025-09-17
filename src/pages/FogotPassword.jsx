@@ -32,14 +32,13 @@ import {
 } from "lucide-react";
 
 // others
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { InputMask } from "@react-input/mask";
 import { usePostData } from "@/api/api";
 import { toast } from "sonner";
 
-function Register() {
+function FogotPassword() {
   const [form, setForm] = useState({
-    name: "",
     phone: "",
     password: "",
     password_confirmation: "",
@@ -52,7 +51,7 @@ function Register() {
 
   const dispatch = useDispatch();
 
-  const registerMutation = usePostData("/register");
+  const fogotPasswordMutation = usePostData("/reset-password");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -68,16 +67,15 @@ function Register() {
     const formData = new FormData(e.target);
 
     const phone = formData.get("phone");
-    const name = formData.get("name");
     const password = formData.get("password");
     const password_confirmation = formData.get("password_confirmation");
 
-    if (!name || !phone || !password || !password_confirmation) {
-      setError("Iltimos hammasini to'ldiring.");
+    if (!phone || !password || !password_confirmation) {
+      setError("Please fill all fields.");
       return;
     }
     if (password !== password_confirmation) {
-      setError("Parol mos emas!");
+      setError("Passwords do not match.");
       return;
     }
 
@@ -88,7 +86,6 @@ function Register() {
       : `${cleanPhone}`;
 
     const resultData = {
-      name,
       phone: formattedPhone,
       password,
       password_confirmation,
@@ -96,15 +93,12 @@ function Register() {
 
     setLoading(true);
     try {
-      const res = await registerMutation.mutateAsync(resultData);
-      console.log(res);
-      dispatch(login(res));
-      localStorage.setItem("token", res?.token);
-      localStorage.setItem("user", res);
-
-      toast.success("Muvaffaqiyatli ro'yhatdan o'tdingiz");
-
-      setSuccess("Registration successful!");
+      const res = await fogotPasswordMutation.mutateAsync(resultData);
+      if (res.message === "Пароль должен содержать минимум 6 символов") {
+        toast.warning("Parol kamida 6 belgidan iborat bo'lishi kerak.");
+      }
+      toast.success("Parol yangilandi!");
+      window.location.href = "/login";
     } catch {
       setError("Failed to connect to API.");
     } finally {
@@ -120,61 +114,21 @@ function Register() {
         </span>
         RideShare
       </h1>
-      <p>Qulay sayohatlar uchun hamroh toping</p>
-      <div className="flex gap-2 w-full max-w-[450px] py-1">
-        <Card className="w-full py-2 h-[80px]">
-          <CardHeader>
-            <CardTitle className="text-green-700 text-sm text-center flex flex-col items-center gap-1">
-              <Users />
-              <p>Ishonchli sayohat hamrohlari</p>
-            </CardTitle>
-          </CardHeader>
-        </Card>
-        <Card className="w-full h-[80px] py-2">
-          <CardHeader>
-            <CardTitle className="text-green-700 text-sm text-center flex flex-col items-center gap-1">
-              <MapPin />
-              <p>Qulay yo‘nalishlar</p>
-            </CardTitle>
-          </CardHeader>
-        </Card>
-      </div>
+      <p>Find travel companions for comfortable trips</p>
+      <div className="flex gap-2 w-full max-w-[450px] py-1"></div>
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-green-700 mx-auto text-md sm:text-xl font-bold">
-            Ro'yhatdan o'tish
+            Parolni yangilash
           </CardTitle>
-          <p className="text-gray-500 mx-auto text-sm sm:text-md">
-            Hisob yaratish
-          </p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid w-full max-w-sm items-center gap-3">
-              <Label htmlFor="name">Ism</Label>
-              <div className="relative">
-                <Input
-                  type="text"
-                  id="name"
-                  name="name"
-                  placeholder="Ismingizni kiriting"
-                  value={form.name}
-                  onChange={handleChange}
-                  required
-                  className="pl-10"
-                />
-                <User
-                  className="absolute left-2 top-2 text-gray-400"
-                  size={20}
-                />
-              </div>
-            </div>
-
-            <div className="grid w-full max-w-sm items-center gap-3">
               <Label htmlFor="phone">Telefon Raqamingiz</Label>
               <div className="relative">
                 <InputMask
-                  mask="_________"
+                  mask="(__) ___-__-__"
                   replacement={{ _: /\d/ }}
                   value={form.phone}
                   onChange={(e) => {
@@ -267,10 +221,10 @@ function Register() {
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <Loader2 className="animate-spin" size={18} />
-                  Ro'yhatdan o'tilmoqda...
+                  Parol yangilanmoqda...
                 </span>
               ) : (
-                "Ro'yhatdan o'tish"
+                "Parolni yangilash"
               )}
             </Button>
             <div className="flex justify-center items-center text-sm">
@@ -288,4 +242,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default FogotPassword;
