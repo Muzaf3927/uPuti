@@ -6,3 +6,4 @@ export { default as Trips } from "./Trips";
 export { default as Requests } from "./Requests";
 export { default as Booking } from "./Booking";
 export { default as FogotPassword } from "./FogotPassword";
+export { default as Profile } from "./Profile";

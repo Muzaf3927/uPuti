@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
-import { Bell, Car, LogOut } from "lucide-react";
+import { Bell, Car, CircleUser, LogOut, UserCircle2Icon } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 import { logout } from "@/app/userSlice/userSlice";
@@ -16,12 +16,25 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 // others
-import { usePostData } from "@/api/api";
+import { usePostData, useGetData } from "@/api/api";
+
+// get firstName
+function getNthWord(str, n) {
+  const parts = str.trim().split(/\s+/);
+  return n >= 1 && n <= parts.length ? parts[n - 1] : null;
+}
 
 function MainLayout() {
   const dispatch = useDispatch();
 
   const logoutMutation = usePostData("/logout");
+  const { data, isLoading, error, refetch } = useGetData("/notifications");
+  const {
+    data: userData,
+    isLoading: userLoading,
+    error: userError,
+    refetch: userRefetch,
+  } = useGetData("/user");
 
   const handleLogout = async () => {
     try {
@@ -45,7 +58,7 @@ function MainLayout() {
             </Link>
             <div>
               <h4 className="text-2xl font-bold text-green-700">RideShare</h4>
-              <p>Salom, [User]</p>
+              <p>Salom, {userData && getNthWord(userData.name, 1)}</p>
             </div>
           </div>
           <div className="flex gap-2">
@@ -54,13 +67,32 @@ function MainLayout() {
                 <Bell className="cursor-pointer" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuLabel className="w-20 sm:w-[180px] text-center">
-                  Bu yerda sizga kelgan bildirishnomalar ko'rinadi.
-                </DropdownMenuLabel>
+                {data && data.notifications.map(() => <div>Bildirishnoma</div>)}
+                {data && data.notifications.length == 0 && (
+                  <DropdownMenuLabel className="w-20 sm:w-[180px] text-center">
+                    Bu yerda sizga kelgan bildirishnomalar ko'rinadi.
+                  </DropdownMenuLabel>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <LogOut onClick={handleLogout} className="cursor-pointer" />
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <CircleUser className="cursor-pointer" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Link to="/profile">Profilga o'tish</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="text-red-600"
+                >
+                  Tizimdan chiqish
+                  <LogOut className="cursor-pointer text-red-600" />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>

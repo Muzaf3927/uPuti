@@ -8,6 +8,7 @@ import {
   Booking,
   History,
   FogotPassword,
+  Profile,
 } from "./pages";
 import MainLayout from "./layout/MainLayout";
 import {
@@ -58,6 +59,10 @@ function App() {
         {
           path: "/chats",
           element: <Chats />,
+        },
+        {
+          path: "/profile",
+          element: <Profile />,
         },
       ],
     },
