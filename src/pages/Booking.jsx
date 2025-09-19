@@ -13,11 +13,7 @@ import { useGetData } from "@/api/api";
 
 function Booking() {
   const { tripId } = useParams();
-  const { data, isLoading, error, refetch } = useGetData(
-    `/trips/${tripId}/bookings`
-  );
 
-  console.log(data && data);
   return (
     <>
       <Tabs defaultValue="fromMe" className="">

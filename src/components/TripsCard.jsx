@@ -111,13 +111,13 @@ function TripsCard({ trip }) {
         </p>
         <div className="w-full flex gap-3">
           <button
-            onClick={() => handleClick("bron")}
+            onClick={handleClick}
             className="bg-green-700 h-10 text-sm  rounded-2xl text-white w-full"
           >
             Bron qilish
           </button>
           <button
-            onClick={() => handleClick("price")}
+            onClick={handleClick}
             className="w-full bg-white h-10 text-sm  border-green-700 text-green-700  border-2 rounded-2xl"
           >
             Narx taklif qilish

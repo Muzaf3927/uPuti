@@ -49,7 +49,7 @@ function App() {
           element: <Requests />,
         },
         {
-          path: "/trips/:tripId/bookings",
+          path: "/booking",
           element: <Booking />,
         },
         {

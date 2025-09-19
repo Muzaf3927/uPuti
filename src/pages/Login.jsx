@@ -133,6 +133,7 @@ function Login() {
                   inputMode="numeric"
                   placeholder="(90) 123 45 67"
                   required
+                  autoComplete="tel"
                   className="pl-20 font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                 />
                 <p className="absolute left-10 top-1.5 font-normal select-none">
@@ -185,7 +186,7 @@ function Login() {
                 Parol esdan chiqdimi?
               </Link>
               <p>
-                Hisobingiz yo'qmi?
+                Hisobingiz yo'qmi?{" "}
                 <Link className="underline" to="/register">
                   Ro'yhatdan o'ting
                 </Link>
