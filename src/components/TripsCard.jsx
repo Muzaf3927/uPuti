@@ -110,15 +110,14 @@ function TripsCard({ trip }) {
           {trip.note}
         </p>
         <div className="w-full flex gap-3">
-          <Link
-            to={`/trips/${trip?.id}/bookings`}
-            onClick={handleClick}
+          <button
+            onClick={() => handleClick("bron")}
             className="bg-green-700 h-10 text-sm  rounded-2xl text-white w-full"
           >
             Bron qilish
-          </Link>
+          </button>
           <button
-            onClick={handleClick}
+            onClick={() => handleClick("price")}
             className="w-full bg-white h-10 text-sm  border-green-700 text-green-700  border-2 rounded-2xl"
           >
             Narx taklif qilish

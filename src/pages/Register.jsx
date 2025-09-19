@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // redux
 import { useDispatch } from "react-redux";
@@ -16,6 +16,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // lucide icons
 import {
@@ -49,10 +57,14 @@ function Register() {
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [modal, setModal] = useState(false);
 
   const dispatch = useDispatch();
 
   const registerMutation = usePostData("/register");
+  const verifyMuatation = usePostData("/verify");
+
+  const registerDataRef = useRef({});
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -97,15 +109,39 @@ function Register() {
     setLoading(true);
     try {
       const res = await registerMutation.mutateAsync(resultData);
+      registerDataRef.current = res;
+      setModal(true);
+      toast.success("Raqamingizga yuborilgan textni kiriting!");
+    } catch {
+      setError("Failed to connect to API.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerify = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    const verifyText = formData.get("verifyText");
+
+    console.log(registerDataRef);
+
+    const resultData = {
+      verification_id: registerDataRef.current?.verification_id,
+      message: verifyText,
+    };
+
+    try {
+      const res = await verifyMuatation.mutateAsync(resultData);
       console.log(res);
       dispatch(login(res));
-      localStorage.setItem("token", res?.token);
-      localStorage.setItem("user", res);
-
-      toast.success("Muvaffaqiyatli ro'yhatdan o'tdingiz");
+      localStorage.setItem("token", res?.access_token);
+      toast.success("Muvaffaqiyatli royhatdan o'tdingiz!");
 
       setSuccess("Registration successful!");
-    } catch {
+    } catch (err) {
+      console.log(err);
       setError("Failed to connect to API.");
     } finally {
       setLoading(false);
@@ -282,6 +318,28 @@ function Register() {
               </p>
             </div>
           </form>
+          <Dialog open={modal} onOpenChange={setModal}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Raqamingizga kelgan kodni kiriting</DialogTitle>
+                <DialogDescription></DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleVerify}>
+                <div className="flex flex-col gap-2 mb-2">
+                  <Label htmlFor="verifyText">Kod</Label>
+                  <Input
+                    type="text"
+                    id="verifyText"
+                    name="verifyText"
+                    placeholder="*********"
+                  />
+                </div>
+                <div>
+                  <Button>Yuborish</Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
         </CardContent>
       </Card>
     </div>
