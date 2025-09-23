@@ -18,6 +18,7 @@ import {
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "./app/userSlice/userSlice";
+import UserProfile from "./pages/UserProfile";
 
 function App() {
   const { user, isAuth } = useSelector((store) => store.user);
@@ -63,6 +64,11 @@ function App() {
         {
           path: "/profile",
           element: <Profile />,
+        },
+
+        {
+          path: "/user/:id",
+          element: <UserProfile />,
         },
       ],
     },

@@ -6,7 +6,6 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   Tooltip,
@@ -18,50 +17,52 @@ import {
   Phone,
   CheckCircle2,
   CalendarDays,
-  Copy,
-  MessageCircle,
-  Star,
-  LucideBadgeDollarSign,
   ArrowLeft,
+  LucideBadgeDollarSign,
+  Star,
 } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
 import { useGetData } from "@/api/api";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Link } from "react-router-dom";
 
-function Profile() {
-  const { data, isPending, error } = useGetData("/users/me");
+function UserProfile() {
+  const { id } = useParams();
+  const { data, isPending, error } = useGetData(`/users/${id}`);
+  const user = data && data;
 
-  if (isPending)
+  const createdDate = new Date(user?.created_at).toLocaleString();
+  const updatedDate = new Date(user?.updated_at).toLocaleString();
+
+  if (isPending) {
     return (
-      <Card className="max-w-md mx-auto w-full shadow-lg">
-        <CardHeader className="flex items-center gap-4 pb-2">
-          <Skeleton className="h-16 w-16 rounded-full" />
-          <div className="flex-1">
-            <Skeleton className="h-6 w-32 mb-2" />
-          </div>
-          <Skeleton className="h-8 w-16" />
-        </CardHeader>
-        <CardContent className="grid gap-4 pt-2">
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-4 w-4 rounded" />
-            <Skeleton className="h-5 w-24" />
-          </div>
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-5 w-20" />
-            <Skeleton className="h-5 w-16" />
-          </div>
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-5 w-20" />
-            <Skeleton className="h-5 w-16" />
-          </div>
-        </CardContent>
-      </Card>
+      <>
+        <Link
+          to="/"
+          className="flex items-center border-green-400 border rounded-2xl mb-5 w-40 p-1"
+        >
+          <ArrowLeft />
+          Orqaga qaytish
+        </Link>
+        <Card className="mx-auto w-full shadow-lg px-0">
+          <CardHeader className="flex items-center gap-4 pb-2">
+            <Skeleton className="h-16 w-16 rounded-full" />
+            <div className="flex-1">
+              <Skeleton className="h-6 w-32 mb-2" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+          </CardHeader>
+          <CardContent className="grid gap-4 pt-2">
+            <Skeleton className="h-5 w-36" />
+            <Skeleton className="h-5 w-28" />
+            <Skeleton className="h-5 w-32" />
+          </CardContent>
+          <CardFooter className="flex gap-2 pt-2">
+            <Skeleton className="h-8 w-24" />
+          </CardFooter>
+        </Card>
+      </>
     );
-  if (error) return <div>Error loading profile.</div>;
-  if (!data) return null;
-
-  const createdDate = new Date(data.created_at).toLocaleString();
-  const updatedDate = new Date(data.updated_at).toLocaleString();
+  }
 
   return (
     <>
@@ -72,21 +73,21 @@ function Profile() {
         <ArrowLeft />
         Orqaga qaytish
       </Link>
-      <Card className="mx-auto w-full shadow-lg border border-green-500">
+      <Card className=" mx-auto w-full shadow-lg px-0 border-green-400">
         <CardHeader className="flex items-center gap-4 pb-2">
           <Avatar className="h-16 w-16">
-            {data.avatar ? (
-              <AvatarImage src={data.avatar} alt={data.name} />
+            {user?.avatar ? (
+              <AvatarImage src={user?.avatar} alt={user?.name} />
             ) : (
               <AvatarFallback className="uppercase text-xl">
-                {(data.name || "?").split(" ")[0]?.[0] || "U"}
+                {(user?.name || "?").split(" ")[0]?.[0] || "U"}
               </AvatarFallback>
             )}
           </Avatar>
           <div className="flex-1">
             <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-              <span>{data.name || "No name"}</span>
-              {data.is_verified && (
+              <span>{user?.name || "No name"}</span>
+              {user?.is_verified && (
                 <Tooltip>
                   <TooltipTrigger>
                     <CheckCircle2 className="h-5 w-5 text-green-500" />
@@ -96,23 +97,21 @@ function Profile() {
               )}
             </CardTitle>
           </div>
-          <Button size="sm" variant="outline">
-            Edit
-          </Button>
         </CardHeader>
 
         <CardContent className="grid gap-4 pt-2">
           <div className="flex items-center gap-2 text-base">
             <Phone className="h-4 w-4 text-muted-foreground" />
-            <span>{data.phone || "—"}</span>
+            <span>{user?.phone || "—"}</span>
           </div>
+
           <div className="flex items-center gap-2 text-base text-green-700">
             <span>
               <LucideBadgeDollarSign />
             </span>
             <span className="font-medium text-green-600">Balance:</span>
             <span className="text-black font-bold">
-              {Number(data?.balance).toLocaleString()} UZS
+              {Number(user?.balance).toLocaleString()} UZS
             </span>
           </div>
           <div className="flex items-center gap-2 text-base text-green-700">
@@ -121,16 +120,16 @@ function Profile() {
             </span>
             <span className="font-medium text-green-600">Rating:</span>
             <span className="flex items-center gap-1">
-              <span className="text-yellow-500 font-bold">{data?.rating}</span>
+              <span className="text-yellow-500 font-bold">{user?.rating}</span>
               <span className="text-xs text-muted-foreground">
-                ({data?.rating_count})
+                ({user?.rating_count})
               </span>
             </span>
           </div>
         </CardContent>
-      </Card>{" "}
+      </Card>
     </>
   );
 }
 
-export default Profile;
+export default UserProfile;

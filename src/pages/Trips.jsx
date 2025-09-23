@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // components
 import TripsCard from "@/components/TripsCard";
 
 // icons
-import { Car, MapPin, Route } from "lucide-react";
+import { Car, MapPin, Route, Search } from "lucide-react";
 
 // shad cn
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -34,34 +34,54 @@ import MyTripsCard from "@/components/MyTripsCard";
 
 function Trips() {
   const [dialog, setDialog] = useState(false);
-  const trips = [
-    {
-      id: 1,
-      from: "Ташкент",
-      to: "Самарканд",
-      date: "15 января",
-      time: "09:00",
-      seats: 3,
-      price: "50 000 сум",
-      status: "Активная",
-      driver: "Алексей Петров",
-      rating: 4.8,
-    },
-    {
-      id: 2,
-      from: "Бухара",
-      to: "Ташкент",
-      date: "16 января",
-      time: "14:30",
-      seats: 2,
-      price: "75 000 сум",
-      status: "Активная",
-      driver: "Мария Иванова",
-      rating: 4.9,
-    },
-  ];
+  const [searchDialog, setSearchDialog] = useState(false);
+  const [dialogBron, setDialogBron] = useState(false);
+  const [dialogPrice, setDialogPrice] = useState(false);
+  const [searchFilters, setSearchFilters] = useState({
+    from: "",
+    to: "",
+    date: "",
+    time: "",
+  });
 
-  const { data, isLoading, error, refetch } = useGetData("/trips");
+  const [filteredUrl, setFilteredUrl] = useState("");
+
+  const { data, isLoading, error, refetch } = useGetData(
+    `/trips${
+      searchFilters.from
+        ? `?from_city=${searchFilters.from}&to_city=${searchFilters.to}`
+        : ""
+    }`
+  );
+
+  console.log(data?.data);
+
+  // useEffect(() => {
+  //   refetch();
+  // }, [filteredUrl]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const from = formData.get("from");
+    const to = formData.get("to");
+    const date = formData.get("date");
+    const time = formData.get("time");
+
+    setSearchFilters({ from, to, date, time });
+
+    // const params = new URLSearchParams();
+
+    // if (from) params.set("from_city", from);
+    // if (to) params.set("to_city", to);
+
+    // const query = params.toString() ? `?${params.toString()}` : "";
+
+    // setFilteredUrl(query);
+
+    setSearchDialog(false);
+  };
+
   const {
     data: myTrips,
     isLoading: myTripsLoading,
@@ -99,17 +119,25 @@ function Trips() {
       numberCar,
     };
 
-    const res = await tripPostMutation.mutateAsync(resultData);
-    if (res.message === "Поездка создана!") {
-      toast.success("Safar yaratildi.");
+    try {
+      const res = await tripPostMutation.mutateAsync(resultData);
+      if (res.message === "Trip created!") {
+        toast.success("Safar yaratildi.");
+      }
       setDialog(false);
       refetch();
       myTripsRefetch();
+    } catch (err) {
+      console.error(err);
     }
   };
 
+  // if (isLoading) {
+  //   return;
+  // }
+
   return (
-    <div className="">
+    <div>
       <div className="w-full flex text-green-600 gap-2.5 mb-5">
         <Dialog className="w-full" open={dialog} onOpenChange={setDialog}>
           <DialogTrigger className="w-full cursor-pointer">
@@ -236,10 +264,14 @@ function Trips() {
             </form>
           </DialogContent>
         </Dialog>
-        <Dialog className="w-full">
+        <Dialog
+          className="w-full"
+          open={searchDialog}
+          onOpenChange={setSearchDialog}
+        >
           <DialogTrigger className="w-full cursor-pointer">
             <div className="border-2 w-full py-2 sm:px-10 sm:py-4 bg-gray-500/6 rounded-3xl flex flex-col items-center">
-              <MapPin className="md:size-6 size-4" />
+              <Search className="md:size-6 size-4" />
               <h4 className="text-sm md:text-md">Safar qidirish</h4>
             </div>
           </DialogTrigger>
@@ -248,14 +280,24 @@ function Trips() {
               <DialogTitle className="text-center text-green-600 font-bold">
                 Safar qidirish
               </DialogTitle>
-              <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+              <form onSubmit={handleSearch} className="flex flex-col gap-3">
                 <div className="grid w-full items-center gap-3">
                   <Label htmlFor="from">Qayerdan</Label>
-                  <Input type="text" id="from" placeholder="Qaysi shahardan" />
+                  <Input
+                    type="text"
+                    id="from"
+                    name="from"
+                    placeholder="Qaysi shahardan"
+                  />
                 </div>
                 <div className="grid w-full items-center gap-3">
                   <Label htmlFor="to">Qayerga</Label>
-                  <Input type="text" id="to" placeholder="Qaysi shaharga" />
+                  <Input
+                    type="text"
+                    id="to"
+                    name="to"
+                    placeholder="Qaysi shaharga"
+                  />
                 </div>
                 <div className="flex gap-2">
                   <div className="grid w-full items-center gap-3">
@@ -265,6 +307,7 @@ function Trips() {
                       replacement={{ _: /\d/ }}
                       // type="number"
                       id="date"
+                      name="date"
                       placeholder="06.09.2025"
                       className="font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     />
@@ -276,6 +319,7 @@ function Trips() {
                       replacement={{ _: /\d/ }}
                       type="text"
                       id="time"
+                      name="time"
                       placeholder="12 : 30"
                       className="font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     />
@@ -308,8 +352,8 @@ function Trips() {
                 {isLoading
                   ? Array(4)
                       .fill(1)
-                      .map((item, index) => <TripsCardSkeleton key={index} />)
-                  : data.trips.map((trip) => (
+                      .map((_, index) => <TripsCardSkeleton key={index} />)
+                  : data.data?.map((trip) => (
                       <TripsCard trip={trip} key={trip.id} />
                     ))}
               </div>
@@ -318,7 +362,11 @@ function Trips() {
               value="myTrips"
               className="flex flex-col gap-2.5 items-center justify-center py-10"
             >
-              {myTrips && myTrips.trips.length === 0 && (
+              {myTripsLoading ? (
+                Array(2)
+                  .fill(1)
+                  .map((_, index) => <TripsCardSkeleton key={index} />)
+              ) : myTrips && myTrips.trips.length === 0 ? (
                 <>
                   <div className="mt-10 bg-gray-500/7 rounded-full w-20 h-20 flex items-center justify-center">
                     <Car size={30} />
@@ -331,12 +379,12 @@ function Trips() {
                     Safar yaratsih
                   </Button>
                 </>
-              )}
-
-              {myTrips &&
+              ) : (
+                myTrips &&
                 myTrips.trips.map((item) => (
                   <MyTripsCard trip={item} key={item.id} />
-                ))}
+                ))
+              )}
             </TabsContent>
           </Tabs>
         </CardContent>
@@ -346,3 +394,6 @@ function Trips() {
 }
 
 export default Trips;
+
+// /trips/filter?from_city=Toshkent&to_city=Buxoro
+// /trips/filter?from_city=Toshkent&to_city=Buxoro

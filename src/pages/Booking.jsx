@@ -12,7 +12,9 @@ import { useParams } from "react-router-dom";
 import { useGetData } from "@/api/api";
 
 function Booking() {
-  const { tripId } = useParams();
+  const { data, isPending, error, refetch } = useGetData("/bookings");
+
+  console.log(data);
 
   return (
     <>

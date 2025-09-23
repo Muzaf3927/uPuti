@@ -58,7 +58,7 @@ function MainLayout() {
             </Link>
             <div>
               <h4 className="text-2xl font-bold text-green-700">RideShare</h4>
-              <p>Salom, {userData && getNthWord(userData.name, 1)}</p>
+              <p>Salom, {userData && userData.name}</p>
             </div>
           </div>
           <div className="flex gap-2">

@@ -16,13 +16,33 @@ import {
 import { Link } from "react-router-dom";
 
 import { usePostData } from "@/api/api";
+import { toast } from "sonner";
 
 function TripsCard({ trip }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const tripPostMutation = usePostData(`/trips/${trip?.id}/booking`);
 
-  const handleClick = (e) => {
+  const handleClickBron = async (e) => {
+    e.stopPropagation();
+
+    try {
+      const res = await tripPostMutation.mutateAsync(result);
+
+      if (res.status === "Success") {
+        toast.success("Bron qilindi.");
+      }
+    } catch {
+    } finally {
+    }
+
+    const result = {
+      seats: 1,
+      offered_price: 5000,
+      comment: "boshqa pulim yuq",
+    };
+  };
+  const handleClickPrice = (e) => {
     e.stopPropagation();
 
     const result = {
@@ -41,16 +61,18 @@ function TripsCard({ trip }) {
         <div className="flex justify-between items-center w-full">
           {/* Driver */}
           <div className="flex items-center gap-1 text-sm">
-            <Avatar className="size-10 sm:size-13">
-              <AvatarImage
-                src={
-                  trip.driver.avatar
-                    ? trip.driver.avatar
-                    : "https://github.com/shadcn.png"
-                }
-              />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            <Link to={`/user/${trip?.driver?.id}`}>
+              <Avatar className="size-10 sm:size-13">
+                <AvatarImage
+                  src={
+                    trip.driver.avatar
+                      ? trip.driver.avatar
+                      : "https://github.com/shadcn.png"
+                  }
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </Link>
             <div className="flex flex-col ml-2">
               <span className="text-md sm:text-xl  font-bold">
                 {trip.driver.name}
@@ -75,7 +97,7 @@ function TripsCard({ trip }) {
           <div className="flex flex-col sm:flex-row sm:justify-between sm:gap-10">
             <span>{trip.carColor}</span>
             <span className="border-2 border-gray-400 px-2 rounded-md">
-              {trip.carNumber ? trip.carNumber : "Bo'sh"}
+              {trip.numberCar ? trip.numberCar : "Bo'sh"}
             </span>
           </div>
         </div>
@@ -111,13 +133,13 @@ function TripsCard({ trip }) {
         </p>
         <div className="w-full flex gap-3">
           <button
-            onClick={handleClick}
+            onClick={handleClickBron}
             className="bg-green-700 h-10 text-sm  rounded-2xl text-white w-full"
           >
             Bron qilish
           </button>
           <button
-            onClick={handleClick}
+            onClick={handleClickPrice}
             className="w-full bg-white h-10 text-sm  border-green-700 text-green-700  border-2 rounded-2xl"
           >
             Narx taklif qilish
@@ -155,16 +177,18 @@ function TripsCard({ trip }) {
 
           {/* Driver */}
           <div className="flex items-center gap-1 text-sm">
-            <Avatar>
-              <AvatarImage
-                src={
-                  trip.driver.avatar
-                    ? trip.driver.avatar
-                    : "https://github.com/shadcn.png"
-                }
-              />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            <Link to={`/user/${trip?.driver?.id}`}>
+              <Avatar>
+                <AvatarImage
+                  src={
+                    trip.driver.avatar
+                      ? trip.driver.avatar
+                      : "https://github.com/shadcn.png"
+                  }
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </Link>
             <span>{trip.driver.name}</span>
             <span>⭐ {trip.driver.rating}</span>
           </div>
