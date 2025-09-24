@@ -60,7 +60,7 @@ function Chats() {
     <Card className="h-full border py-0 relative rounded-3xl overflow-hidden shadow-sm">
       {/* User List */}
       <CardContent className="flex px-0 relative h-full bg-gradient-to-br from-green-50 to-blue-50">
-        <div className="flex flex-col w-28 sm:w-64 border-r bg-white/70 backdrop-blur-sm">
+        <div className="flex flex-col w-14 sm:w-64 border-r bg-white/70 backdrop-blur-sm">
           {chats.map((c) => (
             <Tooltip key={`${c.trip_id}-${c.chat_partner_id}`}>
               <TooltipTrigger
@@ -105,7 +105,7 @@ function Chats() {
 
         {/* Chat Window */}
         <div className=" flex flex-col bg-white overflow-y-clip w-full">
-          <div className="border-b px-6 py-4 flex items-center gap-3 bg-gradient-to-r from-green-100 to-blue-100 sticky top-0 z-10">
+          <div className="border-b px-3 sm:px-6 py-3 sm:py-4 flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-green-100 to-blue-100 sticky top-0 z-10">
             {selectedChat ? (
               <>
                 <Avatar className="size-8 sm:size-11 ring-2 ring-white shadow">
@@ -123,14 +123,14 @@ function Chats() {
               </div>
             )}
           </div>
-          <div className="px-6 py-6 pb-28 overflow-y-scroll flex flex-col gap-3 h-[calc(100vh-260px)] bg-white/60">
+          <div className="px-3 sm:px-6 py-4 sm:py-6 pb-24 sm:pb-28 overflow-y-scroll flex flex-col gap-2 sm:gap-3 h-[calc(100vh-230px)] sm:h-[calc(100vh-260px)] bg-white/60">
             {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex ${msg.sender_id !== selected.receiverId ? "justify-end" : "justify-start"}`}
               >
                 <span
-                  className={`inline-block text-sm sm:text-base px-4 py-2 rounded-3xl max-w-[70%] shadow ${
+                  className={`inline-block text-xs sm:text-base px-3 sm:px-4 py-2 rounded-3xl max-w-[80%] sm:max-w-[70%] shadow ${
                     msg.sender_id !== selected.receiverId
                       ? "bg-green-600 text-white"
                       : "bg-white text-gray-900 border"
@@ -142,19 +142,19 @@ function Chats() {
             ))}
             <div ref={chatEndRef} />
           </div>
-          <div className="px-4 py-3 border-t flex items-center gap-2 bg-white sticky bottom-0 w-full shadow-[0_-6px_16px_-12px_rgba(0,0,0,0.2)]">
+          <div className="px-2 sm:px-4 py-2 sm:py-3 border-t flex items-center gap-2 bg-white sticky bottom-0 w-full shadow-[0_-6px_16px_-12px_rgba(0,0,0,0.2)]">
             <Input
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder={t("chats.placeholder")}
-              className="px-4 py-3 text-sm sm:text-base rounded-full border focus:outline-none focus:ring-2 focus:ring-green-300 w-full"
+              className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-base rounded-full border focus:outline-none focus:ring-2 focus:ring-green-300 w-full"
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               disabled={!selected.tripId || !selected.receiverId}
             />
             <Button
               onClick={handleSend}
-              className="sm:px-6 sm:py-3 px-4 py-3 text-sm rounded-full bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow"
+              className="px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm rounded-full bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow"
               type="button"
               disabled={!selected.tripId || !selected.receiverId}
             >

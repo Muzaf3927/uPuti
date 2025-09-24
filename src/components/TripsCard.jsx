@@ -105,20 +105,21 @@ function TripsCard({ trip }) {
   return (
     <>
       <Card className="shadow-sm rounded-3xl bg-white/80 backdrop-blur-sm">
-        <CardContent className="p-4 sm:p-5 flex flex-col gap-3">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
-            <div className="flex items-center gap-2 text-green-700 font-bold text-sm sm:text-lg">
+        <CardContent className="p-3 sm:p-4 flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-2 text-green-700 font-bold text-sm sm:text-lg">
+            <div className="flex items-center gap-2 min-w-0">
               <MapPin className="text-green-600" />
-              <span>{trip.from_city}</span>
-              <ArrowRight size={18} />
-              <span>{trip.to_city}</span>
+              <span className="truncate max-w-[60vw] sm:max-w-none">{trip.from_city}</span>
+              <Route className="text-green-600" />
+              <span className="truncate max-w-[60vw] sm:max-w-none">{trip.to_city}</span>
             </div>
-            <div className="text-base sm:text-2xl font-extrabold text-gray-900 whitespace-nowrap">
+            {/* Price near route on desktop */}
+            <span className="hidden sm:inline-block font-extrabold text-gray-900 whitespace-nowrap text-lg">
               {Number(trip.price).toLocaleString()} сум
-            </div>
+            </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-sm">
             <div className="flex items-center gap-1 text-gray-700">
               <Calendar size={16} /> {trip.date}
             </div>
@@ -131,8 +132,16 @@ function TripsCard({ trip }) {
             <div className="flex items-center gap-1 text-gray-700">
               <Car size={16} /> {trip.carModel}
             </div>
-            <div className="flex items-center gap-1 text-gray-700">
-              <span className="inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
+            <div className="col-span-2 sm:col-span-2 flex items-center justify-between text-gray-700">
+              {/* Desktop: only car number on the left */}
+              <span className="hidden sm:inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
+              {/* Mobile: number and price sit next to each other */}
+              <div className="flex sm:hidden items-center gap-2">
+                <span className="inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
+                <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm">{Number(trip.price).toLocaleString()} сум</span>
+              </div>
+              {/* Filler to keep structure consistent */}
+              <span className="hidden sm:inline-block" />
             </div>
           </div>
 
@@ -156,7 +165,7 @@ function TripsCard({ trip }) {
             </div>
           ) : null}
 
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
             {trip?.my_booking ? (
               <button
                 onClick={handleCancelBooking}

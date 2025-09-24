@@ -143,9 +143,9 @@ function MyTripsCard({ trip }) {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
           <div className="flex items-center gap-2 text-green-700 font-bold text-sm sm:text-lg">
             <MapPin className="text-green-600" />
-            <span>{trip.from_city}</span>
-            <ArrowRight size={18} />
-            <span>{trip.to_city}</span>
+            <span className="truncate max-w-[70vw] sm:max-w-none">{trip.from_city}</span>
+            <Route className="text-green-600" />
+            <span className="truncate max-w-[70vw] sm:max-w-none">{trip.to_city}</span>
           </div>
           <div className="text-base sm:text-2xl font-extrabold text-gray-900 whitespace-nowrap">
             {Number(trip.price).toLocaleString()} сум

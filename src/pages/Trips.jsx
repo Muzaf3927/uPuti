@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import TripsCard from "@/components/TripsCard";
 
 // icons
-import { Car, MapPin, Route, Search } from "lucide-react";
+import { Car, MapPin, Route, Search, ChevronLeft, ChevronRight } from "lucide-react";
 
 // shad cn
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -47,14 +47,16 @@ function Trips() {
   });
 
   const [filteredUrl, setFilteredUrl] = useState("");
+  const [allPage, setAllPage] = useState(1);
+  const [myPage, setMyPage] = useState(1);
+  const ALL_PER_PAGE = 10;
+  const MY_PER_PAGE = 5;
 
-  const { data, isLoading, error, refetch } = useGetData(
-    `/trips${
-      searchFilters.from
-        ? `?from_city=${searchFilters.from}&to_city=${searchFilters.to}`
-        : ""
-    }`
-  );
+  const baseQuery = searchFilters.from
+    ? `?from_city=${searchFilters.from}&to_city=${searchFilters.to}`
+    : "?";
+  const allTripsUrl = `/trips${baseQuery}${baseQuery.includes("?") && baseQuery !== "?" ? "&" : ""}page=${allPage}&per_page=${ALL_PER_PAGE}`;
+  const { data, isLoading, error, refetch } = useGetData(allTripsUrl);
 
   //
 
@@ -89,7 +91,7 @@ function Trips() {
     isLoading: myTripsLoading,
     error: myTripsError,
     refetch: myTripsRefetch,
-  } = useGetData("/my-trips");
+  } = useGetData(`/my-trips?page=${myPage}&per_page=${MY_PER_PAGE}`);
 
   const tripPostMutation = usePostData("/trip");
 
@@ -307,6 +309,20 @@ function Trips() {
                         <TripsCard trip={trip} key={trip.id} />
                       ))}
               </div>
+              <div className="flex items-center justify-center gap-3 px-4 py-2">
+                <Button variant="outline" disabled={allPage === 1} onClick={() => setAllPage((p) => Math.max(1, p - 1))} aria-label="Prev page">
+                  <ChevronLeft />
+                </Button>
+                <span className="text-sm">{allPage}</span>
+                <Button
+                  variant="outline"
+                  disabled={Array.isArray(data?.data) && data.data.length < ALL_PER_PAGE}
+                  onClick={() => setAllPage((p) => p + 1)}
+                  aria-label="Next page"
+                >
+                  <ChevronRight />
+                </Button>
+              </div>
             </TabsContent>
             <TabsContent value="myTrips">
               {myTripsLoading ? (
@@ -327,14 +343,30 @@ function Trips() {
                   </Button>
                 </>
               ) : (
-                <div className="p-4 space-y-4">
-                  {myTrips &&
-                    myTrips.trips
-                      .filter((item) => item.status !== "completed")
-                      .map((item) => (
-                        <MyTripsCard trip={item} key={item.id} />
-                      ))}
-                </div>
+                <>
+                  <div className="p-4 space-y-4">
+                    {myTrips &&
+                      myTrips.trips
+                        .filter((item) => item.status !== "completed")
+                        .map((item) => (
+                          <MyTripsCard trip={item} key={item.id} />
+                        ))}
+                  </div>
+                  <div className="flex items-center justify-center gap-3 px-4 py-2">
+                    <Button variant="outline" disabled={myPage === 1} onClick={() => setMyPage((p) => Math.max(1, p - 1))} aria-label="Prev page">
+                      <ChevronLeft />
+                    </Button>
+                    <span className="text-sm">{myPage}</span>
+                    <Button
+                      variant="outline"
+                      disabled={Array.isArray(myTrips?.trips) && myTrips.trips.length < MY_PER_PAGE}
+                      onClick={() => setMyPage((p) => p + 1)}
+                      aria-label="Next page"
+                    >
+                      <ChevronRight />
+                    </Button>
+                  </div>
+                </>
               )}
             </TabsContent>
           </Tabs>
