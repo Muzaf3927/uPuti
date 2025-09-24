@@ -14,9 +14,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useGetData, usePostData, postData } from "@/api/api";
+import { useI18n } from "@/app/i18n.jsx";
 import { toast } from "sonner";
 
 function Requests() {
+  const { t } = useI18n();
   const { data: mineRes, isPending: mineLoading, error: mineError, refetch: refetchMine } = useGetData(
     "/bookings/pending/mine"
   );
@@ -54,18 +56,18 @@ function Requests() {
   return (
     <Tabs defaultValue="allTrips" className="w-full">
       <TabsList className="px-2 w-full  mb-6">
-        <TabsTrigger value="allTrips">Men yuborgan so'rovlar</TabsTrigger>
-        <TabsTrigger value="myTrips">Menga kelgan so'rovlar</TabsTrigger>
+        <TabsTrigger value="allTrips">{t("requests.mineTab")}</TabsTrigger>
+        <TabsTrigger value="myTrips">{t("requests.toMeTab")}</TabsTrigger>
       </TabsList>
       <TabsContent value="allTrips">
         <Card className="bg-gray-500/5">
           <CardContent className="flex flex-col gap-5 sm:py-6">
             {mineLoading ? (
-              <div>Yuklanmoqda...</div>
+              <div>{t("requests.loading")}</div>
             ) : mineError ? (
               <div className="text-red-600">Xatolik: {mineError.message}</div>
             ) : mine.length === 0 ? (
-              <div>Hozircha yuborgan so'rovlaringiz yo'q.</div>
+              <div>{t("requests.emptyMine")}</div>
             ) : (
               mine.map((b) => (
                 <div key={b.id} className="bg-green-500/5 border border-green-100 p-2 sm:p-5 rounded-2xl">
@@ -79,14 +81,20 @@ function Requests() {
                     <p>
                       {b.trip?.date} • {b.trip?.time}
                     </p>
-                    <span className="bg-green-700 text-white py-1 px-2 rounded-2xl">Kutilmoqda</span>
+                    <span className="bg-green-700 text-white py-1 px-2 rounded-2xl">{t("requests.pending")}</span>
                   </div>
                   <div className="flex justify-between items-center mt-2 text-sm">
-                    <span>{b.seats} ta o'rin</span>
+                    <span>
+                      {b.seats} {t("requests.seats")}
+                    </span>
                     {b.offered_price ? (
-                      <span>Taklif: {b.offered_price} so'm</span>
+                      <span>
+                        {t("requests.offer")}: {b.offered_price} сум
+                      </span>
                     ) : (
-                      <span>Narx: {b.trip?.price}</span>
+                      <span>
+                        {t("requests.price")}: {b.trip?.price} сум
+                      </span>
                     )}
                   </div>
                   {b.comment ? (
@@ -104,11 +112,11 @@ function Requests() {
         <Card className="bg-gray-500/5">
           <CardContent className="flex flex-col gap-5 sm:py-6">
             {toMeLoading ? (
-              <div>Yuklanmoqda...</div>
+              <div>{t("requests.loading")}</div>
             ) : toMeError ? (
               <div className="text-red-600">Xatolik: {toMeError.message}</div>
             ) : toMe.length === 0 ? (
-              <div>Hozircha sizning safarlarga so'rovlar yo'q.</div>
+              <div>{t("requests.emptyToMe")}</div>
             ) : (
               toMe.map((b) => (
                 <div key={b.id} className="bg-green-500/5 border border-green-100 p-2 sm:p-5 rounded-2xl">
@@ -122,7 +130,7 @@ function Requests() {
                         <h2 className="font-bold text-green-700">{b.user?.name || "Foydalanuvchi"}</h2>
                       </div>
                     </div>
-                    <p className="bg-green-700 text-white py-1 px-2 rounded-2xl text-sm sm:text-md">Kutilmoqda</p>
+                    <p className="bg-green-700 text-white py-1 px-2 rounded-2xl text-sm sm:text-md">{t("requests.pending")}</p>
                   </div>
                   <div className="bg-white/70 border border-green-100 p-2 sm:p-4 rounded-2xl mt-2">
                     <h3 className="flex items-center font-bold text-green-700 text-sm">
@@ -136,9 +144,13 @@ function Requests() {
                         {b.trip?.date} • {b.trip?.time}
                       </p>
                       {b.offered_price ? (
-                        <span>Taklif: {b.offered_price} so'm</span>
+                        <span>
+                          {t("requests.offer")}: {b.offered_price} сум
+                        </span>
                       ) : (
-                        <span>Narx: {b.trip?.price}</span>
+                        <span>
+                          {t("requests.price")}: {b.trip?.price} сум
+                        </span>
                       )}
                     </div>
                     {b.comment ? (
@@ -150,13 +162,13 @@ function Requests() {
                       onClick={() => handleConfirm(b.id)}
                       className="w-full flex justify-center items-center gap-2 bg-green-700 text-white rounded-3xl py-2 hover:shadow-[0px_54px_55px_theme(colors.green.700/0.25),0px_-12px_30px_theme(colors.green.700/0.12),0px_4px_6px_theme(colors.green.700/0.12),0px_12px_13px_theme(colors.green.700/0.17),0px_-3px_5px_theme(colors.green.700/0.09)] transition-all duration-300 cursor-pointer"
                     >
-                      <Check size={16} /> Roziman
+                      <Check size={16} /> {t("requests.accept")}
                     </button>
                     <button
                       onClick={() => handleDecline(b.id)}
-                      className="w-full flex justify-center items-center gap-2 border border-amber-500 text-amber-500 rounded-3xl py-2 hover:shadow-[0px_-12px_30px_theme(colors.amber.500/0.12),0px_4px_6px_theme(colors.amber.500/0.12),0px_12px_13px_theme(colors.amber.500/0.17),0px_-3px_5px_theme(colors.amber.500/0.09)]  transition-all duration-300 cursor-pointer"
+                      className="w/full flex justify-center items-center gap-2 border border-amber-500 text-amber-500 rounded-3xl py-2 hover:shadow-[0px_-12px_30px_theme(colors.amber.500/0.12),0px_4px_6px_theme(colors.amber.500/0.12),0px_12px_13px_theme(colors.amber.500/0.17),0px_-3px_5px_theme(colors.amber.500/0.09)]  transition-all duration-300 cursor-pointer"
                     >
-                      <X size={16} /> Bekor qilish
+                      <X size={16} /> {t("requests.decline")}
                     </button>
                   </div>
                 </div>

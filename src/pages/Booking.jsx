@@ -10,13 +10,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 
 import { useGetData } from "@/api/api";
+import { useI18n } from "@/app/i18n";
 
 function TripBookingsList({ tripId }) {
+  const { t } = useI18n();
   const { data, isLoading, error } = useGetData(`/trips/${tripId}/bookings`);
-  if (isLoading) return <div className="text-sm">Yuklanmoqda...</div>;
+  if (isLoading) return <div className="text-sm">{t("booking.loading")}</div>;
   if (error) return <div className="text-sm text-red-600">Xatolik: {error.message}</div>;
   const bookings = data?.bookings || [];
-  if (bookings.length === 0) return <div className="text-sm">Hali bronlar yo'q.</div>;
+  if (bookings.length === 0) return <div className="text-sm">{t("booking.none")}</div>;
   return (
     <div className="flex flex-col gap-3 mt-3">
       {bookings.map((b) => (
@@ -37,7 +39,7 @@ function TripBookingsList({ tripId }) {
             to={`/chats?tripId=${tripId}&receiverId=${b.user?.id}`}
             className="inline-flex items-center gap-2 text-green-700 border-2 border-green-700 px-3 py-1 rounded-2xl hover:bg-green-700 hover:text-white transition"
           >
-            <MessageCircle size={16} /> Yo'lovchiga yozish
+            <MessageCircle size={16} /> {t("booking.writePassenger")}
           </Link>
         </div>
       ))}
@@ -60,13 +62,13 @@ function Booking() {
   return (
     <>
       <Tabs defaultValue="fromMe" className="">
-        <TabsList className="w-full">
+        <TabsList className="w-full rounded-2xl bg-white/70 backdrop-blur-sm">
           <TabsTrigger value="fromMe">Mening bronlarim</TabsTrigger>
           <TabsTrigger value="toMe">Mening safarımga bronlar</TabsTrigger>
         </TabsList>
         <TabsContent value="fromMe">
-          <Card>
-            <CardContent className="flex flex-col gap-4 py-6">
+          <Card className="rounded-3xl shadow-sm">
+            <CardContent className="flex flex-col gap-4 py-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
               {myBookingsLoading ? (
                 <div>Yuklanmoqda...</div>
               ) : myBookingsError ? (
@@ -75,7 +77,7 @@ function Booking() {
                 <div>Hali bronlaringiz yo'q.</div>
               ) : (
                 myBookings.map((b) => (
-                  <div key={b.id} className="bg-green-500/5 border border-green-100 p-4 rounded-2xl">
+                  <div key={b.id} className="bg-white/80 backdrop-blur-sm border border-green-100 p-4 rounded-2xl shadow-sm">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Avatar className="size-8 sm:size-10">
@@ -102,9 +104,9 @@ function Booking() {
                     {b.comment ? <div className="text-sm text-gray-700 mt-1">{b.comment}</div> : null}
                     <Link
                       to={`/chats?tripId=${b.trip?.id}&receiverId=${b.trip?.driver?.id}`}
-                      className="mt-3 inline-flex items-center justify-center gap-2 border-2 rounded-2xl py-1 px-3 border-green-700 text-green-700 hover:text-white hover:bg-green-700 transition-all duration-300"
+                      className="mt-3 inline-flex items-center justify-center gap-2 border-2 rounded-2xl py-1 px-3 border-green-700 text-green-700 hover:text-white hover:bg-green-700 transition-all duration-300 shadow"
                     >
-                      <MessageCircle size={16} /> Haydovchiga yozish
+                      <MessageCircle size={16} /> {t("booking.writeDriver")}
                     </Link>
                   </div>
                 ))
@@ -113,8 +115,8 @@ function Booking() {
           </Card>
         </TabsContent>
         <TabsContent value="toMe">
-          <Card>
-            <CardContent className="flex flex-col gap-4 py-6">
+          <Card className="rounded-3xl shadow-sm">
+            <CardContent className="flex flex-col gap-4 py-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
               {myTripsLoading ? (
                 <div>Yuklanmoqda...</div>
               ) : myTripsError ? (
@@ -123,7 +125,7 @@ function Booking() {
                 <div>Hali siz yaratgan safarlar yo'q.</div>
               ) : (
                 myTrips.map((t) => (
-                  <div key={t.id} className="border rounded-2xl p-4">
+                  <div key={t.id} className="border rounded-2xl p-4 bg-white/80 backdrop-blur-sm shadow-sm">
                     <div className="flex items-center justify-between">
                       <div className="font-semibold text-green-700">
                         {t.from_city} <ArrowRight size={14} className="inline" /> {t.to_city}
@@ -131,7 +133,7 @@ function Booking() {
                       </div>
                       <button
                         onClick={() => toggleTrip(t.id)}
-                        className="text-sm border rounded-xl px-2 py-1"
+                        className="text-sm border rounded-xl px-2 py-1 bg-white hover:bg-green-50"
                       >
                         {expandedTripIds.includes(t.id) ? (
                           <span className="inline-flex items-center gap-1">Yopish <ChevronUp size={14} /></span>

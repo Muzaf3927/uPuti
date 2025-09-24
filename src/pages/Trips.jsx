@@ -28,11 +28,13 @@ import { InputMask } from "@react-input/mask";
 import { Textarea } from "@/components/ui/textarea";
 
 import { useGetData, usePostData } from "@/api/api";
+import { useI18n } from "@/app/i18n.jsx";
 import TripsCardSkeleton from "@/components/TripsCardSkeleton";
 import { toast } from "sonner";
 import MyTripsCard from "@/components/MyTripsCard";
 
 function Trips() {
+  const { t } = useI18n();
   const [dialog, setDialog] = useState(false);
   const [searchDialog, setSearchDialog] = useState(false);
   const [dialogBron, setDialogBron] = useState(false);
@@ -143,14 +145,12 @@ function Trips() {
           <DialogTrigger className="w-full cursor-pointer">
             <div className="border-2 w-full py-2 sm:px-10 sm:py-4 bg-gray-500/6 rounded-3xl flex flex-col items-center">
               <Route className="md:size-6 size-4" />
-              <h4 className="text-sm md:text-md">Safar yaratish</h4>
+              <h4 className="text-sm md:text-md">{t("trips.create")}</h4>
             </div>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle className="text-center text-green-600 font-bold">
-                Safar yaratish
-              </DialogTitle>
+              <DialogTitle className="text-center text-green-600 font-bold">{t("trips.create")}</DialogTitle>
             </DialogHeader>
             <form
               onSubmit={handleSubmit}
@@ -272,13 +272,13 @@ function Trips() {
           <DialogTrigger className="w-full cursor-pointer">
             <div className="border-2 w-full py-2 sm:px-10 sm:py-4 bg-gray-500/6 rounded-3xl flex flex-col items-center">
               <Search className="md:size-6 size-4" />
-              <h4 className="text-sm md:text-md">Safar qidirish</h4>
+              <h4 className="text-sm md:text-md">{t("trips.search")}</h4>
             </div>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">
-                Safar qidirish
+                {t("trips.search")}
               </DialogTitle>
               <form onSubmit={handleSearch} className="flex flex-col gap-3">
                 <div className="grid w-full items-center gap-3">
@@ -340,12 +340,12 @@ function Trips() {
           </DialogContent>
         </Dialog>
       </div>
-      <Card className="px-0">
-        <CardContent className="px-0">
+      <Card className="px-0 rounded-3xl shadow-sm">
+        <CardContent className="px-0 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
           <Tabs defaultValue="allTrips" className="w-full">
-            <TabsList className="px-2 w-full">
-              <TabsTrigger value="allTrips">Barcha safarlar</TabsTrigger>
-              <TabsTrigger value="myTrips">Mening safarlarim</TabsTrigger>
+            <TabsList className="px-2 w-full rounded-2xl bg-white/70 backdrop-blur-sm">
+              <TabsTrigger value="allTrips">{t("trips.all")}</TabsTrigger>
+              <TabsTrigger value="myTrips">{t("trips.mine")}</TabsTrigger>
             </TabsList>
             <TabsContent value="allTrips">
               <div className="p-4 space-y-4">
@@ -360,34 +360,33 @@ function Trips() {
                       ))}
               </div>
             </TabsContent>
-            <TabsContent
-              value="myTrips"
-              className="flex flex-col gap-2.5 items-center justify-center py-10"
-            >
+            <TabsContent value="myTrips">
               {myTripsLoading ? (
                 Array(2)
                   .fill(1)
                   .map((_, index) => <TripsCardSkeleton key={index} />)
               ) : myTrips && myTrips.trips.length === 0 ? (
                 <>
-                  <div className="mt-10 bg-gray-500/7 rounded-full w-20 h-20 flex items-center justify-center">
+                  <div className="mt-10 bg-white/80 backdrop-blur-sm shadow rounded-full w-20 h-20 flex items-center justify-center">
                     <Car size={30} />
                   </div>
-                  <h2>Hozirda hali sizda safarlar yo'q.</h2>
+                  <h2>{t("trips.empty")}</h2>
                   <Button
                     onClick={() => setDialog(true)}
-                    className="text-white bg-green-600 rounded-2xl cursor-pointer"
+                    className="text-white bg-green-600 rounded-2xl cursor-pointer shadow"
                   >
-                    Safar yaratsih
+                    {t("trips.create")}
                   </Button>
                 </>
               ) : (
-                myTrips &&
-                myTrips.trips
-                  .filter((item) => item.status !== "completed")
-                  .map((item) => (
-                    <MyTripsCard trip={item} key={item.id} />
-                  ))
+                <div className="p-4 space-y-4">
+                  {myTrips &&
+                    myTrips.trips
+                      .filter((item) => item.status !== "completed")
+                      .map((item) => (
+                        <MyTripsCard trip={item} key={item.id} />
+                      ))}
+                </div>
               )}
             </TabsContent>
           </Tabs>

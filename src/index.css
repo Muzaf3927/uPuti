@@ -127,6 +127,6 @@ body,
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground bg-[radial-gradient(1000px_500px_at_10%_-20%,#d1fae5_0%,transparent_60%),radial-gradient(800px_400px_at_110%_20%,#bfdbfe_0%,transparent_60%)];
   }
 }

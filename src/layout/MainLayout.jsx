@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
 import { Bell, Car, CircleUser, LogOut, UserCircle2Icon } from "lucide-react";
+import { useI18n } from "@/app/i18n.jsx";
 import { useDispatch } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 import { logout } from "@/app/userSlice/userSlice";
@@ -26,6 +27,7 @@ function getNthWord(str, n) {
 
 function MainLayout() {
   const dispatch = useDispatch();
+  const { lang, setLang } = useI18n();
 
   const logoutMutation = usePostData("/logout");
   const { data, isLoading, error, refetch } = useGetData("/notifications");
@@ -50,21 +52,29 @@ function MainLayout() {
   };
   return (
     <div className="flex flex-col h-full ">
-      <header className="shadow-[0_4px_6px_-1px_rgba(34,197,94,0.1)] h-20">
+      <header className="h-20 sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b">
         <div className="flex justify-between items-center py-3 custom-container overflow-hidden">
-          <div className="flex gap-3">
-            <Link className="w-15 h-15 bg-green-700 rounded-2xl p-3" to="/">
-              <Car className="text-white size-8" />
+          <div className="flex gap-3 items-center">
+            <Link className="rounded-2xl p-0" to="/">
+              <img src="/logo.png" alt="UPuti" className="h-12 sm:h-14 w-auto object-contain" />
             </Link>
             <div>
-              <h4 className="text-2xl font-bold text-green-700">RideShare</h4>
-              <p>Salom, {userData && userData.name}</p>
+              <h4 className="text-2xl font-bold text-green-700">UPuti</h4>
+              <p className="text-sm text-gray-600">Salom, {userData && userData.name}</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            <button
+              type="button"
+              onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
+              className="px-3 py-1 rounded-full border bg-white/80 hover:bg-green-50 text-sm"
+              title={lang === "uz" ? "RU" : "UZ"}
+            >
+              {lang === "uz" ? "🇷🇺 RU" : "🇺🇿 UZ"}
+            </button>
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Bell className="cursor-pointer" />
+                <Bell className="cursor-pointer text-gray-700 hover:text-green-600 transition" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 {data && data.notifications.map(() => <div>Bildirishnoma</div>)}
@@ -78,7 +88,7 @@ function MainLayout() {
 
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <CircleUser className="cursor-pointer" />
+                <CircleUser className="cursor-pointer text-gray-700 hover:text-green-600 transition" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
@@ -99,7 +109,7 @@ function MainLayout() {
       <div className="custom-container my-5">
         <Navbar />
       </div>
-      <main className="grow custom-container">
+      <main className="grow custom-container mb-10">
         <Outlet />
       </main>
     </div>

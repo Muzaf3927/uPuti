@@ -21,12 +21,17 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "./ui/button";
+import { useI18n } from "@/app/i18n.jsx";
+import { useGetData } from "@/api/api";
 import { usePostData, useDeleteData, postData } from "@/api/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 function MyTripsCard({ trip }) {
+  const { t } = useI18n();
   const [editOpen, setEditOpen] = useState(false);
+  const [requestsOpen, setRequestsOpen] = useState(false);
+  const [bookingsOpen, setBookingsOpen] = useState(false);
   const [form, setForm] = useState({
     from_city: trip.from_city || "",
     to_city: trip.to_city || "",
@@ -98,62 +103,107 @@ function MyTripsCard({ trip }) {
   const handleComplete = async () => {
     try {
       await postData(`/trips/${trip.id}/complete`, {});
-      toast.success("Safar yakunlandi.");
+      toast.success(t("myTripsCard.completeToast"));
       queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
       queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
     } catch (err) {
-      toast.error("Yakunlashda xatolik.");
+      toast.error(t("myTripsCard.completeError"));
+    }
+  };
+
+  const { data: tripBookingsRes, isPending: tripBookingsLoading, error: tripBookingsError } = useGetData(`/trips/${trip.id}/bookings`);
+  const tripBookings = tripBookingsRes?.bookings || [];
+  const pendingRequests = tripBookings.filter((b) => b.status === "pending");
+  const confirmedBookings = tripBookings.filter((b) => b.status === "confirmed");
+
+  const handleConfirm = async (bookingId) => {
+    try {
+      await postData(`/bookings/${bookingId}`, { status: "confirmed" });
+      toast.success(t("myTripsCard.acceptedToast"));
+      queryClient.invalidateQueries({ queryKey: ["data", `/trips/${trip.id}/bookings`] });
+      queryClient.invalidateQueries({ queryKey: ["data", "/bookings/pending/to-my-trips"] });
+    } catch (e) {
+      toast.error(t("requests.acceptError"));
+    }
+  };
+  const handleDecline = async (bookingId) => {
+    try {
+      await postData(`/bookings/${bookingId}`, { status: "declined" });
+      toast.success(t("myTripsCard.declinedToast"));
+      queryClient.invalidateQueries({ queryKey: ["data", `/trips/${trip.id}/bookings`] });
+      queryClient.invalidateQueries({ queryKey: ["data", "/bookings/pending/to-my-trips"] });
+    } catch (e) {
+      toast.error(t("requests.declineError"));
     }
   };
 
   return (
-    <Card className="shadow-md rounded-2xl px-2 ">
-      <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between">
-        <div className="flex flex-col gap-2">
-          {/* From → To */}
-          <div className="flex justify-between items-center mb-2">
-            <p className="text-lg font-bold flex items-center">
-              <MapPin className="text-green-400 mr-1" /> {trip.from_city}{" "}
-              <ArrowRight size={17} /> {trip.to_city}
-            </p>
+    <Card className="shadow-sm rounded-3xl bg-white/80 backdrop-blur-sm border border-green-100 w-full">
+      <CardContent className="p-4 sm:p-5 flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-green-700 font-bold text-base sm:text-lg">
+            <MapPin className="text-green-600" />
+            <span>{trip.from_city}</span>
+            <ArrowRight size={18} />
+            <span>{trip.to_city}</span>
           </div>
-
-          {/* Date / Time / Seats */}
-          <div className="flex items-center gap-4 text-sm text-gray-600 ">
-            <span className="flex items-center gap-1">
-              <Calendar size={16} /> {trip.date}
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock size={16} /> {trip.time}
-            </span>
-            <span className="flex items-center gap-1">
-              <Users size={16} /> {trip.seats} o'rindiq
-            </span>
+          <div className="text-lg sm:text-2xl font-extrabold text-gray-900">
+            {Number(trip.price).toLocaleString()} сум
           </div>
         </div>
-
-        <div className="text-right flex items-center gap-3 mt-4 sm:flex-col ss:relative">
-          <p className="sm:text-md md:text-3xl font-bold">{trip.price}</p>
-          {/* Status */}
-          <span className="inline-block sm:mt-2 text-xs px-3 py-1 rounded-full bg-green-600 text-white">
-            {trip.status}
-          </span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm text-gray-700">
+          <span className="flex items-center gap-1"><Calendar size={16} /> {trip.date}</span>
+          <span className="flex items-center gap-1"><Clock size={16} /> {trip.time}</span>
+          <span className="flex items-center gap-1"><Users size={16} /> {trip.seats} o'rindiq</span>
+          <span className="flex items-center gap-1"><Car size={16} /> {trip.carModel}</span>
         </div>
       </CardContent>
       <CardFooter className="w-full">
-        <div className="flex gap-3 items-center justify-end w-full">
-          <Button onClick={handleComplete} disabled={trip.status !== "active"}>
-            <span className="hidden sm:block">Yakunlash</span>{" "}
-            <CircleCheck />
-          </Button>
-          <Button onClick={handleDelete}>
-            <span className="hidden sm:block">O'chirish</span>
-            <Trash2 />
-          </Button>
-          <Button onClick={() => setEditOpen(true)}>
-            <span className="hidden sm:block">Tahrirlash</span>
-            <Pencil />
-          </Button>
+        <div className="w-full flex items-center justify-between gap-2">
+          {/* Left group: 3 text buttons */}
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => setRequestsOpen(true)}
+              className="h-10 px-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2"
+            >
+              <Mail className="size-4" />
+              <span className="text-sm">{t("myTripsCard.requests")}</span>
+            </Button>
+            <Button
+              onClick={() => setBookingsOpen(true)}
+              className="h-10 px-3 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-2"
+            >
+              <CircleCheck className="size-4" />
+              <span className="text-sm">{t("myTripsCard.bookings")}</span>
+            </Button>
+            <Button
+              onClick={handleComplete}
+              disabled={trip.status !== "active"}
+              className="h-10 px-3 rounded-full bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-300 disabled:text-gray-500 flex items-center gap-2"
+            >
+              <CircleCheck className="size-4" />
+              <span className="text-sm">{t("myTripsCard.complete")}</span>
+            </Button>
+          </div>
+          {/* Right group: 2 icon-only buttons */}
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => setEditOpen(true)}
+              className="h-10 w-10 rounded-full bg-white border hover:bg-gray-50 flex items-center justify-center"
+              aria-label={t("myTripsCard.edit")}
+              title={t("myTripsCard.edit")}
+            >
+              <Pencil className="size-5 text-gray-700" />
+            </Button>
+            <Button
+              onClick={handleDelete}
+              className="h-10 w-10 rounded-full bg-white border border-red-300 text-red-600 hover:bg-red-50 flex items-center justify-center"
+              aria-label={t("myTripsCard.delete")}
+              title={t("myTripsCard.delete")}
+            >
+              <Trash2 className="size-5" />
+            </Button>
+          </div>
         </div>
       </CardFooter>
 
@@ -217,6 +267,80 @@ function MyTripsCard({ trip }) {
               <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">Saqlash</Button>
             </div>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Requests Dialog */}
+      <Dialog open={requestsOpen} onOpenChange={setRequestsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>So'rovlar</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto">
+            {tripBookingsLoading ? (
+              <div>{t("myTripsCard.loading")}</div>
+            ) : tripBookingsError ? (
+              <div className="text-red-600">Xatolik: {tripBookingsError.message}</div>
+            ) : pendingRequests.length === 0 ? (
+              <div>{t("myTripsCard.noRequests")}</div>
+            ) : (
+              pendingRequests.map((b) => (
+                <div key={b.id} className="border rounded-2xl p-3 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="size-8">
+                      <AvatarImage src={b.user?.avatar || "https://github.com/shadcn.png"} />
+                      <AvatarFallback>U</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col text-sm">
+                      <span className="font-semibold">{b.user?.name || "Foydalanuvchi"}</span>
+                      <span>{b.seats} ta o'rin • {b.status}</span>
+                      {b.offered_price ? <span>Taklif: {b.offered_price} so'm</span> : null}
+                      {b.comment ? <span className="text-gray-600">{b.comment}</span> : null}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button onClick={() => handleConfirm(b.id)} className="h-8 text-xs bg-green-600 text-white rounded-full px-3">{t("requests.accept")}</Button>
+                    <Button onClick={() => handleDecline(b.id)} className="h-8 text-xs border border-amber-500 text-amber-600 bg-white rounded-full px-3">{t("requests.decline")}</Button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Bookings Dialog */}
+      <Dialog open={bookingsOpen} onOpenChange={setBookingsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Bronlar</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto">
+            {tripBookingsLoading ? (
+              <div>{t("myTripsCard.loading")}</div>
+            ) : tripBookingsError ? (
+              <div className="text-red-600">Xatolik: {tripBookingsError.message}</div>
+            ) : confirmedBookings.length === 0 ? (
+              <div>{t("myTripsCard.noBookings")}</div>
+            ) : (
+              confirmedBookings.map((b) => (
+                <div key={b.id} className="border rounded-2xl p-3 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="size-8">
+                      <AvatarImage src={b.user?.avatar || "https://github.com/shadcn.png"} />
+                      <AvatarFallback>U</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col text-sm">
+                      <span className="font-semibold">{b.user?.name || "Foydalanuvchi"}</span>
+                      <span>{b.seats} ta o'rin • {b.status}</span>
+                      {b.offered_price ? <span>Taklif: {b.offered_price} so'm</span> : null}
+                      {b.comment ? <span className="text-gray-600">{b.comment}</span> : null}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </Card>

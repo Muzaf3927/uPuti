@@ -9,13 +9,16 @@ import { store } from "./app/store";
 // others
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
+import { I18nProvider } from "./app/i18n.jsx";
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <I18nProvider>
+        <App />
+      </I18nProvider>
       <Toaster position="top-center" />
     </QueryClientProvider>
   </Provider>

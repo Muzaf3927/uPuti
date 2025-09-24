@@ -9,8 +9,10 @@ import { Input } from "@/components/ui/input";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { History as HistoryIcon, Star } from "lucide-react";
+import { useI18n } from "@/app/i18n.jsx";
 
 function History() {
+  const { t } = useI18n();
   const { data: asDriverRes, isPending: asDriverLoading, error: asDriverError } = useGetData("/trips/completed/mine");
   const { data: asPassengerRes, isPending: asPassengerLoading, error: asPassengerError } = useGetData("/trips/completed/as-passenger");
 
@@ -57,20 +59,20 @@ function History() {
   }, [asDriver]);
 
   const Empty = () => (
-    <Card className="flex flex-col items-center bg-gray-300/6  py-20">
+    <Card className="flex flex-col items-center bg-gradient-to-br from-gray-50 to-gray-100 py-20 rounded-3xl shadow-sm">
       <div className="rounded-full bg-gray-500/6 w-20 h-20 flex items-center justify-center">
         <HistoryIcon />
       </div>
-      <h2>Safarlar tarixi bo‘sh</h2>
+      <h2>{t("history.empty")}</h2>
     </Card>
   );
 
   const currency = (n) => `${Number(n || 0).toLocaleString("ru-RU")} сум`;
 
   const TripItem = ({ t, showEarn = false, role = "driver" }) => (
-    <div className="border rounded-2xl p-4 flex items-center justify-between">
+    <div className="border rounded-2xl p-4 flex items-center justify-between bg-white/80 backdrop-blur-sm shadow-sm">
       <div className="flex items-center gap-3">
-        <Avatar className="size-8">
+        <Avatar className="size-8 ring-2 ring-white shadow">
           <AvatarImage src={t?.driver?.avatar || "https://github.com/shadcn.png"} />
           <AvatarFallback>U</AvatarFallback>
         </Avatar>
@@ -133,16 +135,16 @@ function History() {
 
   return (
     <Card>
-      <CardContent className="py-6">
+      <CardContent className="py-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
         <Tabs defaultValue="asDriver">
           <TabsList className="w-full">
-            <TabsTrigger value="asDriver">Mening tugagan safarlarim</TabsTrigger>
-            <TabsTrigger value="asPassenger">Men yo'lovchi bo'lgan</TabsTrigger>
+            <TabsTrigger value="asDriver">{t("history.driverTab")}</TabsTrigger>
+            <TabsTrigger value="asPassenger">{t("history.passengerTab")}</TabsTrigger>
           </TabsList>
           <TabsContent value="asDriver">
             {asDriver && asDriver.length > 0 ? (
-              <div className="mb-4 p-4 rounded-2xl border bg-green-50 text-green-800">
-                <div className="text-sm">Общий заработок</div>
+              <div className="mb-4 p-4 rounded-2xl border bg-white/80 backdrop-blur-sm text-green-800 shadow-sm">
+                <div className="text-sm">{t("history.totalEarn")}</div>
                 <div className="text-2xl font-bold">{currency(driverTotals.total)}</div>
               </div>
             ) : null}

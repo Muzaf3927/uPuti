@@ -20,11 +20,12 @@ import {
 import { Link } from "react-router-dom";
 
 import { useDeleteData, usePostData, postData } from "@/api/api";
+import { useI18n } from "@/app/i18n.jsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 function TripsCard({ trip }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const { t } = useI18n();
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [offerDialogOpen, setOfferDialogOpen] = useState(false);
   const [seats, setSeats] = useState(1);
@@ -103,195 +104,86 @@ function TripsCard({ trip }) {
 
   return (
     <>
-      {isOpen ? (
-    <Card
-      className="shadow-md rounded-2xl bg-green-300/5"
-      onClick={() => setIsOpen(false)}
-    >
-      <CardContent className="p-4 flex flex-col items-center gap-3">
-        <div className="flex justify-between items-center w-full">
-          {/* Driver */}
-          <div className="flex items-center gap-1 text-sm">
-            <Link to={`/user/${trip?.driver?.id}`}>
-              <Avatar className="size-10 sm:size-13">
-                <AvatarImage
-                  src={
-                    trip.driver.avatar
-                      ? trip.driver.avatar
-                      : "https://github.com/shadcn.png"
-                  }
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </Link>
-            <div className="flex flex-col ml-2">
-              <span className="text-md sm:text-xl  font-bold">
-                {trip.driver.name}
-              </span>
-              <span>⭐ {trip.driver.rating}</span>
+      <Card className="shadow-sm rounded-3xl bg-white/80 backdrop-blur-sm">
+        <CardContent className="p-4 sm:p-5 flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-green-700 font-bold text-base sm:text-lg">
+              <MapPin className="text-green-600" />
+              <span>{trip.from_city}</span>
+              <ArrowRight size={18} />
+              <span>{trip.to_city}</span>
+            </div>
+            <div className="text-lg sm:text-2xl font-extrabold text-gray-900">
+              {Number(trip.price).toLocaleString()} сум
             </div>
           </div>
-          <p className="inline-block mt-2 text-sm sm:text-md px-3 py-1 rounded-full bg-green-600 text-white">
-            {trip.status}
-          </p>
-        </div>
 
-        <div className="flex justify-between items-center p-3 sm:p-6 border-2 border-gray-400 bg-green-500/5 rounded-2xl text-green-700 w-full">
-          <div className="flex gap-3 items-center">
-            <div className="flex flex-col sm:flex-row sm:gap-3">
-              <Car className="size-8" />{" "}
-              <span className="font-bold text-sm sm:text-xl">
-                {trip.carModel}
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:gap-10">
-            <span>{trip.carColor}</span>
-            <span className="border-2 border-gray-400 px-2 rounded-md">
-              {trip.numberCar ? trip.numberCar : "Bo'sh"}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-2 w-full">
-          {/* From → To */}
-          <div className="flex justify-between items-center mb-2">
-            <p className="text-sm sm:text-lg font-bold flex items-center text-green-700">
-              <MapPin className="text-green-700 mr-1" /> {trip.from_city}{" "}
-              <ArrowRight size={17} /> {trip.to_city}
-            </p>
-          </div>
-
-          {/* Date / Time / Seats / Price*/}
-          <div className="grid grid-cols-2 items-center gap-4 text-sm sm:text-md text-green-600">
-            <span className="flex items-center gap-1">
-              <Calendar size={16} className="text-gray-400" /> {trip.date}
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock size={16} className="text-gray-400" /> {trip.time}
-            </span>
-            <span className="flex items-center gap-1">
-              <Users size={16} className="text-gray-400" /> {trip.seats}{" "}
-              o'rindiq
-            </span>
-            <p className="text-xs md:text-xl font-bold text-black">
-              {trip.price}
-            </p>
-          </div>
-        </div>
-        <p className="rounded-2xl text-sm p-2 sm:p-4 bg-white w-full">
-          {trip.note}
-        </p>
-        <div className="w-full flex gap-3">
-          {trip?.my_booking ? (
-            <button
-              onClick={handleCancelBooking}
-              disabled={trip?.my_booking?.can_cancel === false}
-              className="bg-red-600 disabled:bg-gray-300 disabled:text-gray-500 h-10 text-sm rounded-2xl text-white w-full"
-            >
-              Bekor qilish
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={openBookingDialog}
-                className="bg-green-700 h-10 text-sm  rounded-2xl text-white w-full"
-              >
-                Bron qilish
-              </button>
-              <button
-                onClick={openOfferDialog}
-                className="w-full bg-white h-10 text-sm  border-green-700 text-green-700  border-2 rounded-2xl"
-              >
-                Narx taklif qilish
-              </button>
-            </>
-          )}
-        </div>
-      </CardContent>
-        </Card>
-      ) : (
-        <Card
-      className="shadow-md rounded-2xl px-2 "
-      onClick={() => setIsOpen(true)}
-    >
-      <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between">
-        <div className="flex flex-col gap-2">
-          {/* From → To */}
-          <div className="flex justify-between items-center mb-2">
-            <p className="text-lg font-bold flex items-center">
-              <MapPin className="text-green-400 mr-1" /> {trip.from_city}{" "}
-              <ArrowRight size={17} /> {trip.to_city}
-            </p>
-          </div>
-
-          {/* Date / Time / Seats */}
-          <div className="flex items-center gap-4 text-sm text-gray-600 ">
-            <span className="flex items-center gap-1">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+            <div className="flex items-center gap-1 text-gray-700">
               <Calendar size={16} /> {trip.date}
-            </span>
-            <span className="flex items-center gap-1">
+            </div>
+            <div className="flex items-center gap-1 text-gray-700">
               <Clock size={16} /> {trip.time}
-            </span>
-            <span className="flex items-center gap-1">
-              <Users size={16} /> {trip.seats} o'rindiq
-            </span>
+            </div>
+            <div className="flex items-center gap-1 text-gray-700">
+              <Users size={16} /> {trip.seats} {t("tripsCard.seats")}
+            </div>
+            <div className="flex items-center gap-1 text-gray-700">
+              <Car size={16} /> {trip.carModel}
+            </div>
+            <div className="flex items-center gap-1 text-gray-700">
+              <span className="inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
+            </div>
           </div>
 
-          {/* Driver */}
-          <div className="flex items-center gap-1 text-sm">
+          <div className="flex items-center gap-3">
             <Link to={`/user/${trip?.driver?.id}`}>
-              <Avatar>
-                <AvatarImage
-                  src={
-                    trip.driver.avatar
-                      ? trip.driver.avatar
-                      : "https://github.com/shadcn.png"
-                  }
-                />
+              <Avatar className="size-9 ring-2 ring-white shadow">
+                <AvatarImage src={trip.driver.avatar ? trip.driver.avatar : "https://github.com/shadcn.png"} />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </Link>
-            <span>{trip.driver.name}</span>
-            <span>⭐ {trip.driver.rating}</span>
-          </div>
-        </div>
-
-        <div className="text-right flex items-center gap-3 sm:flex-col  ss:relative">
-          <p className="sm:text-md md:text-3xl font-bold">{trip.price}</p>
-          {trip?.my_booking ? (
-            <button
-              onClick={handleCancelBooking}
-              disabled={trip?.my_booking?.can_cancel === false}
-              className="text-xs px-3 py-1 rounded-full bg-red-600 text-white disabled:bg-gray-300 disabled:text-gray-500"
-            >
-              Bekor qilish
-            </button>
-          ) : (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={openBookingDialog}
-                className="text-xs px-3 py-1 rounded-full bg-green-600 text-white"
-              >
-                Bron qilish
-              </button>
-              <button
-                onClick={openOfferDialog}
-                className="text-xs px-3 py-1 rounded-full border-2 border-green-700 text-green-700 bg-white"
-              >
-                Narx taklif qilish
-              </button>
+            <div className="flex items-center gap-2 text-sm text-gray-800">
+              <span className="font-medium truncate max-w-[150px] sm:max-w-[220px]">{trip.driver.name}</span>
+              <span className="text-gray-500">•</span>
+              <span className="text-gray-600">⭐ {trip.driver.rating}</span>
             </div>
-          )}
-          {/* Status */}
-          <span className="inline-block sm:mt-2 text-xs px-3 py-1 rounded-full bg-green-600 text-white">
-            {trip.status}
-          </span>
-        </div>
-      </CardContent>
-        </Card>
-      )}
+          </div>
 
+          {trip.note ? (
+            <div className="text-xs sm:text-sm text-gray-700 bg-white rounded-2xl p-3 border">
+              {trip.note}
+            </div>
+          ) : null}
+
+          <div className="w-full grid grid-cols-2 gap-2">
+            {trip?.my_booking ? (
+              <button
+                onClick={handleCancelBooking}
+                disabled={trip?.my_booking?.can_cancel === false}
+                className="bg-red-600 disabled:bg-gray-300 disabled:text-gray-500 h-9 text-sm rounded-2xl text-white w-full"
+              >
+                {t("tripsCard.cancel")}
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={openBookingDialog}
+                  className="bg-green-700 h-9 text-sm rounded-2xl text-white w-full"
+                >
+                  {t("tripsCard.book")}
+                </button>
+                <button
+                  onClick={openOfferDialog}
+                  className="w-full bg-white h-9 text-sm border-green-700 text-green-700 border-2 rounded-2xl"
+                >
+                  {t("tripsCard.offer")}
+                </button>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
       {/* Booking Dialog */}
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
         <DialogContent onClick={(e) => e.stopPropagation()}>

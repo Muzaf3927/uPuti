@@ -67,14 +67,14 @@ function Profile() {
     <>
       <Link
         to="/"
-        className="flex items-center border-green-400 border rounded-2xl mb-5 w-40 p-1"
+        className="flex items-center border-green-400 border rounded-2xl mb-5 w-40 p-1 bg-white/80 backdrop-blur-sm shadow"
       >
         <ArrowLeft />
         Orqaga qaytish
       </Link>
-      <Card className="mx-auto w-full shadow-lg border border-green-500">
+      <Card className="mx-auto w-full shadow-sm border rounded-3xl bg-gradient-to-br from-green-50 to-blue-50">
         <CardHeader className="flex items-center gap-4 pb-2">
-          <Avatar className="h-16 w-16">
+          <Avatar className="h-16 w-16 ring-2 ring-white shadow">
             {data.avatar ? (
               <AvatarImage src={data.avatar} alt={data.name} />
             ) : (
@@ -84,7 +84,7 @@ function Profile() {
             )}
           </Avatar>
           <div className="flex-1">
-            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
               <span>{data.name || "No name"}</span>
               {data.is_verified && (
                 <Tooltip>
@@ -96,7 +96,7 @@ function Profile() {
               )}
             </CardTitle>
           </div>
-          <Button size="sm" variant="outline">
+          <Button size="sm" variant="outline" className="bg-white/80">
             Edit
           </Button>
         </CardHeader>
