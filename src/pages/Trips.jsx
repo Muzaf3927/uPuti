@@ -148,11 +148,12 @@ function Trips() {
               <h4 className="text-sm md:text-md">{t("trips.create")}</h4>
             </div>
           </DialogTrigger>
-          <DialogContent className="max-w-[95vw] sm:max-w-[760px] p-4 sm:p-6">
+          <DialogContent className="max-w-[95vw] sm:max-w-[760px] p-4 sm:p-6 max-h-[95vh]">
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">{t("trips.create")}</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto pr-1 max-h-[70vh]">
               <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="from">Qayerdan</Label>
                 <Input type="text" id="from" name="from" placeholder="Toshkent" />
@@ -201,7 +202,8 @@ function Trips() {
                 <Label htmlFor="note">Izoh</Label>
                 <Input type="text" id="note" name="note" placeholder="Qisqa izoh" />
               </div>
-              <div className="col-span-1 sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 w-full">
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 w-full">
                 <DialogClose asChild>
                   <Button type="button" className="rounded-2xl w-full h-10 text-sm">Bekor qilish</Button>
                 </DialogClose>

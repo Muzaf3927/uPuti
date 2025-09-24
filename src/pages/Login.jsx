@@ -16,8 +16,10 @@ import { Link } from "react-router-dom";
 import { InputMask } from "@react-input/mask";
 import { usePostData } from "@/api/api";
 import { toast } from "sonner";
+import { useI18n } from "@/app/i18n.jsx";
 
 function Login() {
+  const { t, lang, setLang } = useI18n();
   const [showPassword, setShowPassword] = useState(false);
 
   const loginMutation = usePostData("/login");
@@ -84,13 +86,19 @@ function Login() {
 
   return (
     <div className="py-10 px-2 flex gap-5 flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="flex items-center gap-5 text-green-700 font-bold text-3xl sm:text-4xl">
-        <span className="rounded-full inline-block text-white bg-green-700 size-15 sm:size-18 py-2">
-          <Car className="mx-auto size-12" />
-        </span>
-        RideShare
+      <h1 className="flex items-center justify-center text-green-700 font-bold">
+        <img src="/logo.png" alt="UPuti" className="h-20 sm:h-24 w-auto object-contain mix-blend-multiply" />
       </h1>
-      <p>Qulay safarlar uchun hamroh toping</p>
+      <div className="flex items-center justify-center gap-2">
+        <p className="text-center">{t("auth.slogan")}</p>
+        <button
+          type="button"
+          onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
+          className="ml-2 px-3 py-1 rounded-full border bg-white/80 hover:bg-green-50 text-xs"
+        >
+          {lang === "uz" ? "🇷🇺 RU" : "🇺🇿 UZ"}
+        </button>
+      </div>
       <div className="flex gap-2 w-full max-w-[450px] py-1">
         <Card className="w-full py-2 h-[80px]">
           <CardHeader>
@@ -112,14 +120,14 @@ function Login() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-green-700 mx-auto text-xl font-bold">
-            Tizimga kirish
+            {t("auth.loginTitle")}
           </CardTitle>
-          <p className="text-gray-500 mx-auto">Hisobingizga kiring</p>
+          <p className="text-gray-500 mx-auto">{t("auth.loginSubtitle")}</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid w-full max-w-sm items-center gap-3">
-              <Label htmlFor="phone">Telefon raqami</Label>
+              <Label htmlFor="phone">{t("auth.phoneLabel")}</Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                   <User size={20} />
@@ -131,7 +139,7 @@ function Login() {
                   name="phone"
                   type="tel"
                   inputMode="numeric"
-                  placeholder="(90) 123 45 67"
+                  placeholder={t("auth.phonePlaceholder")}
                   required
                   autoComplete="tel"
                   className="pl-20 font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
@@ -142,7 +150,7 @@ function Login() {
               </div>
             </div>
             <div className="grid w-full max-w-sm items-center gap-3">
-              <Label htmlFor="password">Parol</Label>
+              <Label htmlFor="password">{t("auth.passwordLabel")}</Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                   <Lock size={20} />
@@ -167,10 +175,10 @@ function Login() {
               </div>
             </div>
 
-            {loginMutation.error && (
+              {loginMutation.error && (
               <div className="text-red-500 text-sm">
                 {loginMutation.error.message ||
-                  "Login failed. Please try again."}
+                  (lang === "ru" ? "Ошибка входа. Попробуйте ещё раз." : "Kirishda xatolik. Qaytadan urinib ko'ring.")}
               </div>
             )}
             <Button
@@ -178,17 +186,17 @@ function Login() {
               disabled={loginMutation.isPending}
               className="w-full bg-green-700"
             >
-              {loginMutation.isPending ? "Logging in..." : "Login"}
+              {loginMutation.isPending ? t("auth.loginLoading") : t("auth.loginBtn")}
             </Button>
 
             <div className="flex justify-between items-center text-sm">
               <Link to="/fogotPassword" className="underline">
-                Parol esdan chiqdimi?
+                {t("auth.forgot")}
               </Link>
               <p>
-                Hisobingiz yo'qmi?{" "}
+                {t("auth.needAccount")} {" "}
                 <Link className="underline" to="/register">
-                  Ro'yhatdan o'ting
+                  {t("auth.register")}
                 </Link>
               </p>
             </div>
