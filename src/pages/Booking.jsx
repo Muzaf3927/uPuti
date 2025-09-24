@@ -53,19 +53,27 @@ function Booking() {
   const { data: myTripsRes, isPending: myTripsLoading, error: myTripsError } = useGetData("/my-trips");
 
   const myBookings = myBookingsRes?.bookings || [];
-  const myTrips = myTripsRes?.trips || [];
+  const myTrips = myTripsRes?.trips || myTripsRes?.data || [];
 
   const [expandedTripIds, setExpandedTripIds] = useState([]);
   const toggleTrip = (id) => {
     setExpandedTripIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
+  // Разворачиваем все поездки по умолчанию, когда список загрузился
+  React.useEffect(() => {
+    if (Array.isArray(myTrips) && myTrips.length > 0) {
+      const ids = myTrips.map((t) => t.id);
+      setExpandedTripIds(ids);
+    }
+  }, [myTrips]);
+
   return (
     <>
       <Tabs defaultValue="fromMe" className="">
         <TabsList className="w-full rounded-2xl bg-white/70 backdrop-blur-sm">
-          <TabsTrigger value="fromMe">Mening bronlarim</TabsTrigger>
-          <TabsTrigger value="toMe">Mening safarımga bronlar</TabsTrigger>
+          <TabsTrigger value="fromMe">{t("booking.myBookings")}</TabsTrigger>
+          <TabsTrigger value="toMe">{t("booking.toMe")}</TabsTrigger>
         </TabsList>
         <TabsContent value="fromMe">
           <Card className="rounded-3xl shadow-sm">
