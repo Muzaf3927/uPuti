@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
 import { Bell, Car, CircleUser, LogOut, UserCircle2Icon } from "lucide-react";
+import { useI18n } from "@/app/i18n.jsx";
 import { useDispatch } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 import { logout } from "@/app/userSlice/userSlice";
@@ -26,6 +27,7 @@ function getNthWord(str, n) {
 
 function MainLayout() {
   const dispatch = useDispatch();
+  const { lang, setLang } = useI18n();
 
   const logoutMutation = usePostData("/logout");
   const { data, isLoading, error, refetch } = useGetData("/notifications");
@@ -62,6 +64,14 @@ function MainLayout() {
             </div>
           </div>
           <div className="flex gap-2 items-center">
+            <button
+              type="button"
+              onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
+              className="px-3 py-1 rounded-full border bg-white/80 hover:bg-green-50 text-sm"
+              title={lang === "uz" ? "RU" : "UZ"}
+            >
+              {lang === "uz" ? "🇷🇺 RU" : "🇺🇿 UZ"}
+            </button>
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Bell className="cursor-pointer text-gray-700 hover:text-green-600 transition" />
