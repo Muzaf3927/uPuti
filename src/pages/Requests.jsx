@@ -160,13 +160,13 @@ function Requests() {
                   <div className="w-full flex gap-3 mt-3">
                     <button
                       onClick={() => handleConfirm(b.id)}
-                      className="w-full flex justify-center items-center gap-2 bg-green-700 text-white rounded-3xl py-2 hover:shadow-[0px_54px_55px_theme(colors.green.700/0.25),0px_-12px_30px_theme(colors.green.700/0.12),0px_4px_6px_theme(colors.green.700/0.12),0px_12px_13px_theme(colors.green.700/0.17),0px_-3px_5px_theme(colors.green.700/0.09)] transition-all duration-300 cursor-pointer"
+                      className="w-full flex justify-center items-center gap-2 bg-green-700 text-white rounded-3xl py-2 px-3 text-sm sm:text-base hover:shadow-[0px_54px_55px_theme(colors.green.700/0.25),0px_-12px_30px_theme(colors.green.700/0.12),0px_4px_6px_theme(colors.green.700/0.12),0px_12px_13px_theme(colors.green.700/0.17),0px_-3px_5px_theme(colors.green.700/0.09)] transition-all duration-300 cursor-pointer"
                     >
                       <Check size={16} /> {t("requests.accept")}
                     </button>
                     <button
                       onClick={() => handleDecline(b.id)}
-                      className="w/full flex justify-center items-center gap-2 border border-amber-500 text-amber-500 rounded-3xl py-2 hover:shadow-[0px_-12px_30px_theme(colors.amber.500/0.12),0px_4px_6px_theme(colors.amber.500/0.12),0px_12px_13px_theme(colors.amber.500/0.17),0px_-3px_5px_theme(colors.amber.500/0.09)]  transition-all duration-300 cursor-pointer"
+                      className="w-full flex justify-center items-center gap-2 border border-amber-500 text-amber-500 rounded-3xl py-2 px-3 text-sm sm:text-base hover:shadow-[0px_-12px_30px_theme(colors.amber.500/0.12),0px_4px_6px_theme(colors.amber.500/0.12),0px_12px_13px_theme(colors.amber.500/0.17),0px_-3px_5px_theme(colors.amber.500/0.09)] transition-all duration-300 cursor-pointer"
                     >
                       <X size={16} /> {t("requests.decline")}
                     </button>

@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 
 import { useGetData } from "@/api/api";
-import { useI18n } from "@/app/i18n";
+import { useI18n } from "@/app/i18n.jsx";
 
 function TripBookingsList({ tripId }) {
   const { t } = useI18n();
@@ -30,7 +30,7 @@ function TripBookingsList({ tripId }) {
             </Avatar>
             <div className="flex flex-col text-sm">
               <span className="font-semibold">{b.user?.name || "Foydalanuvchi"}</span>
-              <span>{b.seats} ta o'rin • {b.status}</span>
+              <span>{b.seats} ta o'rin • Подтверждено</span>
               {b.offered_price ? <span>Taklif: {b.offered_price} so'm</span> : null}
               {b.comment ? <span className="text-gray-600">{b.comment}</span> : null}
             </div>
@@ -94,7 +94,7 @@ function Booking() {
                         </div>
                       </div>
                       <span className="text-xs sm:text-sm bg-green-700 text-white py-1 px-2 rounded-2xl">
-                        {b.status}
+                        Подтверждено
                       </span>
                     </div>
                     <div className="flex justify-between items-center mt-2 text-sm">
