@@ -93,6 +93,8 @@ function Trips() {
     refetch: myTripsRefetch,
   } = useGetData(`/my-trips?page=${myPage}&per_page=${MY_PER_PAGE}`);
 
+  const myTripsList = (myTrips && (myTrips.trips || myTrips.data)) || [];
+
   const tripPostMutation = usePostData("/trip");
 
   const handleSubmit = async (e) => {
@@ -329,29 +331,25 @@ function Trips() {
                 Array(2)
                   .fill(1)
                   .map((_, index) => <TripsCardSkeleton key={index} />)
-              ) : myTrips && myTrips.trips.length === 0 ? (
-                <>
-                  <div className="mt-10 bg-white/80 backdrop-blur-sm shadow rounded-full w-20 h-20 flex items-center justify-center">
-                    <Car size={30} />
-                  </div>
-                  <h2>{t("trips.empty")}</h2>
-                  <Button
-                    onClick={() => setDialog(true)}
-                    className="text-white bg-green-600 rounded-2xl cursor-pointer shadow"
-                  >
-                    {t("trips.create")}
-                  </Button>
-                </>
               ) : (
                 <>
-                  <div className="p-4 space-y-4">
-                    {myTrips &&
-                      myTrips.trips
-                        .filter((item) => item.status !== "completed")
-                        .map((item) => (
-                          <MyTripsCard trip={item} key={item.id} />
-                        ))}
-                  </div>
+                  {myTrips && myTripsList.length === 0 ? (
+                    <div className="flex flex-col items-center gap-3 py-8">
+                      <h2>{t("trips.empty")}</h2>
+                      <Button onClick={() => setDialog(true)} className="text-white bg-green-600 rounded-2xl cursor-pointer shadow">
+                        {t("trips.create")}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="p-4 space-y-4">
+                      {myTrips &&
+                        myTripsList
+                          .filter((item) => item.status !== "completed")
+                          .map((item) => (
+                            <MyTripsCard trip={item} key={item.id} />
+                          ))}
+                    </div>
+                  )}
                   <div className="flex items-center justify-center gap-3 px-4 py-2">
                     <Button variant="outline" disabled={myPage === 1} onClick={() => setMyPage((p) => Math.max(1, p - 1))} aria-label="Prev page">
                       <ChevronLeft />
@@ -359,7 +357,7 @@ function Trips() {
                     <span className="text-sm">{myPage}</span>
                     <Button
                       variant="outline"
-                      disabled={Array.isArray(myTrips?.trips) && myTrips.trips.length < MY_PER_PAGE}
+                      disabled={Array.isArray(myTripsList) && myTripsList.length < MY_PER_PAGE}
                       onClick={() => setMyPage((p) => p + 1)}
                       aria-label="Next page"
                     >

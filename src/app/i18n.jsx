@@ -113,6 +113,14 @@ const dict = {
       acceptError: "Tasdiqlashda xatolik.",
       declineError: "Bekor qilishda xatolik.",
     },
+    profilePanel: {
+      support: "Texnik yordam",
+      name: "Ism",
+      phone: "Telefon",
+      rating: "Reyting",
+      balance: "Balans",
+      logout: "Tizimdan chiqish",
+    },
   },
   ru: {
     nav: {
@@ -223,6 +231,14 @@ const dict = {
       declinedToast: "Отклонено.",
       acceptError: "Ошибка при подтверждении.",
       declineError: "Ошибка при отклонении.",
+    },
+    profilePanel: {
+      support: "Техподдержка",
+      name: "Имя",
+      phone: "Телефон",
+      rating: "Рейтинг",
+      balance: "Баланс",
+      logout: "Выйти",
     },
   },
 };
