@@ -187,15 +187,15 @@ function MyTripsCard({ trip }) {
         {/* Desktop ≥ 640px: previous inline layout */}
         <div className="w-full hidden sm:flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Button onClick={() => setRequestsOpen(true)} className="h-10 px-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2">
+            <Button onClick={() => setRequestsOpen(true)} className="h-10 px-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 text-sm sm:text-base">
               <Mail className="size-4" />
               <span className="text-sm">{t("myTripsCard.requests")}</span>
             </Button>
-            <Button onClick={() => setBookingsOpen(true)} className="h-10 px-3 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-2">
+            <Button onClick={() => setBookingsOpen(true)} className="h-10 px-3 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-2 text-sm sm:text-base">
               <CircleCheck className="size-4" />
               <span className="text-sm">{t("myTripsCard.bookings")}</span>
             </Button>
-            <Button onClick={handleComplete} disabled={trip.status !== "active"} className="h-10 px-3 rounded-full bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-300 disabled:text-gray-500 flex items-center gap-2">
+            <Button onClick={handleComplete} disabled={trip.status !== "active"} className="h-10 px-3 rounded-full bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-300 disabled:text-gray-500 flex items-center gap-2 text-sm sm:text-base">
               <CircleCheck className="size-4" />
               <span className="text-sm">{t("myTripsCard.complete")}</span>
             </Button>

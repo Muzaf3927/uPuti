@@ -178,13 +178,13 @@ function TripsCard({ trip }) {
               <>
                 <button
                   onClick={openBookingDialog}
-                  className="bg-green-700 h-9 rounded-2xl text-white w-full text-[10px] sm:text-sm px-2 whitespace-normal leading-tight"
+                  className="bg-green-700 h-9 rounded-2xl text-white w-full text-xs sm:text-base px-2 whitespace-normal leading-tight"
                 >
                   {t("tripsCard.book")}
                 </button>
                 <button
                   onClick={openOfferDialog}
-                  className="w-full bg-white h-9 border-green-700 text-green-700 border-2 rounded-2xl text-[10px] sm:text-sm px-2 whitespace-normal leading-tight"
+                  className="w-full bg-white h-9 border-green-700 text-green-700 border-2 rounded-2xl text-xs sm:text-base px-2 whitespace-normal leading-tight"
                 >
                   {t("tripsCard.offer")}
                 </button>

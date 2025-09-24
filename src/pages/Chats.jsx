@@ -13,9 +13,10 @@ import { useGetUserChats, useGetChatMessages, useSendChatMessage } from "@/api/a
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Check, CheckCheck } from "lucide-react";
+import { MessageCircle, Check, CheckCheck, X } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useI18n } from "@/app/i18n.jsx";
+import { useSelector } from "react-redux";
 
 function Chats() {
   const { t } = useI18n();
@@ -23,10 +24,12 @@ function Chats() {
   const params = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const initialTripId = params.get("tripId");
   const initialReceiverId = params.get("receiverId");
+  const currentUserId = useSelector((s) => s.user?.user?.id);
 
   const [selected, setSelected] = useState({ tripId: initialTripId, receiverId: initialReceiverId });
   const [message, setMessage] = useState("");
   const chatEndRef = useRef(null);
+  const inputRef = useRef(null);
   const queryClient = useQueryClient();
   const { data: chatsRes } = useGetUserChats();
   const chats = chatsRes?.chats || [];
@@ -57,10 +60,10 @@ function Chats() {
   }, [selected.tripId, selected.receiverId, queryClient]);
 
   return (
-    <Card className="h-full border py-0 relative rounded-3xl overflow-hidden shadow-sm">
-      {/* User List */}
+    <Card className="h-[100dvh] sm:h-full border py-0 relative rounded-3xl overflow-hidden shadow-sm">
+      {/* Только список; чат открывается как компактная панель */}
       <CardContent className="flex px-0 relative h-full bg-gradient-to-br from-green-50 to-blue-50">
-        <div className="flex flex-col w-14 sm:w-64 border-r bg-white/70 backdrop-blur-sm">
+        <div className="flex flex-col w-full sm:w-96 border-r bg-white/70 backdrop-blur-sm">
           {chats.map((c) => (
             <Tooltip key={`${c.trip_id}-${c.chat_partner_id}`}>
               <TooltipTrigger
@@ -76,7 +79,7 @@ function Chats() {
                   <AvatarImage src={c.partner?.avatar || "https://github.com/shadcn.png"} />
                   <AvatarFallback>{c.partner?.name?.[0] || "U"}</AvatarFallback>
                 </Avatar>
-                <div className="hidden sm:flex flex-col text-sm min-w-0">
+                <div className="flex flex-col text-sm min-w-0">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="font-semibold truncate text-gray-900">{c.partner?.name || "User"}</span>
                     {Number(c.unread_count || 0) > 0 ? (
@@ -91,6 +94,9 @@ function Chats() {
                       <Check className="size-3 text-gray-400" />
                     )}
                   </div>
+                  <div className="text-[11px] text-gray-500 truncate">
+                    {c.trip?.date} • {c.trip?.time} • {Number(c.trip?.price || 0).toLocaleString()} сум
+                  </div>
                 </div>
               </TooltipTrigger>
               <TooltipContent>
@@ -103,65 +109,63 @@ function Chats() {
           )}
         </div>
 
-        {/* Chat Window */}
-        <div className=" flex flex-col bg-white overflow-y-clip w-full">
-          <div className="border-b px-3 sm:px-6 py-3 sm:py-4 flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-green-100 to-blue-100 sticky top-0 z-10">
-            {selectedChat ? (
-              <>
-                <Avatar className="size-8 sm:size-11 ring-2 ring-white shadow">
-                  <AvatarImage src={selectedChat.partner?.avatar || "https://github.com/shadcn.png"} />
-                  <AvatarFallback>{selectedChat.partner?.name?.[0] || "U"}</AvatarFallback>
-                </Avatar>
-                <span className="font-semibold text-sm sm:text-lg text-gray-900">
-                  {selectedChat.partner?.name}
-                </span>
-                <span className="text-xs text-gray-600">{selectedChat.trip?.from_city} → {selectedChat.trip?.to_city}</span>
-              </>
-            ) : (
-              <div className="flex items-center gap-2 text-gray-500 text-sm">
-                <MessageCircle size={16} /> {t("chats.selectChat")}
+        {/* Плавающая компактная панель чата */}
+        {selectedChat && (
+          <div className="pointer-events-auto fixed right-2 top-20 sm:right-4 sm:top-24 z-20 bg-white border rounded-2xl shadow-xl flex flex-col overflow-hidden w-[90vw] max-w-[360px] sm:w-[220px] sm:max-w-[220px] h-[60vh] max-h-[540px] sm:h-[500px]">
+            <div className="border-b px-3 py-2 flex items-center gap-2 bg-gradient-to-r from-green-100 to-blue-100">
+              <Avatar className="size-8 ring-2 ring-white shadow">
+                <AvatarImage src={selectedChat.partner?.avatar || 'https://github.com/shadcn.png'} />
+                <AvatarFallback>{selectedChat.partner?.name?.[0] || 'U'}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col min-w-0">
+                <span className="font-semibold text-sm truncate text-gray-900">{selectedChat.partner?.name}</span>
+                <span className="text-[11px] text-gray-600 truncate">{selectedChat.trip?.from_city} → {selectedChat.trip?.to_city}</span>
               </div>
-            )}
-          </div>
-          <div className="px-3 sm:px-6 py-4 sm:py-6 pb-24 sm:pb-28 overflow-y-scroll flex flex-col gap-2 sm:gap-3 h-[calc(100vh-230px)] sm:h-[calc(100vh-260px)] bg-white/60">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex ${msg.sender_id !== selected.receiverId ? "justify-end" : "justify-start"}`}
+              <button
+                type="button"
+                className="ml-auto inline-flex items-center justify-center rounded-full p-1.5 hover:bg-white/60 text-gray-600 hover:text-gray-800"
+                aria-label="Закрыть чат"
+                onClick={() => setSelected({ tripId: null, receiverId: null })}
               >
-                <span
-                  className={`inline-block text-xs sm:text-base px-3 sm:px-4 py-2 rounded-3xl max-w-[80%] sm:max-w-[70%] shadow ${
-                    msg.sender_id !== selected.receiverId
-                      ? "bg-green-600 text-white"
-                      : "bg-white text-gray-900 border"
-                  }`}
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="px-3 py-3 pb-24 overflow-y-auto flex flex-col gap-2 h-full bg-white/60">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex ${Number(msg.sender_id) === Number(currentUserId) ? 'justify-end' : 'justify-start'}`}
                 >
-                  {msg.message}
-                </span>
-              </div>
-            ))}
-            <div ref={chatEndRef} />
+                  <span className={`inline-block text-xs px-3 py-2 rounded-2xl max-w-[85%] shadow ${Number(msg.sender_id) === Number(currentUserId) ? 'bg-blue-600 text-white' : 'bg-emerald-100 text-gray-900 border border-emerald-200'}`}>
+                    {msg.message}
+                  </span>
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
+            <div className="px-2 py-2 border-t flex items-center gap-2 bg-white sticky bottom-0 w-full pb-[env(safe-area-inset-bottom)]">
+              <Input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder={t('chats.placeholder')}
+                className="px-3 py-2 text-xs rounded-full border focus:outline-none focus:ring-2 focus:ring-green-300 w-full"
+                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                disabled={!selected.tripId || !selected.receiverId}
+                onFocus={() => setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 100)}
+                ref={inputRef}
+              />
+              <Button
+                onClick={handleSend}
+                className="px-3 py-2 text-xs rounded-full bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow"
+                type="button"
+                disabled={!selected.tripId || !selected.receiverId}
+              >
+                {t('chats.send')}
+              </Button>
+            </div>
           </div>
-          <div className="px-2 sm:px-4 py-2 sm:py-3 border-t flex items-center gap-2 bg-white sticky bottom-0 w-full shadow-[0_-6px_16px_-12px_rgba(0,0,0,0.2)]">
-            <Input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder={t("chats.placeholder")}
-              className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-base rounded-full border focus:outline-none focus:ring-2 focus:ring-green-300 w-full"
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              disabled={!selected.tripId || !selected.receiverId}
-            />
-            <Button
-              onClick={handleSend}
-              className="px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm rounded-full bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow"
-              type="button"
-              disabled={!selected.tripId || !selected.receiverId}
-            >
-              {t("chats.send")}
-            </Button>
-          </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   );
