@@ -48,6 +48,7 @@ function TripBookingsList({ tripId }) {
 }
 
 function Booking() {
+  const { t } = useI18n();
   const { data: myBookingsRes, isPending: myBookingsLoading, error: myBookingsError } = useGetData("/bookings");
   const { data: myTripsRes, isPending: myTripsLoading, error: myTripsError } = useGetData("/my-trips");
 
