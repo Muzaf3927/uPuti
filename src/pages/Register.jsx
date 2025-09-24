@@ -125,7 +125,7 @@ function Register() {
 
     const verifyText = formData.get("verifyText");
 
-    console.log(registerDataRef);
+    //
 
     const resultData = {
       verification_id: registerDataRef.current?.verification_id,
@@ -141,7 +141,7 @@ function Register() {
 
       setSuccess("Registration successful!");
     } catch (err) {
-      console.log(err);
+      //
       setError("Failed to connect to API.");
     } finally {
       setLoading(false);

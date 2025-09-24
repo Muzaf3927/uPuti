@@ -47,7 +47,7 @@ function MainLayout() {
       localStorage.setItem("token", "");
       toast.success("Muvaffaqiyatli tizimdan chiqdingiz!");
     } catch {
-      console.log("Failed to connect to API.");
+      // silently ignore
     }
   };
   return (

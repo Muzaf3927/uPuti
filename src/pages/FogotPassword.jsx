@@ -130,14 +130,14 @@ function FogotPassword() {
 
     try {
       const res = await fogotPasswordMutationTwo.mutateAsync(resultData);
-      console.log(res);
+      //
 
       toast.success("Parol muvaffaqiyatli yangilandi!");
       setTimeout(() => {
         window.location.href = "/login";
       }, 3000);
     } catch (err) {
-      console.log(err);
+      //
       setError("Failed to connect to API.");
     } finally {
       setLoading(false);

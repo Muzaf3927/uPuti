@@ -56,7 +56,7 @@ function Trips() {
     }`
   );
 
-  console.log(data?.data);
+  //
 
   // useEffect(() => {
   //   refetch();
@@ -148,118 +148,64 @@ function Trips() {
               <h4 className="text-sm md:text-md">{t("trips.create")}</h4>
             </div>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-[95vw] sm:max-w-[760px] p-4 sm:p-6">
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">{t("trips.create")}</DialogTitle>
             </DialogHeader>
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col gap-3 h-96 overflow-y-scroll"
-            >
-              <div className="grid w-full items-center gap-3">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+              <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="from">Qayerdan</Label>
-                <Input
-                  type="text"
-                  id="from"
-                  name="from"
-                  placeholder="Qaysi shahardan"
-                />
+                <Input type="text" id="from" name="from" placeholder="Toshkent" />
               </div>
-              <div className="grid w-full items-center gap-3">
+              <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="to">Qayerga</Label>
-                <Input
+                <Input type="text" id="to" name="to" placeholder="Buxoro" />
+              </div>
+              <div className="col-span-1 grid items-center gap-1.5">
+                <Label htmlFor="date">Sana</Label>
+                <Input type="date" id="date" name="date" />
+              </div>
+              <div className="col-span-1 grid items-center gap-1.5">
+                <Label htmlFor="time">Vaqt</Label>
+                <InputMask
+                  mask="__:__"
+                  replacement={{ _: /\d/ }}
                   type="text"
-                  id="to"
-                  name="to"
-                  placeholder="Qaysi shaharga"
+                  id="time"
+                  name="time"
+                  placeholder="12:30"
+                  className="font-normal border-input h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs outline-none"
                 />
               </div>
-              <div className="flex gap-2">
-                <div className="grid w-full items-center gap-3">
-                  <Label htmlFor="date">Sana</Label>
-                  <Input
-                    type="date"
-                    id="date"
-                    name="date"
-                    placeholder="06.09.2025"
-                  />
-                </div>
-                <div className="grid w-full items-center gap-3">
-                  <Label htmlFor="time">Vaqt</Label>
-                  <InputMask
-                    mask="__:__"
-                    replacement={{ _: /\d/ }}
-                    type="text"
-                    id="time"
-                    name="time"
-                    placeholder="12 : 30"
-                    className="font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                  />
-                </div>
-              </div>
-              <div className="grid w-full items-center gap-3">
+              <div className="col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="cost">Xizmat haqqi</Label>
-                <Input type="text" id="cost" name="cost" placeholder="50000" />
+                <Input type="number" id="cost" name="cost" placeholder="50000" />
               </div>
-              <div className="grid w-full items-center gap-3">
-                <Label htmlFor="note">Qo'shimcha izoh</Label>
-                <Textarea
-                  name="note"
-                  className="pb-5"
-                  id="note"
-                  placeholder="safarni tariflab bering."
-                />
+              <div className="col-span-1 grid items-center gap-1.5">
+                <Label htmlFor="carSeats">O'rindiqlar soni</Label>
+                <Input type="number" id="carSeats" name="carSeats" placeholder="4" />
               </div>
-              <div className="flex gap-2">
-                <div className="grid w-full items-center gap-3">
-                  <Label htmlFor="car">Mashina rusumi</Label>
-                  <Input
-                    type="text"
-                    id="car"
-                    name="carModel"
-                    placeholder="Toyota Camry"
-                  />
-                </div>
-                <div className="grid w-full items-center gap-3">
-                  <Label htmlFor="carColor">Mashina rangi</Label>
-                  <Input
-                    type="text"
-                    id="carColor"
-                    name="carColor"
-                    placeholder="Oq rang"
-                  />
-                </div>
+              <div className="col-span-1 grid items-center gap-1.5">
+                <Label htmlFor="car">Mashina rusumi</Label>
+                <Input type="text" id="car" name="carModel" placeholder="Toyota Camry" />
               </div>
-              <div className="flex gap-2">
-                <div className="grid w-full items-center gap-3">
-                  <Label htmlFor="carNumber">Mashina raqami</Label>
-                  <Input
-                    type="text"
-                    id="carNumber"
-                    name="carNumber"
-                    placeholder="01A123BC"
-                    className="uppercase"
-                  />
-                </div>
-                <div className="grid w-full items-center gap-3">
-                  <Label htmlFor="carSeats">O'rindiqlar soni</Label>
-                  <Input
-                    type="text"
-                    id="carSeats"
-                    name="carSeats"
-                    placeholder="4 ta"
-                  />
-                </div>
+              <div className="col-span-1 grid items-center gap-1.5">
+                <Label htmlFor="carColor">Mashina rangi</Label>
+                <Input type="text" id="carColor" name="carColor" placeholder="Oq" />
               </div>
-              <div className="w-full flex gap-2 ">
-                <DialogClose className="w-[48%]" asChild>
-                  <Button type="button" className="rounded-2xl max-w-full ">
-                    Bekor qilish
-                  </Button>
+              <div className="col-span-1 grid items-center gap-1.5">
+                <Label htmlFor="carNumber">Mashina raqami</Label>
+                <Input type="text" id="carNumber" name="carNumber" placeholder="01A123BC" className="uppercase" />
+              </div>
+              <div className="col-span-1 grid items-center gap-1.5">
+                <Label htmlFor="note">Izoh</Label>
+                <Input type="text" id="note" name="note" placeholder="Qisqa izoh" />
+              </div>
+              <div className="col-span-1 sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 w-full">
+                <DialogClose asChild>
+                  <Button type="button" className="rounded-2xl w-full h-10 text-sm">Bekor qilish</Button>
                 </DialogClose>
-                <Button className="bg-green-600 rounded-2xl w-[48%]">
-                  Yuborish
-                </Button>
+                <Button className="bg-green-600 rounded-2xl w-full h-10 text-sm">Yuborish</Button>
               </div>
             </form>
           </DialogContent>

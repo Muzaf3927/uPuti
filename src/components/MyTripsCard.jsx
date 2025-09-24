@@ -140,14 +140,14 @@ function MyTripsCard({ trip }) {
   return (
     <Card className="shadow-sm rounded-3xl bg-white/80 backdrop-blur-sm border border-green-100 w-full">
       <CardContent className="p-4 sm:p-5 flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-green-700 font-bold text-base sm:text-lg">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
+          <div className="flex items-center gap-2 text-green-700 font-bold text-sm sm:text-lg">
             <MapPin className="text-green-600" />
             <span>{trip.from_city}</span>
             <ArrowRight size={18} />
             <span>{trip.to_city}</span>
           </div>
-          <div className="text-lg sm:text-2xl font-extrabold text-gray-900">
+          <div className="text-base sm:text-2xl font-extrabold text-gray-900 whitespace-nowrap">
             {Number(trip.price).toLocaleString()} сум
           </div>
         </div>
@@ -161,18 +161,18 @@ function MyTripsCard({ trip }) {
       <CardFooter className="w-full">
         {/* Mobile layout ≤ 640px: grid 3 text buttons above, 2 icon buttons on right below */}
         <div className="w-full sm:hidden">
-          <div className="grid grid-cols-3 gap-1 mb-2">
-            <Button onClick={() => setRequestsOpen(true)} className="h-9 px-2 rounded-full bg-blue-600 text-white text-xs flex items-center gap-1 justify-center">
+          <div className="grid grid-cols-2 gap-1 mb-2">
+            <Button onClick={() => setRequestsOpen(true)} className="min-h-9 px-2 py-2 rounded-full bg-blue-600 text-white text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center">
               <Mail className="size-4" />
-              <span className="truncate">{t("myTripsCard.requests")}</span>
+              <span>{t("myTripsCard.requests")}</span>
             </Button>
-            <Button onClick={() => setBookingsOpen(true)} className="h-9 px-2 rounded-full bg-emerald-600 text-white text-xs flex items-center gap-1 justify-center">
+            <Button onClick={() => setBookingsOpen(true)} className="min-h-9 px-2 py-2 rounded-full bg-emerald-600 text-white text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center">
               <CircleCheck className="size-4" />
-              <span className="truncate">{t("myTripsCard.bookings")}</span>
+              <span>{t("myTripsCard.bookings")}</span>
             </Button>
-            <Button onClick={handleComplete} disabled={trip.status !== "active"} className="h-9 px-2 rounded-full bg-red-600 text-white text-xs disabled:bg-gray-300 disabled:text-gray-500 flex items-center gap-1 justify-center">
+            <Button onClick={handleComplete} disabled={trip.status !== "active"} className="min-h-9 px-2 py-2 rounded-full bg-red-600 text-white text-[10px] leading-tight disabled:bg-gray-300 disabled:text-gray-500 flex items-center gap-1 justify-center whitespace-normal text-center col-span-2">
               <CircleCheck className="size-4" />
-              <span className="truncate">{t("myTripsCard.complete")}</span>
+              <span>{t("myTripsCard.complete")}</span>
             </Button>
           </div>
           <div className="flex items-center gap-2 justify-end">

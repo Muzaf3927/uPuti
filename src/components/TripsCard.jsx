@@ -106,14 +106,14 @@ function TripsCard({ trip }) {
     <>
       <Card className="shadow-sm rounded-3xl bg-white/80 backdrop-blur-sm">
         <CardContent className="p-4 sm:p-5 flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-green-700 font-bold text-base sm:text-lg">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
+            <div className="flex items-center gap-2 text-green-700 font-bold text-sm sm:text-lg">
               <MapPin className="text-green-600" />
               <span>{trip.from_city}</span>
               <ArrowRight size={18} />
               <span>{trip.to_city}</span>
             </div>
-            <div className="text-lg sm:text-2xl font-extrabold text-gray-900">
+            <div className="text-base sm:text-2xl font-extrabold text-gray-900 whitespace-nowrap">
               {Number(trip.price).toLocaleString()} сум
             </div>
           </div>
@@ -156,7 +156,7 @@ function TripsCard({ trip }) {
             </div>
           ) : null}
 
-          <div className="w-full grid grid-cols-2 gap-2">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2">
             {trip?.my_booking ? (
               <button
                 onClick={handleCancelBooking}
@@ -169,13 +169,13 @@ function TripsCard({ trip }) {
               <>
                 <button
                   onClick={openBookingDialog}
-                  className="bg-green-700 h-9 text-sm rounded-2xl text-white w-full"
+                  className="bg-green-700 h-9 rounded-2xl text-white w-full text-[10px] sm:text-sm px-2 whitespace-normal leading-tight"
                 >
                   {t("tripsCard.book")}
                 </button>
                 <button
                   onClick={openOfferDialog}
-                  className="w-full bg-white h-9 text-sm border-green-700 text-green-700 border-2 rounded-2xl"
+                  className="w-full bg-white h-9 border-green-700 text-green-700 border-2 rounded-2xl text-[10px] sm:text-sm px-2 whitespace-normal leading-tight"
                 >
                   {t("tripsCard.offer")}
                 </button>
