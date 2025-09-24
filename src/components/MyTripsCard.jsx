@@ -159,48 +159,52 @@ function MyTripsCard({ trip }) {
         </div>
       </CardContent>
       <CardFooter className="w-full">
-        <div className="w-full flex items-center justify-between gap-2">
-          {/* Left group: 3 text buttons */}
+        {/* Mobile layout ≤ 640px: grid 3 text buttons above, 2 icon buttons on right below */}
+        <div className="w-full sm:hidden">
+          <div className="grid grid-cols-3 gap-1 mb-2">
+            <Button onClick={() => setRequestsOpen(true)} className="h-9 px-2 rounded-full bg-blue-600 text-white text-xs flex items-center gap-1 justify-center">
+              <Mail className="size-4" />
+              <span className="truncate">{t("myTripsCard.requests")}</span>
+            </Button>
+            <Button onClick={() => setBookingsOpen(true)} className="h-9 px-2 rounded-full bg-emerald-600 text-white text-xs flex items-center gap-1 justify-center">
+              <CircleCheck className="size-4" />
+              <span className="truncate">{t("myTripsCard.bookings")}</span>
+            </Button>
+            <Button onClick={handleComplete} disabled={trip.status !== "active"} className="h-9 px-2 rounded-full bg-red-600 text-white text-xs disabled:bg-gray-300 disabled:text-gray-500 flex items-center gap-1 justify-center">
+              <CircleCheck className="size-4" />
+              <span className="truncate">{t("myTripsCard.complete")}</span>
+            </Button>
+          </div>
+          <div className="flex items-center gap-2 justify-end">
+            <Button onClick={() => setEditOpen(true)} className="h-9 w-9 rounded-full bg-white border hover:bg-gray-50 flex items-center justify-center" aria-label={t("myTripsCard.edit")} title={t("myTripsCard.edit")}>
+              <Pencil className="size-5 text-gray-700" />
+            </Button>
+            <Button onClick={handleDelete} className="h-9 w-9 rounded-full bg-white border border-red-300 text-red-600 hover:bg-red-50 flex items-center justify-center" aria-label={t("myTripsCard.delete")} title={t("myTripsCard.delete")}>
+              <Trash2 className="size-5" />
+            </Button>
+          </div>
+        </div>
+        {/* Desktop ≥ 640px: previous inline layout */}
+        <div className="w-full hidden sm:flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Button
-              onClick={() => setRequestsOpen(true)}
-              className="h-10 px-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2"
-            >
+            <Button onClick={() => setRequestsOpen(true)} className="h-10 px-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2">
               <Mail className="size-4" />
               <span className="text-sm">{t("myTripsCard.requests")}</span>
             </Button>
-            <Button
-              onClick={() => setBookingsOpen(true)}
-              className="h-10 px-3 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-2"
-            >
+            <Button onClick={() => setBookingsOpen(true)} className="h-10 px-3 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-2">
               <CircleCheck className="size-4" />
               <span className="text-sm">{t("myTripsCard.bookings")}</span>
             </Button>
-            <Button
-              onClick={handleComplete}
-              disabled={trip.status !== "active"}
-              className="h-10 px-3 rounded-full bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-300 disabled:text-gray-500 flex items-center gap-2"
-            >
+            <Button onClick={handleComplete} disabled={trip.status !== "active"} className="h-10 px-3 rounded-full bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-300 disabled:text-gray-500 flex items-center gap-2">
               <CircleCheck className="size-4" />
               <span className="text-sm">{t("myTripsCard.complete")}</span>
             </Button>
           </div>
-          {/* Right group: 2 icon-only buttons */}
           <div className="flex items-center gap-2">
-            <Button
-              onClick={() => setEditOpen(true)}
-              className="h-10 w-10 rounded-full bg-white border hover:bg-gray-50 flex items-center justify-center"
-              aria-label={t("myTripsCard.edit")}
-              title={t("myTripsCard.edit")}
-            >
+            <Button onClick={() => setEditOpen(true)} className="h-10 w-10 rounded-full bg-white border hover:bg-gray-50 flex items-center justify-center" aria-label={t("myTripsCard.edit")} title={t("myTripsCard.edit")}>
               <Pencil className="size-5 text-gray-700" />
             </Button>
-            <Button
-              onClick={handleDelete}
-              className="h-10 w-10 rounded-full bg-white border border-red-300 text-red-600 hover:bg-red-50 flex items-center justify-center"
-              aria-label={t("myTripsCard.delete")}
-              title={t("myTripsCard.delete")}
-            >
+            <Button onClick={handleDelete} className="h-10 w-10 rounded-full bg-white border border-red-300 text-red-600 hover:bg-red-50 flex items-center justify-center" aria-label={t("myTripsCard.delete")} title={t("myTripsCard.delete")}>
               <Trash2 className="size-5" />
             </Button>
           </div>
