@@ -119,6 +119,43 @@ export const useDeleteData = (url) => {
   });
 };
 
+// Chat API helpers
+export const chatsApi = {
+  getUserChats: () => getData("/chats"),
+  getUnreadCount: () => getData("/chats/unread-count"),
+  getChatMessages: (tripId, receiverId) =>
+    getData(`/chats/${tripId}/with/${receiverId}`),
+  sendMessage: (tripId, body) => postData(`/chats/${tripId}/send`, body),
+};
+
+export const useGetUserChats = () =>
+  useQuery({ queryKey: ["chats", "list"], queryFn: chatsApi.getUserChats });
+
+export const useGetUnreadCount = () =>
+  useQuery({ queryKey: ["chats", "unread"], queryFn: chatsApi.getUnreadCount, refetchInterval: 15000 });
+
+export const useGetChatMessages = (tripId, receiverId, enabled = true) =>
+  useQuery({
+    queryKey: ["chats", "messages", tripId, receiverId],
+    queryFn: () => chatsApi.getChatMessages(tripId, receiverId),
+    enabled: Boolean(tripId && receiverId && enabled),
+    refetchInterval: 5000,
+  });
+
+export const useSendChatMessage = (tripId) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (body) => chatsApi.sendMessage(tripId, body),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["chats", "messages", tripId, variables?.receiver_id],
+      });
+      queryClient.invalidateQueries({ queryKey: ["chats", "list"] });
+      queryClient.invalidateQueries({ queryKey: ["chats", "unread"] });
+    },
+  });
+};
+
 // ? HOW TO USE EXAMPLES:
 
 // * 1. GET DATA (useGetData hook)

@@ -33,6 +33,12 @@ function TripBookingsList({ tripId }) {
               {b.comment ? <span className="text-gray-600">{b.comment}</span> : null}
             </div>
           </div>
+          <Link
+            to={`/chats?tripId=${tripId}&receiverId=${b.user?.id}`}
+            className="inline-flex items-center gap-2 text-green-700 border-2 border-green-700 px-3 py-1 rounded-2xl hover:bg-green-700 hover:text-white transition"
+          >
+            <MessageCircle size={16} /> Yo'lovchiga yozish
+          </Link>
         </div>
       ))}
     </div>
@@ -95,7 +101,7 @@ function Booking() {
                     </div>
                     {b.comment ? <div className="text-sm text-gray-700 mt-1">{b.comment}</div> : null}
                     <Link
-                      to="/chats"
+                      to={`/chats?tripId=${b.trip?.id}&receiverId=${b.trip?.driver?.id}`}
                       className="mt-3 inline-flex items-center justify-center gap-2 border-2 rounded-2xl py-1 px-3 border-green-700 text-green-700 hover:text-white hover:bg-green-700 transition-all duration-300"
                     >
                       <MessageCircle size={16} /> Haydovchiga yozish

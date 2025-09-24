@@ -353,9 +353,11 @@ function Trips() {
                   ? Array(4)
                       .fill(1)
                       .map((_, index) => <TripsCardSkeleton key={index} />)
-                  : data.data?.map((trip) => (
-                      <TripsCard trip={trip} key={trip.id} />
-                    ))}
+                  : data.data
+                      ?.filter((trip) => trip.status !== "completed")
+                      .map((trip) => (
+                        <TripsCard trip={trip} key={trip.id} />
+                      ))}
               </div>
             </TabsContent>
             <TabsContent
@@ -381,9 +383,11 @@ function Trips() {
                 </>
               ) : (
                 myTrips &&
-                myTrips.trips.map((item) => (
-                  <MyTripsCard trip={item} key={item.id} />
-                ))
+                myTrips.trips
+                  .filter((item) => item.status !== "completed")
+                  .map((item) => (
+                    <MyTripsCard trip={item} key={item.id} />
+                  ))
               )}
             </TabsContent>
           </Tabs>
