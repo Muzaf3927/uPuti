@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 // shadcn ui
 import { Input } from "@/components/ui/input";
@@ -24,6 +24,8 @@ function Login() {
 
   const loginMutation = usePostData("/login");
   const dispatch = useDispatch();
+
+  const mobileRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,7 +89,11 @@ function Login() {
   return (
     <div className="py-10 px-2 flex gap-5 flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="flex items-center justify-center text-green-700 font-bold">
-        <img src="/logo.png" alt="UPuti" className="h-20 sm:h-24 w-auto object-contain mix-blend-multiply" />
+        <img
+          src="/logo.png"
+          alt="UPuti"
+          className="h-20 sm:h-24 w-auto object-contain mix-blend-multiply"
+        />
       </h1>
       <div className="flex items-center justify-center gap-2">
         <p className="text-center">{t("auth.slogan")}</p>
@@ -175,10 +181,12 @@ function Login() {
               </div>
             </div>
 
-              {loginMutation.error && (
+            {loginMutation.error && (
               <div className="text-red-500 text-sm">
                 {loginMutation.error.message ||
-                  (lang === "ru" ? "Ошибка входа. Попробуйте ещё раз." : "Kirishda xatolik. Qaytadan urinib ko'ring.")}
+                  (lang === "ru"
+                    ? "Ошибка входа. Попробуйте ещё раз."
+                    : "Kirishda xatolik. Qaytadan urinib ko'ring.")}
               </div>
             )}
             <Button
@@ -186,7 +194,9 @@ function Login() {
               disabled={loginMutation.isPending}
               className="w-full bg-green-700"
             >
-              {loginMutation.isPending ? t("auth.loginLoading") : t("auth.loginBtn")}
+              {loginMutation.isPending
+                ? t("auth.loginLoading")
+                : t("auth.loginBtn")}
             </Button>
 
             <div className="flex justify-between items-center text-sm">
@@ -194,7 +204,7 @@ function Login() {
                 {t("auth.forgot")}
               </Link>
               <p>
-                {t("auth.needAccount")} {" "}
+                {t("auth.needAccount")}{" "}
                 <Link className="underline" to="/register">
                   {t("auth.register")}
                 </Link>

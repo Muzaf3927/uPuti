@@ -147,7 +147,7 @@ function Chats() {
 
         {/* Плавающая компактная панель чата */}
         {selectedChat && (
-          <div className="pointer-events-auto fixed right-2 top-20 sm:right-4 sm:top-24 z-20 bg-white border rounded-2xl shadow-xl flex flex-col overflow-hidden w-[90vw] max-w-[360px] sm:w-[220px] sm:max-w-[220px] h-[60dvh] max-h-[540px] sm:h-[500px]">
+          <div className="pointer-events-auto fixed right-2 top-20 sm:right-4 sm:top-24 z-20 bg-white border rounded-2xl shadow-xl flex flex-col overflow-hidden ss:w-[90vw] ss:max-w-[360px] sm:w-full sm:max-w-[220px] w-full max-w-[95vw] h-[60vh] max-h-[540px] sm:h-[500px]">
             <div className="border-b px-3 py-2 flex items-center gap-2 bg-gradient-to-r from-green-100 to-blue-100">
               <Avatar className="size-8 ring-2 ring-white shadow">
                 <AvatarImage
