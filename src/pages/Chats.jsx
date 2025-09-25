@@ -9,7 +9,11 @@ import {
 } from "@/components/ui/tooltip";
 
 import { useLocation } from "react-router-dom";
-import { useGetUserChats, useGetChatMessages, useSendChatMessage } from "@/api/api";
+import {
+  useGetUserChats,
+  useGetChatMessages,
+  useSendChatMessage,
+} from "@/api/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -21,12 +25,18 @@ import { useSelector } from "react-redux";
 function Chats() {
   const { t } = useI18n();
   const location = useLocation();
-  const params = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const params = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search]
+  );
   const initialTripId = params.get("tripId");
   const initialReceiverId = params.get("receiverId");
   const currentUserId = useSelector((s) => s.user?.user?.id);
 
-  const [selected, setSelected] = useState({ tripId: initialTripId, receiverId: initialReceiverId });
+  const [selected, setSelected] = useState({
+    tripId: initialTripId,
+    receiverId: initialReceiverId,
+  });
   const [message, setMessage] = useState("");
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -34,16 +44,25 @@ function Chats() {
   const { data: chatsRes } = useGetUserChats();
   const chats = chatsRes?.chats || [];
   const selectedChat = chats.find(
-    (c) => String(c.trip_id) === String(selected.tripId) && String(c.chat_partner_id) === String(selected.receiverId)
+    (c) =>
+      String(c.trip_id) === String(selected.tripId) &&
+      String(c.chat_partner_id) === String(selected.receiverId)
   );
-  const { data: messagesRes } = useGetChatMessages(selected.tripId, selected.receiverId, Boolean(selected.tripId && selected.receiverId));
+  const { data: messagesRes } = useGetChatMessages(
+    selected.tripId,
+    selected.receiverId,
+    Boolean(selected.tripId && selected.receiverId)
+  );
   const messages = messagesRes?.messages || [];
   const sendMutation = useSendChatMessage(selected.tripId);
 
   const handleSend = async () => {
     if (!message.trim() || !selected.receiverId || !selected.tripId) return;
     try {
-      await sendMutation.mutateAsync({ receiver_id: Number(selected.receiverId), message });
+      await sendMutation.mutateAsync({
+        receiver_id: Number(selected.receiverId),
+        message,
+      });
       setMessage("");
     } catch (_err) {}
   };
@@ -67,27 +86,41 @@ function Chats() {
           {chats.map((c) => (
             <Tooltip key={`${c.trip_id}-${c.chat_partner_id}`}>
               <TooltipTrigger
-                onClick={() => setSelected({ tripId: c.trip_id, receiverId: c.chat_partner_id })}
+                onClick={() =>
+                  setSelected({
+                    tripId: c.trip_id,
+                    receiverId: c.chat_partner_id,
+                  })
+                }
                 className={`w-full text-left px-4 py-3 flex items-center gap-3 mb-1 transition-all ${
-                  String(selected.tripId) === String(c.trip_id) && String(selected.receiverId) === String(c.chat_partner_id)
+                  String(selected.tripId) === String(c.trip_id) &&
+                  String(selected.receiverId) === String(c.chat_partner_id)
                     ? "bg-blue-100/80 font-semibold shadow-sm rounded-xl"
                     : "hover:bg-blue-50 rounded-xl"
                 }`}
                 type="button"
               >
                 <Avatar className="size-8 sm:size-10 ring-2 ring-white shadow">
-                  <AvatarImage src={c.partner?.avatar || "https://github.com/shadcn.png"} />
+                  <AvatarImage
+                    src={c.partner?.avatar || "https://github.com/shadcn.png"}
+                  />
                   <AvatarFallback>{c.partner?.name?.[0] || "U"}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col text-sm min-w-0">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="font-semibold truncate text-gray-900">{c.partner?.name || "User"}</span>
+                    <span className="font-semibold truncate text-gray-900">
+                      {c.partner?.name || "User"}
+                    </span>
                     {Number(c.unread_count || 0) > 0 ? (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-600 text-white">{c.unread_count}</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-600 text-white">
+                        {c.unread_count}
+                      </span>
                     ) : null}
                   </div>
                   <div className="flex items-center gap-1 text-gray-500 truncate">
-                    <span className="truncate">{c.trip?.from_city} → {c.trip?.to_city}</span>
+                    <span className="truncate">
+                      {c.trip?.from_city} → {c.trip?.to_city}
+                    </span>
                     {c.last_message_is_read === true ? (
                       <CheckCheck className="size-3 text-green-600" />
                     ) : (
@@ -95,7 +128,8 @@ function Chats() {
                     )}
                   </div>
                   <div className="text-[11px] text-gray-500 truncate">
-                    {c.trip?.date} • {c.trip?.time} • {Number(c.trip?.price || 0).toLocaleString()} сум
+                    {c.trip?.date} • {c.trip?.time} •{" "}
+                    {Number(c.trip?.price || 0).toLocaleString()} сум
                   </div>
                 </div>
               </TooltipTrigger>
@@ -105,21 +139,34 @@ function Chats() {
             </Tooltip>
           ))}
           {chats.length === 0 && (
-            <div className="text-xs text-gray-500 px-4 py-3">{t("chats.selectChat")}</div>
+            <div className="text-xs text-gray-500 px-4 py-3">
+              {t("chats.selectChat")}
+            </div>
           )}
         </div>
 
         {/* Плавающая компактная панель чата */}
         {selectedChat && (
-          <div className="pointer-events-auto fixed right-2 top-20 sm:right-4 sm:top-24 z-20 bg-white border rounded-2xl shadow-xl flex flex-col overflow-hidden w-[90vw] max-w-[360px] sm:w-[220px] sm:max-w-[220px] h-[60vh] max-h-[540px] sm:h-[500px]">
+          <div className="pointer-events-auto fixed right-2 top-20 sm:right-4 sm:top-24 z-20 bg-white border rounded-2xl shadow-xl flex flex-col overflow-hidden w-[90vw] max-w-[360px] sm:w-[220px] sm:max-w-[220px] h-[60dvh] max-h-[540px] sm:h-[500px]">
             <div className="border-b px-3 py-2 flex items-center gap-2 bg-gradient-to-r from-green-100 to-blue-100">
               <Avatar className="size-8 ring-2 ring-white shadow">
-                <AvatarImage src={selectedChat.partner?.avatar || 'https://github.com/shadcn.png'} />
-                <AvatarFallback>{selectedChat.partner?.name?.[0] || 'U'}</AvatarFallback>
+                <AvatarImage
+                  src={
+                    selectedChat.partner?.avatar ||
+                    "https://github.com/shadcn.png"
+                  }
+                />
+                <AvatarFallback>
+                  {selectedChat.partner?.name?.[0] || "U"}
+                </AvatarFallback>
               </Avatar>
               <div className="flex flex-col min-w-0">
-                <span className="font-semibold text-sm truncate text-gray-900">{selectedChat.partner?.name}</span>
-                <span className="text-[11px] text-gray-600 truncate">{selectedChat.trip?.from_city} → {selectedChat.trip?.to_city}</span>
+                <span className="font-semibold text-sm truncate text-gray-900">
+                  {selectedChat.partner?.name}
+                </span>
+                <span className="text-[11px] text-gray-600 truncate">
+                  {selectedChat.trip?.from_city} → {selectedChat.trip?.to_city}
+                </span>
               </div>
               <button
                 type="button"
@@ -134,9 +181,19 @@ function Chats() {
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`flex ${Number(msg.sender_id) === Number(currentUserId) ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${
+                    Number(msg.sender_id) === Number(currentUserId)
+                      ? "justify-end"
+                      : "justify-start"
+                  }`}
                 >
-                  <span className={`inline-block text-xs px-3 py-2 rounded-2xl max-w-[85%] shadow ${Number(msg.sender_id) === Number(currentUserId) ? 'bg-blue-600 text-white' : 'bg-emerald-100 text-gray-900 border border-emerald-200'}`}>
+                  <span
+                    className={`inline-block text-xs px-3 py-2 rounded-2xl max-w-[85%] shadow ${
+                      Number(msg.sender_id) === Number(currentUserId)
+                        ? "bg-blue-600 text-white"
+                        : "bg-emerald-100 text-gray-900 border border-emerald-200"
+                    }`}
+                  >
                     {msg.message}
                   </span>
                 </div>
@@ -148,11 +205,20 @@ function Chats() {
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder={t('chats.placeholder')}
+                placeholder={t("chats.placeholder")}
                 className="px-3 py-2 text-xs rounded-full border focus:outline-none focus:ring-2 focus:ring-green-300 w-full"
-                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 disabled={!selected.tripId || !selected.receiverId}
-                onFocus={() => setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 100)}
+                onFocus={() =>
+                  setTimeout(
+                    () =>
+                      chatEndRef.current?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "end",
+                      }),
+                    100
+                  )
+                }
                 ref={inputRef}
               />
               <Button
@@ -161,7 +227,7 @@ function Chats() {
                 type="button"
                 disabled={!selected.tripId || !selected.receiverId}
               >
-                {t('chats.send')}
+                {t("chats.send")}
               </Button>
             </div>
           </div>
