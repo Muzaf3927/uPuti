@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 // others
-import { usePostData, useGetData } from "@/api/api";
+import { usePostData, useGetData, useNotifications, useNotificationsUnread, useMarkAllNotificationsRead, useMarkNotificationRead } from "@/api/api";
 
 // get firstName
 function getNthWord(str, n) {
@@ -31,7 +31,10 @@ function MainLayout() {
   const [profileOpen, setProfileOpen] = React.useState(false);
 
   const logoutMutation = usePostData("/logout");
-  const { data, isLoading, error, refetch } = useGetData("/notifications");
+  const { data: notifications } = useNotifications();
+  const { data: unread } = useNotificationsUnread();
+  const markAll = useMarkAllNotificationsRead();
+  const markRead = useMarkNotificationRead();
   const {
     data: userData,
     isLoading: userLoading,
@@ -74,16 +77,44 @@ function MainLayout() {
               {lang === "uz" ? "🇷🇺 RU" : "🇺🇿 UZ"}
             </button>
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger className="relative">
                 <Bell className="cursor-pointer text-gray-700 hover:text-green-600 transition" />
+                {!!unread?.unread_count && (
+                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-red-600 text-white text-[10px] flex items-center justify-center">
+                    {unread.unread_count}
+                  </span>
+                )}
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {data && data.notifications.map(() => <div>Bildirishnoma</div>)}
-                {data && data.notifications.length == 0 && (
-                  <DropdownMenuLabel className="w-20 sm:w-[180px] text-center">
-                    Bu yerda sizga kelgan bildirishnomalar ko'rinadi.
+              <DropdownMenuContent className="w-72 max-h-96 overflow-auto">
+                <div className="flex items-center justify-between px-2 py-1">
+                  <DropdownMenuLabel className="text-sm">Уведомления</DropdownMenuLabel>
+                  <button disabled={markAll.isPending} onClick={() => markAll.mutate()} className="text-xs text-green-700 hover:underline">
+                    Прочитать все
+                  </button>
+                </div>
+                <DropdownMenuSeparator />
+                {!notifications?.notifications?.length && (
+                  <DropdownMenuLabel className="text-center text-xs py-6 text-gray-500">
+                    Уведомлений нет
                   </DropdownMenuLabel>
                 )}
+                {notifications?.notifications?.map((n) => (
+                  <DropdownMenuItem key={n.id} className="whitespace-normal py-2">
+                    <div className="flex items-start justify-between gap-2 w-full">
+                      <div className="flex-1">
+                        <div className={`text-sm ${n.is_read ? "text-gray-600" : "text-gray-900 font-semibold"}`}>{n.message}</div>
+                        {n.created_at && (
+                          <div className="text-[10px] text-gray-400 mt-0.5">{new Date(n.created_at).toLocaleString()}</div>
+                        )}
+                      </div>
+                      {!n.is_read && (
+                        <button onClick={(e) => { e.stopPropagation(); markRead.mutate(n.id); }} className="text-xs text-blue-600 hover:underline">
+                          Прочитать
+                        </button>
+                      )}
+                    </div>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
             <button type="button" onClick={() => { setProfileOpen(true); userRefetch(); }}>

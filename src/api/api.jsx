@@ -156,6 +156,42 @@ export const useSendChatMessage = (tripId) => {
   });
 };
 
+// Notifications API helpers
+export const notificationsApi = {
+  list: () => getData("/notifications"),
+  unreadCount: () => getData("/notifications/unread-count"),
+  markAsRead: (id) => postData(`/notifications/${id}/read`, {}),
+  markAllAsRead: () => postData("/notifications/read-all", {}),
+};
+
+export const useNotifications = () =>
+  useQuery({ queryKey: ["notifications", "list"], queryFn: notificationsApi.list, refetchInterval: 30000 });
+
+export const useNotificationsUnread = () =>
+  useQuery({ queryKey: ["notifications", "unread"], queryFn: notificationsApi.unreadCount, refetchInterval: 15000 });
+
+export const useMarkNotificationRead = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => notificationsApi.markAsRead(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications", "list"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications", "unread"] });
+    },
+  });
+};
+
+export const useMarkAllNotificationsRead = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => notificationsApi.markAllAsRead(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications", "list"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications", "unread"] });
+    },
+  });
+};
+
 // ? HOW TO USE EXAMPLES:
 
 // * 1. GET DATA (useGetData hook)
