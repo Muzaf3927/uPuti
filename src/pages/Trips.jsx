@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import TimePicker from "@/components/ui/time-picker";
 
 // input mask
 import { InputMask } from "@react-input/mask";
@@ -37,6 +38,8 @@ function Trips() {
   const { t } = useI18n();
   const [dialog, setDialog] = useState(false);
   const [searchDialog, setSearchDialog] = useState(false);
+  const [selectedTime, setSelectedTime] = useState("12:00");
+  const [formErrors, setFormErrors] = useState({});
   const [dialogBron, setDialogBron] = useState(false);
   const [dialogPrice, setDialogPrice] = useState(false);
   const [searchFilters, setSearchFilters] = useState({
@@ -97,19 +100,65 @@ function Trips() {
 
   const tripPostMutation = usePostData("/trip");
 
+  // Функция валидации формы
+  const validateForm = (formData) => {
+    const errors = {};
+    
+    if (!formData.get("from")?.trim()) {
+      errors.from = "Qayerdan maydoni to'ldirilishi shart";
+    }
+    if (!formData.get("to")?.trim()) {
+      errors.to = "Qayerga maydoni to'ldirilishi shart";
+    }
+    if (!formData.get("date")?.trim()) {
+      errors.date = "Sana tanlanishi shart";
+    }
+    if (!selectedTime?.trim()) {
+      errors.time = "Vaqt tanlanishi shart";
+    }
+    if (!formData.get("cost")?.trim()) {
+      errors.cost = "Xizmat haqqi kiritilishi shart";
+    }
+    if (!formData.get("carSeats")?.trim()) {
+      errors.carSeats = "O'rindiqlar soni kiritilishi shart";
+    }
+    if (!formData.get("carModel")?.trim()) {
+      errors.carModel = "Mashina rusumi kiritilishi shart";
+    }
+    if (!formData.get("carColor")?.trim()) {
+      errors.carColor = "Mashina rangi kiritilishi shart";
+    }
+    if (!formData.get("carNumber")?.trim()) {
+      errors.carNumber = "Mashina raqami kiritilishi shart";
+    }
+    
+    return errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
 
+    // Валидация формы
+    const errors = validateForm(formData);
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      toast.error("Iltimos, barcha majburiy maydonlarni to'ldiring");
+      return;
+    }
+
+    // Очищаем ошибки если валидация прошла
+    setFormErrors({});
+
     const from_city = formData.get("from");
     const to_city = formData.get("to");
     const date = formData.get("date");
-    const time = formData.get("time");
+    const time = selectedTime; // Используем выбранное время из TimePicker
     const price = formData.get("cost");
     const note = formData.get("note");
     const carModel = formData.get("carModel");
     const carColor = formData.get("carColor");
-    const numberCar = formData.get("carNumber");
+    const numberCar = formData.get("carNumber")?.toString().toUpperCase(); // Автоматически делаем заглавными
     const seats = formData.get("carSeats");
 
     const resultData = {
@@ -129,12 +178,25 @@ function Trips() {
       const res = await tripPostMutation.mutateAsync(resultData);
       if (res.message === "Trip created!") {
         toast.success("Safar yaratildi.");
+        setDialog(false);
+        refetch();
+        myTripsRefetch();
       }
-      setDialog(false);
-      refetch();
-      myTripsRefetch();
     } catch (err) {
       console.error(err);
+      
+      // Отображаем ошибку от backend
+      if (err.response?.data?.message) {
+        toast.error(err.response.data.message);
+      } else if (err.response?.data?.errors) {
+        // Если есть валидационные ошибки
+        const errorMessages = Object.values(err.response.data.errors).flat();
+        toast.error(errorMessages.join(', '));
+      } else if (err.message) {
+        toast.error(err.message);
+      } else {
+        toast.error("Safar yaratishda xatolik yuz berdi.");
+      }
     }
   };
 
@@ -159,52 +221,115 @@ function Trips() {
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto pr-1 max-h-[70vh]">
               <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="from">Qayerdan</Label>
-                <Input type="text" id="from" name="from" placeholder="Toshkent" />
+                <Label htmlFor="from">Qayerdan *</Label>
+                <Input 
+                  type="text" 
+                  id="from" 
+                  name="from" 
+                  placeholder="Toshkent" 
+                  required
+                  className={formErrors.from ? "border-red-500" : ""}
+                />
+                {formErrors.from && <span className="text-red-500 text-xs">{formErrors.from}</span>}
               </div>
               <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="to">Qayerga</Label>
-                <Input type="text" id="to" name="to" placeholder="Buxoro" />
-              </div>
-              <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="date">Sana</Label>
-                <Input type="date" id="date" name="date" />
-              </div>
-              <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="time">Vaqt</Label>
-                <InputMask
-                  mask="__:__"
-                  replacement={{ _: /\d/ }}
-                  type="text"
-                  id="time"
-                  name="time"
-                  placeholder="12:30"
-                  className="font-normal border-input h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs outline-none"
+                <Label htmlFor="to">Qayerga *</Label>
+                <Input 
+                  type="text" 
+                  id="to" 
+                  name="to" 
+                  placeholder="Buxoro" 
+                  required
+                  className={formErrors.to ? "border-red-500" : ""}
                 />
+                {formErrors.to && <span className="text-red-500 text-xs">{formErrors.to}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="cost">Xizmat haqqi</Label>
-                <Input type="number" id="cost" name="cost" placeholder="50000" />
+                <Label htmlFor="date">Sana *</Label>
+                <Input 
+                  type="date" 
+                  id="date" 
+                  name="date" 
+                  required
+                  className={formErrors.date ? "border-red-500" : ""}
+                />
+                {formErrors.date && <span className="text-red-500 text-xs">{formErrors.date}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="carSeats">O'rindiqlar soni</Label>
-                <Input type="number" id="carSeats" name="carSeats" placeholder="4" />
+                <Label htmlFor="time">Vaqt *</Label>
+                <TimePicker
+                  value={selectedTime}
+                  onChange={setSelectedTime}
+                  className={`w-full ${formErrors.time ? "border-red-500" : ""}`}
+                />
+                {formErrors.time && <span className="text-red-500 text-xs">{formErrors.time}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="car">Mashina rusumi</Label>
-                <Input type="text" id="car" name="carModel" placeholder="Toyota Camry" />
+                <Label htmlFor="cost">Xizmat haqqi *</Label>
+                <Input 
+                  type="number" 
+                  id="cost" 
+                  name="cost" 
+                  placeholder="50000" 
+                  required
+                  className={formErrors.cost ? "border-red-500" : ""}
+                />
+                {formErrors.cost && <span className="text-red-500 text-xs">{formErrors.cost}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="carColor">Mashina rangi</Label>
-                <Input type="text" id="carColor" name="carColor" placeholder="Oq" />
+                <Label htmlFor="carSeats">O'rindiqlar soni *</Label>
+                <Input 
+                  type="number" 
+                  id="carSeats" 
+                  name="carSeats" 
+                  placeholder="4" 
+                  required
+                  className={formErrors.carSeats ? "border-red-500" : ""}
+                />
+                {formErrors.carSeats && <span className="text-red-500 text-xs">{formErrors.carSeats}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="carNumber">Mashina raqami</Label>
-                <Input type="text" id="carNumber" name="carNumber" placeholder="01A123BC" className="uppercase" />
+                <Label htmlFor="car">Mashina rusumi *</Label>
+                <Input 
+                  type="text" 
+                  id="car" 
+                  name="carModel" 
+                  placeholder="Toyota Camry" 
+                  required
+                  className={formErrors.carModel ? "border-red-500" : ""}
+                />
+                {formErrors.carModel && <span className="text-red-500 text-xs">{formErrors.carModel}</span>}
+              </div>
+              <div className="col-span-1 grid items-center gap-1.5">
+                <Label htmlFor="carColor">Mashina rangi *</Label>
+                <Input 
+                  type="text" 
+                  id="carColor" 
+                  name="carColor" 
+                  placeholder="Oq" 
+                  required
+                  className={formErrors.carColor ? "border-red-500" : ""}
+                />
+                {formErrors.carColor && <span className="text-red-500 text-xs">{formErrors.carColor}</span>}
+              </div>
+              <div className="col-span-1 grid items-center gap-1.5">
+                <Label htmlFor="carNumber">Mashina raqami *</Label>
+                <Input 
+                  type="text" 
+                  id="carNumber" 
+                  name="carNumber" 
+                  placeholder="01A123BC" 
+                  className={`uppercase ${formErrors.carNumber ? "border-red-500" : ""}`}
+                  required
+                  onChange={(e) => {
+                    e.target.value = e.target.value.toUpperCase();
+                  }}
+                />
+                {formErrors.carNumber && <span className="text-red-500 text-xs">{formErrors.carNumber}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="note">Izoh</Label>
-                <Input type="text" id="note" name="note" placeholder="Qisqa izoh" />
+                <Input type="text" id="note" name="note" placeholder="Qisqa izoh (ixtiyoriy)" />
               </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 w-full">

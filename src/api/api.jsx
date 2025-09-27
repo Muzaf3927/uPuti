@@ -192,6 +192,20 @@ export const useMarkAllNotificationsRead = () => {
   });
 };
 
+// Booking unread count API helpers
+export const bookingsApi = {
+  getUnreadCount: () => getData("/bookings/unread-count"),
+};
+
+export const useBookingsUnreadCount = () =>
+  useQuery({ 
+    queryKey: ["bookings", "unread-count"], 
+    queryFn: bookingsApi.getUnreadCount, 
+    refetchInterval: 60000,
+    staleTime: 30000, // Данные считаются свежими 30 секунд
+    cacheTime: 300000 // Кэш хранится 5 минут
+  });
+
 // ? HOW TO USE EXAMPLES:
 
 // * 1. GET DATA (useGetData hook)

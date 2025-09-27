@@ -13,18 +13,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useGetData, usePostData, postData } from "@/api/api";
+import { getInitials } from "@/lib/utils";
+import { useGetData, usePostData, postData, useBookingsUnreadCount } from "@/api/api";
 import { useI18n } from "@/app/i18n.jsx";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 function Requests() {
   const { t } = useI18n();
+  const queryClient = useQueryClient();
+  
+  // API для моих pending запросов (где я пассажир)
   const { data: mineRes, isPending: mineLoading, error: mineError, refetch: refetchMine } = useGetData(
-    "/bookings/pending/mine"
+    "/bookings/my/pending"
   );
+  
+  // API для pending запросов на мои поездки (где я водитель)
   const { data: toMeRes, isPending: toMeLoading, error: toMeError, refetch: refetchToMe } = useGetData(
-    "/bookings/pending/to-my-trips"
+    "/bookings/to-my-trips/pending"
   );
+  
+  // Получаем количество непрочитанных сообщений
+  const { data: unreadCounts } = useBookingsUnreadCount();
 
   const handleConfirm = async (bookingId) => {
     try {
@@ -32,9 +42,11 @@ function Requests() {
       toast.success("Tasdiqlandi.");
       refetchMine();
       refetchToMe();
+      queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
+      queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
     } catch (e) {
-      toast.error("Tasdiqlashda xatolik.");
       console.error(e);
+      toast.error("Tasdiqlashda xatolik.");
     }
   };
 
@@ -44,9 +56,11 @@ function Requests() {
       toast.success("Bekor qilindi.");
       refetchMine();
       refetchToMe();
+      queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
+      queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
     } catch (e) {
-      toast.error("Bekor qilishda xatolik.");
       console.error(e);
+      toast.error("Bekor qilishda xatolik.");
     }
   };
 
@@ -56,8 +70,22 @@ function Requests() {
   return (
     <Tabs defaultValue="allTrips" className="w-full">
       <TabsList className="px-2 w-full  mb-6">
-        <TabsTrigger value="allTrips">{t("requests.mineTab")}</TabsTrigger>
-        <TabsTrigger value="myTrips">{t("requests.toMeTab")}</TabsTrigger>
+        <TabsTrigger value="allTrips" className="relative">
+          {t("requests.mineTab")}
+          {unreadCounts?.my_pending_unread > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              {unreadCounts.my_pending_unread > 9 ? '9+' : unreadCounts.my_pending_unread}
+            </span>
+          )}
+        </TabsTrigger>
+        <TabsTrigger value="myTrips" className="relative">
+          {t("requests.toMeTab")}
+          {unreadCounts?.to_my_trips_pending_unread > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              {unreadCounts.to_my_trips_pending_unread > 9 ? '9+' : unreadCounts.to_my_trips_pending_unread}
+            </span>
+          )}
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="allTrips">
         <Card className="bg-gray-500/5">
@@ -123,8 +151,7 @@ function Requests() {
                   <div className="flex justify-between items-center">
                     <div className="flex gap-2 items-center">
                       <Avatar className="size-8 sm:size-10">
-                        <AvatarImage src={b.user?.avatar || "https://github.com/shadcn.png"} />
-                        <AvatarFallback>U</AvatarFallback>
+                        <AvatarFallback>{getInitials(b.user?.name)}</AvatarFallback>
                       </Avatar>
                       <div className="text-sm sm:text-2xl">
                         <h2 className="font-bold text-green-700">{b.user?.name || "Foydalanuvchi"}</h2>

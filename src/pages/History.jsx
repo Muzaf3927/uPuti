@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 import { useGetData, getData, postData } from "@/api/api";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -36,12 +37,24 @@ function History() {
       try {
         let grand = 0;
         const byTripLocal = {};
+        // Получаем все подтвержденные брони на мои поездки одним запросом
+        const confirmedBookingsRes = await getData("/bookings/to-my-trips/confirmed");
+        const confirmedBookings = confirmedBookingsRes?.bookings || [];
+        
+        // Группируем брони по поездкам
+        const bookingsByTrip = {};
+        confirmedBookings.forEach(booking => {
+          const tripId = booking.trip.id;
+          if (!bookingsByTrip[tripId]) {
+            bookingsByTrip[tripId] = [];
+          }
+          bookingsByTrip[tripId].push(booking);
+        });
+        
+        // Считаем суммы для каждой поездки
         for (const t of asDriver) {
-          // получаем брони для каждой поездки
-          const res = await getData(`/trips/${t.id}/bookings`);
-          const bookings = res?.bookings || [];
-          const confirmed = bookings.filter((b) => b.status === "confirmed");
-          const tripSum = confirmed.reduce((sum, b) => {
+          const tripBookings = bookingsByTrip[t.id] || [];
+          const tripSum = tripBookings.reduce((sum, b) => {
             // если есть offered_price, считаем его как итог за бронирование, иначе считаем цена*места
             const add = b.offered_price ? Number(b.offered_price) : Number(t.price) * Number(b.seats || 1);
             return sum + (isNaN(add) ? 0 : add);
@@ -73,8 +86,7 @@ function History() {
     <div className="border rounded-2xl p-4 flex items-center justify-between bg-white/80 backdrop-blur-sm shadow-sm">
       <div className="flex items-center gap-3">
         <Avatar className="size-8 ring-2 ring-white shadow">
-          <AvatarImage src={t?.driver?.avatar || "https://github.com/shadcn.png"} />
-          <AvatarFallback>U</AvatarFallback>
+          <AvatarFallback>{getInitials(t?.driver?.name)}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col text-sm">
           <span className="font-semibold">{t.from_city} → {t.to_city}</span>

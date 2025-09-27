@@ -77,7 +77,6 @@ function Login() {
           dispatch(login(mockResponse));
           localStorage.setItem("user", JSON.stringify(mockResponse));
           localStorage.setItem("token", mockResponse.access_token);
-          return;
         } catch (mockError) {
           //
         }

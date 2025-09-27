@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
@@ -75,13 +76,9 @@ function Profile() {
       <Card className="mx-auto w-full shadow-sm border rounded-3xl bg-gradient-to-br from-green-50 to-blue-50">
         <CardHeader className="flex items-center gap-4 pb-2">
           <Avatar className="h-16 w-16 ring-2 ring-white shadow">
-            {data.avatar ? (
-              <AvatarImage src={data.avatar} alt={data.name} />
-            ) : (
-              <AvatarFallback className="uppercase text-xl">
-                {(data.name || "?").split(" ")[0]?.[0] || "U"}
-              </AvatarFallback>
-            )}
+            <AvatarFallback className="uppercase text-xl">
+              {getInitials(data.name)}
+            </AvatarFallback>
           </Avatar>
           <div className="flex-1">
             <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">

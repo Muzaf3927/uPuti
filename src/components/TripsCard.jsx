@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -56,9 +57,10 @@ function TripsCard({ trip }) {
       setBookingDialogOpen(false);
       queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
       queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
+      queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
     } catch (err) {
-      toast.error("Bron qilishda xatolik yuz berdi.");
       console.error(err);
+      toast.error("Bron qilishda xatolik yuz berdi.");
     }
   };
   const handleSubmitOffer = async (e) => {
@@ -74,9 +76,10 @@ function TripsCard({ trip }) {
       setOfferDialogOpen(false);
       queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
       queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
+      queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
     } catch (err) {
-      toast.error("Taklif yuborishda xatolik yuz berdi.");
       console.error(err);
+      toast.error("Taklif yuborishda xatolik yuz berdi.");
     }
   };
   const handleCancelBooking = async (e) => {
@@ -87,9 +90,10 @@ function TripsCard({ trip }) {
       toast.success("So'rov bekor qilindi.");
       queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
       queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
+      queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
     } catch (err) {
-      toast.error("Bekor qilishda xatolik yuz berdi.");
       console.error(err);
+      toast.error("Bekor qilishda xatolik yuz berdi.");
     }
   };
   const handleClickPrice = (e) => {
@@ -148,8 +152,7 @@ function TripsCard({ trip }) {
           <div className="flex items-center gap-3">
             <Link to={`/user/${trip?.driver?.id}`}>
               <Avatar className="size-9 ring-2 ring-white shadow">
-                <AvatarImage src={trip.driver.avatar ? trip.driver.avatar : "https://github.com/shadcn.png"} />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback>{getInitials(trip.driver?.name)}</AvatarFallback>
               </Avatar>
             </Link>
             <div className="flex items-center gap-2 text-sm text-gray-800">

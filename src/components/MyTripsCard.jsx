@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -111,17 +112,19 @@ function MyTripsCard({ trip }) {
     }
   };
 
-  const { data: tripBookingsRes, isPending: tripBookingsLoading, error: tripBookingsError } = useGetData(`/trips/${trip.id}/bookings`);
-  const tripBookings = tripBookingsRes?.bookings || [];
-  const pendingRequests = tripBookings.filter((b) => b.status === "pending");
-  const confirmedBookings = tripBookings.filter((b) => b.status === "confirmed");
+  // Используем данные пассажиров из trip объекта (приходят с /my-trips API)
+  const pendingRequests = trip.pending_passengers || [];
+  const confirmedBookings = trip.confirmed_passengers || [];
+  
+  const tripBookingsLoading = false; // Данные уже загружены с trip
+  const tripBookingsError = null;
 
   const handleConfirm = async (bookingId) => {
     try {
       await postData(`/bookings/${bookingId}`, { status: "confirmed" });
       toast.success(t("myTripsCard.acceptedToast"));
-      queryClient.invalidateQueries({ queryKey: ["data", `/trips/${trip.id}/bookings`] });
-      queryClient.invalidateQueries({ queryKey: ["data", "/bookings/pending/to-my-trips"] });
+      queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
+      queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
     } catch (e) {
       toast.error(t("requests.acceptError"));
     }
@@ -130,8 +133,8 @@ function MyTripsCard({ trip }) {
     try {
       await postData(`/bookings/${bookingId}`, { status: "declined" });
       toast.success(t("myTripsCard.declinedToast"));
-      queryClient.invalidateQueries({ queryKey: ["data", `/trips/${trip.id}/bookings`] });
-      queryClient.invalidateQueries({ queryKey: ["data", "/bookings/pending/to-my-trips"] });
+      queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
+      queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
     } catch (e) {
       toast.error(t("requests.declineError"));
     }
@@ -165,10 +168,20 @@ function MyTripsCard({ trip }) {
             <Button onClick={() => setRequestsOpen(true)} className="min-h-9 px-2 py-2 rounded-full bg-blue-600 text-white text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center">
               <Mail className="size-4" />
               <span>{t("myTripsCard.requests")}</span>
+              {pendingRequests.length > 0 && (
+                <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {pendingRequests.length}
+                </span>
+              )}
             </Button>
             <Button onClick={() => setBookingsOpen(true)} className="min-h-9 px-2 py-2 rounded-full bg-emerald-600 text-white text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center">
               <CircleCheck className="size-4" />
               <span>{t("myTripsCard.bookings")}</span>
+              {confirmedBookings.length > 0 && (
+                <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {confirmedBookings.length}
+                </span>
+              )}
             </Button>
             <Button onClick={handleComplete} disabled={trip.status !== "active"} className="min-h-9 px-2 py-2 rounded-full bg-red-600 text-white text-[10px] leading-tight disabled:bg-gray-300 disabled:text-gray-500 flex items-center gap-1 justify-center whitespace-normal text-center col-span-2">
               <CircleCheck className="size-4" />
@@ -187,13 +200,23 @@ function MyTripsCard({ trip }) {
         {/* Desktop ≥ 640px: previous inline layout */}
         <div className="w-full hidden sm:flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Button onClick={() => setRequestsOpen(true)} className="h-10 px-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 text-sm sm:text-base">
+            <Button onClick={() => setRequestsOpen(true)} className="h-10 px-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 text-sm sm:text-base relative">
               <Mail className="size-4" />
               <span className="text-sm">{t("myTripsCard.requests")}</span>
+              {pendingRequests.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {pendingRequests.length}
+                </span>
+              )}
             </Button>
-            <Button onClick={() => setBookingsOpen(true)} className="h-10 px-3 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-2 text-sm sm:text-base">
+            <Button onClick={() => setBookingsOpen(true)} className="h-10 px-3 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-2 text-sm sm:text-base relative">
               <CircleCheck className="size-4" />
               <span className="text-sm">{t("myTripsCard.bookings")}</span>
+              {confirmedBookings.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {confirmedBookings.length}
+                </span>
+              )}
             </Button>
             <Button onClick={handleComplete} disabled={trip.status !== "active"} className="h-10 px-3 rounded-full bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-300 disabled:text-gray-500 flex items-center gap-2 text-sm sm:text-base">
               <CircleCheck className="size-4" />
@@ -292,8 +315,7 @@ function MyTripsCard({ trip }) {
                 <div key={b.id} className="border rounded-2xl p-3 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Avatar className="size-8">
-                      <AvatarImage src={b.user?.avatar || "https://github.com/shadcn.png"} />
-                      <AvatarFallback>U</AvatarFallback>
+                      <AvatarFallback>{getInitials(b.user?.name)}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col text-sm">
                       <span className="font-semibold">{b.user?.name || "Foydalanuvchi"}</span>
@@ -331,8 +353,7 @@ function MyTripsCard({ trip }) {
                 <div key={b.id} className="border rounded-2xl p-3 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Avatar className="size-8">
-                      <AvatarImage src={b.user?.avatar || "https://github.com/shadcn.png"} />
-                      <AvatarFallback>U</AvatarFallback>
+                      <AvatarFallback>{getInitials(b.user?.name)}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col text-sm">
                       <span className="font-semibold">{b.user?.name || "Foydalanuvchi"}</span>

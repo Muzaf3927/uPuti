@@ -5,93 +5,83 @@ import { Link } from "react-router-dom";
 // shad ui
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { useParams } from "react-router-dom";
 
-import { useGetData } from "@/api/api";
+import { useGetData, useBookingsUnreadCount } from "@/api/api";
 import { useI18n } from "@/app/i18n.jsx";
 
-function TripBookingsList({ tripId }) {
-  const { t } = useI18n();
-  const { data, isLoading, error } = useGetData(`/trips/${tripId}/bookings`);
-  if (isLoading) return <div className="text-sm">{t("booking.loading")}</div>;
-  if (error) return <div className="text-sm text-red-600">Xatolik: {error.message}</div>;
-  const bookings = data?.bookings || [];
-  if (bookings.length === 0) return <div className="text-sm">{t("booking.none")}</div>;
-  return (
-    <div className="flex flex-col gap-3 mt-3">
-      {bookings.map((b) => (
-        <div key={b.id} className="border rounded-2xl p-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Avatar className="size-8">
-              <AvatarImage src={b.user?.avatar || "https://github.com/shadcn.png"} />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col text-sm">
-              <span className="font-semibold">{b.user?.name || "Foydalanuvchi"}</span>
-              <span>{b.seats} ta o'rin • Подтверждено</span>
-              {b.offered_price ? <span>Taklif: {b.offered_price} so'm</span> : null}
-              {b.comment ? <span className="text-gray-600">{b.comment}</span> : null}
-            </div>
-          </div>
-          <Link
-            to={`/chats?tripId=${tripId}&receiverId=${b.user?.id}`}
-            className="inline-flex items-center gap-2 text-green-700 border-2 border-green-700 px-3 py-1 rounded-2xl hover:bg-green-700 hover:text-white transition"
-          >
-            <MessageCircle size={16} /> {t("booking.writePassenger")}
-          </Link>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function Booking() {
   const { t } = useI18n();
-  const { data: myBookingsRes, isPending: myBookingsLoading, error: myBookingsError } = useGetData("/bookings");
-  const { data: myTripsRes, isPending: myTripsLoading, error: myTripsError } = useGetData("/my-trips");
+  
+  // API для моих подтвержденных броней (где я пассажир)
+  const { data: myConfirmedBookingsRes, isPending: myConfirmedBookingsLoading, error: myConfirmedBookingsError } = useGetData("/bookings/my/confirmed");
+  
+  // API для подтвержденных броней на мои поездки (где я водитель)
+  const { data: confirmedBookingsToMyTripsRes, isPending: confirmedBookingsToMyTripsLoading, error: confirmedBookingsToMyTripsError } = useGetData("/bookings/to-my-trips/confirmed");
+  
+  // Получаем количество непрочитанных сообщений
+  const { data: unreadCounts } = useBookingsUnreadCount();
 
-  const myBookings = myBookingsRes?.bookings || [];
-  const myTrips = myTripsRes?.trips || myTripsRes?.data || [];
+  const myConfirmedBookings = myConfirmedBookingsRes?.bookings || [];
+  const confirmedBookingsToMyTrips = confirmedBookingsToMyTripsRes?.bookings || [];
 
-  const [expandedTripIds, setExpandedTripIds] = useState([]);
-  const toggleTrip = (id) => {
-    setExpandedTripIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
-  };
-
-  // Разворачиваем все поездки по умолчанию, когда список загрузился
-  React.useEffect(() => {
-    if (Array.isArray(myTrips) && myTrips.length > 0) {
-      const ids = myTrips.map((t) => t.id);
-      setExpandedTripIds(ids);
-    }
-  }, [myTrips]);
+  // Группируем брони по поездкам для второй вкладки
+  const bookingsByTrip = React.useMemo(() => {
+    const grouped = {};
+    confirmedBookingsToMyTrips.forEach(booking => {
+      const tripId = booking.trip.id;
+      if (!grouped[tripId]) {
+        grouped[tripId] = {
+          trip: booking.trip,
+          bookings: []
+        };
+      }
+      grouped[tripId].bookings.push(booking);
+    });
+    return grouped;
+  }, [confirmedBookingsToMyTrips]);
 
   return (
     <>
       <Tabs defaultValue="fromMe" className="">
         <TabsList className="w-full rounded-2xl bg-white/70 backdrop-blur-sm">
-          <TabsTrigger value="fromMe">{t("booking.myBookings")}</TabsTrigger>
-          <TabsTrigger value="toMe">{t("booking.toMe")}</TabsTrigger>
+          <TabsTrigger value="fromMe" className="relative">
+            {t("booking.myBookings")}
+            {unreadCounts?.my_confirmed_unread > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                {unreadCounts.my_confirmed_unread > 9 ? '9+' : unreadCounts.my_confirmed_unread}
+              </span>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="toMe" className="relative">
+            {t("booking.toMe")}
+            {unreadCounts?.to_my_trips_confirmed_unread > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                {unreadCounts.to_my_trips_confirmed_unread > 9 ? '9+' : unreadCounts.to_my_trips_confirmed_unread}
+              </span>
+            )}
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="fromMe">
           <Card className="rounded-3xl shadow-sm">
             <CardContent className="flex flex-col gap-4 py-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
-              {myBookingsLoading ? (
+              {myConfirmedBookingsLoading ? (
                 <div>Yuklanmoqda...</div>
-              ) : myBookingsError ? (
-                <div className="text-red-600">Xatolik: {myBookingsError.message}</div>
-              ) : myBookings.length === 0 ? (
-                <div>Hali bronlaringiz yo'q.</div>
+              ) : myConfirmedBookingsError ? (
+                <div className="text-red-600">Xatolik: {myConfirmedBookingsError.message}</div>
+              ) : myConfirmedBookings.length === 0 ? (
+                <div>Hali tasdiqlangan bronlaringiz yo'q.</div>
               ) : (
-                myBookings.map((b) => (
+                myConfirmedBookings.map((b) => (
                   <div key={b.id} className="bg-white/80 backdrop-blur-sm border border-green-100 p-4 rounded-2xl shadow-sm">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Avatar className="size-8 sm:size-10">
-                          <AvatarImage src={b.trip?.driver?.avatar || "https://github.com/shadcn.png"} />
-                          <AvatarFallback>DR</AvatarFallback>
+                          <AvatarFallback>{getInitials(b.trip?.driver?.name)}</AvatarFallback>
                         </Avatar>
                         <div className="text-sm sm:text-base">
                           <h2 className="font-bold text-green-700">
@@ -126,34 +116,46 @@ function Booking() {
         <TabsContent value="toMe">
           <Card className="rounded-3xl shadow-sm">
             <CardContent className="flex flex-col gap-4 py-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
-              {myTripsLoading ? (
+              {confirmedBookingsToMyTripsLoading ? (
                 <div>Yuklanmoqda...</div>
-              ) : myTripsError ? (
-                <div className="text-red-600">Xatolik: {myTripsError.message}</div>
-              ) : myTrips.length === 0 ? (
-                <div>Hali siz yaratgan safarlar yo'q.</div>
+              ) : confirmedBookingsToMyTripsError ? (
+                <div className="text-red-600">Xatolik: {confirmedBookingsToMyTripsError.message}</div>
+              ) : Object.keys(bookingsByTrip).length === 0 ? (
+                <div>Hali sizning safarlaringizga tasdiqlangan bronlar yo'q.</div>
               ) : (
-                myTrips.map((t) => (
-                  <div key={t.id} className="border rounded-2xl p-4 bg-white/80 backdrop-blur-sm shadow-sm">
+                Object.values(bookingsByTrip).map(({ trip, bookings }) => (
+                  <div key={trip.id} className="border rounded-2xl p-4 bg-white/80 backdrop-blur-sm shadow-sm">
                     <div className="flex items-center justify-between">
                       <div className="font-semibold text-green-700">
-                        {t.from_city} <ArrowRight size={14} className="inline" /> {t.to_city}
-                        <span className="ml-2 text-gray-600">{t.date} • {t.time}</span>
+                        {trip.from_city} <ArrowRight size={14} className="inline" /> {trip.to_city}
+                        <span className="ml-2 text-gray-600">{trip.date} • {trip.time}</span>
                       </div>
-                      <button
-                        onClick={() => toggleTrip(t.id)}
-                        className="text-sm border rounded-xl px-2 py-1 bg-white hover:bg-green-50"
-                      >
-                        {expandedTripIds.includes(t.id) ? (
-                          <span className="inline-flex items-center gap-1">Yopish <ChevronUp size={14} /></span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1">Ko'rish <ChevronDown size={14} /></span>
-                        )}
-                      </button>
                     </div>
-                    {expandedTripIds.includes(t.id) && (
-                      <TripBookingsList tripId={t.id} />
-                    )}
+                    
+                    {/* Показываем брони для этой поездки */}
+                    <div className="flex flex-col gap-3 mt-3">
+                      {bookings.map((b) => (
+                        <div key={b.id} className="border rounded-2xl p-3 flex items-center justify-between bg-green-50">
+                          <div className="flex items-center gap-3">
+                            <Avatar className="size-8">
+                              <AvatarFallback>{getInitials(b.user?.name)}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col text-sm">
+                              <span className="font-semibold">{b.user?.name || "Foydalanuvchi"}</span>
+                              <span>{b.seats} ta o'rin • Подтверждено</span>
+                              {b.offered_price ? <span>Taklif: {b.offered_price} so'm</span> : null}
+                              {b.comment ? <span className="text-gray-600">{b.comment}</span> : null}
+                            </div>
+                          </div>
+                          <Link
+                            to={`/chats?tripId=${trip.id}&receiverId=${b.user?.id}`}
+                            className="inline-flex items-center gap-2 text-green-700 border-2 border-green-700 px-3 py-1 rounded-2xl hover:bg-green-700 hover:text-white transition"
+                          >
+                            <MessageCircle size={16} /> {t("booking.writePassenger")}
+                          </Link>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))
               )}

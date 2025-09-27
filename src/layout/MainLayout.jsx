@@ -93,12 +93,12 @@ function MainLayout() {
                   </button>
                 </div>
                 <DropdownMenuSeparator />
-                {!notifications?.notifications?.length && (
+                {!notifications?.notifications?.filter(n => !n.is_read)?.length && (
                   <DropdownMenuLabel className="text-center text-xs py-6 text-gray-500">
                     Уведомлений нет
                   </DropdownMenuLabel>
                 )}
-                {notifications?.notifications?.map((n) => (
+                {notifications?.notifications?.filter(n => !n.is_read)?.map((n) => (
                   <DropdownMenuItem key={n.id} className="whitespace-normal py-2">
                     <div className="flex items-start justify-between gap-2 w-full">
                       <div className="flex-1">

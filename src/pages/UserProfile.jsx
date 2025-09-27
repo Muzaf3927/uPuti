@@ -7,6 +7,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
@@ -76,13 +77,9 @@ function UserProfile() {
       <Card className=" mx-auto w-full shadow-lg px-0 border-green-400">
         <CardHeader className="flex items-center gap-4 pb-2">
           <Avatar className="h-16 w-16">
-            {user?.avatar ? (
-              <AvatarImage src={user?.avatar} alt={user?.name} />
-            ) : (
-              <AvatarFallback className="uppercase text-xl">
-                {(user?.name || "?").split(" ")[0]?.[0] || "U"}
-              </AvatarFallback>
-            )}
+            <AvatarFallback className="uppercase text-xl">
+              {getInitials(user?.name)}
+            </AvatarFallback>
           </Avatar>
           <div className="flex-1">
             <CardTitle className="flex items-center gap-2 text-lg font-semibold">

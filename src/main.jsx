@@ -11,7 +11,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { I18nProvider } from "./app/i18n.jsx";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 минут
+    },
+  },
+});
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
