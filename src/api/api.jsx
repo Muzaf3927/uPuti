@@ -132,14 +132,22 @@ export const useGetUserChats = () =>
   useQuery({ queryKey: ["chats", "list"], queryFn: chatsApi.getUserChats });
 
 export const useGetUnreadCount = () =>
-  useQuery({ queryKey: ["chats", "unread"], queryFn: chatsApi.getUnreadCount, refetchInterval: 15000 });
+  useQuery({ 
+    queryKey: ["chats", "unread"], 
+    queryFn: chatsApi.getUnreadCount, 
+    refetchInterval: 30000,
+    staleTime: 15000,
+    cacheTime: 300000
+  });
 
 export const useGetChatMessages = (tripId, receiverId, enabled = true) =>
   useQuery({
     queryKey: ["chats", "messages", tripId, receiverId],
     queryFn: () => chatsApi.getChatMessages(tripId, receiverId),
     enabled: Boolean(tripId && receiverId && enabled),
-    refetchInterval: 5000,
+    refetchInterval: 30000,
+    staleTime: 10000,
+    cacheTime: 300000
   });
 
 export const useSendChatMessage = (tripId) => {
@@ -168,7 +176,13 @@ export const useNotifications = () =>
   useQuery({ queryKey: ["notifications", "list"], queryFn: notificationsApi.list, refetchInterval: 30000 });
 
 export const useNotificationsUnread = () =>
-  useQuery({ queryKey: ["notifications", "unread"], queryFn: notificationsApi.unreadCount, refetchInterval: 15000 });
+  useQuery({ 
+    queryKey: ["notifications", "unread"], 
+    queryFn: notificationsApi.unreadCount, 
+    refetchInterval: 30000,
+    staleTime: 15000,
+    cacheTime: 300000
+  });
 
 export const useMarkNotificationRead = () => {
   const queryClient = useQueryClient();

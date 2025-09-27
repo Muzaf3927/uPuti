@@ -29,7 +29,9 @@ function TripsCard({ trip }) {
   const { t } = useI18n();
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [offerDialogOpen, setOfferDialogOpen] = useState(false);
-  const [seats, setSeats] = useState(1);
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [pendingRequest, setPendingRequest] = useState(null);
+  const [seats, setSeats] = useState("");
   const [offeredPrice, setOfferedPrice] = useState("");
   const [comment, setComment] = useState("");
 
@@ -38,50 +40,72 @@ function TripsCard({ trip }) {
 
   const openBookingDialog = (e) => {
     e.stopPropagation();
-    setSeats(1);
+    setSeats("");
     setBookingDialogOpen(true);
   };
   const openOfferDialog = (e) => {
     e.stopPropagation();
-    setSeats(1);
+    setSeats("");
     setOfferedPrice("");
     setComment("");
     setOfferDialogOpen(true);
   };
   const handleSubmitBooking = async (e) => {
     e.preventDefault();
-    try {
-      const body = { seats: Number(seats) };
-      await tripPostMutation.mutateAsync(body);
-      toast.success("Bron qilindi.");
-      setBookingDialogOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
-      queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
-      queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
-    } catch (err) {
-      console.error(err);
-      toast.error("Bron qilishda xatolik yuz berdi.");
+    if (!seats || Number(seats) < 1 || Number(seats) > 4) {
+      toast.error("Iltimos, 1-4 o'rin orasida kiriting");
+      return;
     }
+    setPendingRequest({ type: 'booking', data: { seats: Number(seats) } });
+    setBookingDialogOpen(false);
+    setConfirmationDialogOpen(true);
   };
   const handleSubmitOffer = async (e) => {
     e.preventDefault();
-    try {
-      const body = {
+    if (!seats || Number(seats) < 1 || Number(seats) > 4) {
+      toast.error("Iltimos, 1-4 o'rin orasida kiriting");
+      return;
+    }
+    if (!offeredPrice || Number(offeredPrice) < 0) {
+      toast.error("Iltimos, taklif narxini kiriting");
+      return;
+    }
+    setPendingRequest({ 
+      type: 'offer', 
+      data: {
         seats: Number(seats),
-        offered_price: offeredPrice ? Number(offeredPrice) : null,
+        offered_price: Number(offeredPrice),
         comment: comment || null,
-      };
-      await tripPostMutation.mutateAsync(body);
-      toast.success("Taklif yuborildi.");
-      setOfferDialogOpen(false);
+      }
+    });
+    setOfferDialogOpen(false);
+    setConfirmationDialogOpen(true);
+  };
+
+  const handleConfirmRequest = async () => {
+    if (!pendingRequest) return;
+    
+    try {
+      await tripPostMutation.mutateAsync(pendingRequest.data);
+      const successMessage = pendingRequest.type === 'booking' ? "Bron qilindi." : "Taklif yuborildi.";
+      toast.success(successMessage);
+      setConfirmationDialogOpen(false);
+      setPendingRequest(null);
       queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
       queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
       queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
     } catch (err) {
       console.error(err);
-      toast.error("Taklif yuborishda xatolik yuz berdi.");
+      const errorMessage = pendingRequest.type === 'booking' ? "Bron qilishda xatolik yuz berdi." : "Taklif yuborishda xatolik yuz berdi.";
+      toast.error(errorMessage);
     }
   };
+
+  const handleCancelRequest = () => {
+    setConfirmationDialogOpen(false);
+    setPendingRequest(null);
+  };
+
   const handleCancelBooking = async (e) => {
     e.stopPropagation();
     try {
@@ -200,27 +224,30 @@ function TripsCard({ trip }) {
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
         <DialogContent onClick={(e) => e.stopPropagation()}>
           <DialogHeader>
-            <DialogTitle>Necha o'rin band qilmoqchisiz?</DialogTitle>
+            <DialogTitle>{t("tripsCard.bookingTitle")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmitBooking} className="flex flex-col gap-3">
             <div className="grid w-full items-center gap-2">
-              <Label htmlFor="seats">O'rindiqlar soni</Label>
+              <Label htmlFor="seats">{t("tripsCard.seatsLabel")}</Label>
               <Input
                 id="seats"
                 type="number"
                 min={1}
+                max={4}
+                required
                 value={seats}
                 onChange={(e) => setSeats(e.target.value)}
+                placeholder={t("tripsCard.seatsPlaceholder")}
               />
             </div>
             <div className="w-full flex gap-2">
               <DialogClose asChild>
                 <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
-                  Bekor qilish
+                  {t("tripsCard.cancelButton")}
                 </Button>
               </DialogClose>
               <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
-                Yuborish
+                {t("tripsCard.submitBooking")}
               </Button>
             </div>
           </form>
@@ -231,21 +258,24 @@ function TripsCard({ trip }) {
       <Dialog open={offerDialogOpen} onOpenChange={setOfferDialogOpen}>
         <DialogContent onClick={(e) => e.stopPropagation()}>
           <DialogHeader>
-            <DialogTitle>Narx taklif qilish</DialogTitle>
+            <DialogTitle>{t("tripsCard.offerTitle")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmitOffer} className="flex flex-col gap-3">
             <div className="grid w-full items-center gap-2">
-              <Label htmlFor="offer-seats">O'rindiqlar soni</Label>
+              <Label htmlFor="offer-seats">{t("tripsCard.seatsLabel")}</Label>
               <Input
                 id="offer-seats"
                 type="number"
                 min={1}
+                max={4}
+                required
                 value={seats}
                 onChange={(e) => setSeats(e.target.value)}
+                placeholder={t("tripsCard.seatsPlaceholder")}
               />
             </div>
             <div className="grid w-full items-center gap-2">
-              <Label htmlFor="price">Taklif narxi (so'm)</Label>
+              <Label htmlFor="price">{t("tripsCard.priceLabel")}</Label>
               <Input
                 id="price"
                 type="number"
@@ -255,26 +285,60 @@ function TripsCard({ trip }) {
               />
             </div>
             <div className="grid w-full items-center gap-2">
-              <Label htmlFor="comment">Izoh</Label>
+              <Label htmlFor="comment">{t("tripsCard.commentLabel")}</Label>
               <Input
                 id="comment"
                 type="text"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="Menda bundan ko'p pul yo'q"
+                placeholder={t("tripsCard.commentPlaceholder")}
               />
             </div>
             <div className="w-full flex gap-2">
               <DialogClose asChild>
                 <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
-                  Bekor qilish
+                  {t("tripsCard.cancelButton")}
                 </Button>
               </DialogClose>
               <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
-                Yuborish
+                {t("tripsCard.submitOffer")}
               </Button>
             </div>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={confirmationDialogOpen} onOpenChange={setConfirmationDialogOpen}>
+        <DialogContent className="max-w-[400px] p-6">
+          <DialogHeader className="text-center">
+            <div className="mx-auto mb-4 w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <DialogTitle className="text-xl font-bold text-gray-900 mb-2">
+              {t("trips.confirmation.title")}
+            </DialogTitle>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              {t("trips.confirmation.message")}
+            </p>
+          </DialogHeader>
+          <div className="flex gap-3 mt-6">
+            <Button
+              onClick={handleCancelRequest}
+              variant="outline"
+              className="flex-1 rounded-xl border-gray-300 text-gray-700 hover:bg-gray-50"
+            >
+              {t("trips.confirmation.cancel")}
+            </Button>
+            <Button
+              onClick={handleConfirmRequest}
+              className="flex-1 bg-green-600 hover:bg-green-700 rounded-xl text-white font-medium"
+            >
+              {t("trips.confirmation.continue")}
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </>

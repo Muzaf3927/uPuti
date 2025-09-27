@@ -151,51 +151,66 @@ function Register() {
   };
 
   return (
-    <div className="py-10 px-2 flex gap-5 flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="flex items-center justify-center text-green-700 font-bold">
-        <img src="/logo.png" alt="UPuti" className="h-20 sm:h-24 w-auto object-contain mix-blend-multiply" />
-      </h1>
-      <div className="flex items-center justify-center gap-2">
-        <p className="text-center">{t("auth.slogan")}</p>
-        <button
-          type="button"
-          onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
-          className="ml-2 px-3 py-1 rounded-full border bg-white/80 hover:bg-green-50 text-xs"
-        >
-          {lang === "uz" ? "🇷🇺 RU" : "🇺🇿 UZ"}
-        </button>
+    <div className="pt-2 pb-6 px-1 flex gap-3 flex-col items-center justify-center min-h-screen bg-gray-100">
+      {/* Верхний текст */}
+      <div className="w-full max-w-4xl text-center px-2 mb-0">
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-3 shadow-sm border border-green-100">
+          <h2 className="text-sm sm:text-lg lg:text-xl font-bold text-gray-800 mb-1">
+            {lang === "uz" 
+              ? "Qo'l ko'tarib yo'lda Poputi mashina kutish vaqti o'td!" 
+              : "Эпоха голосования на дороге прошла!"
+            }
+          </h2>
+          <p className="text-xs sm:text-sm lg:text-base text-gray-600 leading-relaxed">
+            {lang === "uz" 
+              ? "«Popoutchik» lar uchun endi - arzon, xavfsiz va qulay hamsafar flatformasi:"
+              : "Теперь для «попутчиков» — доступная, безопасная и удобная платформа совместных поездок"
+            }
+          </p>
+        </div>
       </div>
-      <div className="flex gap-2 w-full max-w-[450px] py-1">
-        <Card className="w-full py-2 h-[80px]">
-          <CardHeader>
-            <CardTitle className="text-green-700 text-sm text-center flex flex-col items-center gap-1">
-              <Users />
-              <p>Ishonchli sayohat hamrohlari</p>
+      
+      <h1 className="flex items-center justify-center text-green-700 font-bold">
+        <img src="/logo.png" alt="UPuti" className="h-16 sm:h-20 lg:h-24 w-auto object-contain mix-blend-multiply" />
+      </h1>
+      <div className="flex gap-1 w-full max-w-[450px] py-1">
+        <Card className="w-full py-1 h-[70px] sm:h-[80px]">
+          <CardHeader className="p-2">
+            <CardTitle className="text-green-700 text-xs sm:text-sm text-center flex flex-col items-center gap-1">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+              <p className="text-xs sm:text-sm leading-tight">Ishonchli sayohat hamrohlari</p>
             </CardTitle>
           </CardHeader>
         </Card>
-        <Card className="w-full h-[80px] py-2">
-          <CardHeader>
-            <CardTitle className="text-green-700 text-sm text-center flex flex-col items-center gap-1">
-              <MapPin />
-              <p>Qulay yo‘nalishlar</p>
+        <Card className="w-full h-[70px] sm:h-[80px] py-1">
+          <CardHeader className="p-2">
+            <CardTitle className="text-green-700 text-xs sm:text-sm text-center flex flex-col items-center gap-1">
+              <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+              <p className="text-xs sm:text-sm leading-tight">Qulay yo'nalishlar</p>
             </CardTitle>
           </CardHeader>
         </Card>
       </div>
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-green-700 mx-auto text-md sm:text-xl font-bold">
+        <CardHeader className="relative p-4 sm:p-6">
+          <CardTitle className="text-green-700 mx-auto text-lg sm:text-xl font-bold">
             {t("auth.signupTitle")}
           </CardTitle>
-          <p className="text-gray-500 mx-auto text-sm sm:text-md">
+          <p className="text-gray-500 mx-auto text-sm">
             {t("auth.signupSubtitle")}
           </p>
+          <button
+            type="button"
+            onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
+            className="absolute top-2 right-2 sm:top-4 sm:right-4 px-2 py-1 sm:px-3 sm:py-1 rounded-full border bg-white hover:bg-green-50 text-xs"
+          >
+            {lang === "uz" ? "🇷🇺 RU" : "🇺🇿 UZ"}
+          </button>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid w-full max-w-sm items-center gap-3">
-              <Label htmlFor="name">{t("auth.nameLabel")}</Label>
+        <CardContent className="p-4 sm:p-6">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+            <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
+              <Label htmlFor="name" className="text-sm">{t("auth.nameLabel")}</Label>
               <div className="relative">
                 <Input
                   type="text"
@@ -205,17 +220,17 @@ function Register() {
                   value={form.name}
                   onChange={handleChange}
                   required
-                  className="pl-10"
+                  className="pl-10 h-8 sm:h-9 text-sm sm:text-base"
                 />
                 <User
                   className="absolute left-2 top-2 text-gray-400"
-                  size={20}
+                  size={16}
                 />
               </div>
             </div>
 
-            <div className="grid w-full max-w-sm items-center gap-3">
-              <Label htmlFor="phone">{t("auth.phoneLabel")}</Label>
+            <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
+              <Label htmlFor="phone" className="text-sm">{t("auth.phoneLabel")}</Label>
               <div className="relative">
                 <InputMask
                   mask="_________"
@@ -233,17 +248,17 @@ function Register() {
                   placeholder={t("auth.phonePlaceholder")}
                   required
                   autoComplete="tel"
-                  className="pl-20 font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                  className="pl-16 sm:pl-20 font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-8 sm:h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm sm:text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-6 sm:file:h-7 file:border-0 file:bg-transparent file:text-xs sm:file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                 />
                 <Phone
                   className="absolute left-2 top-2 text-gray-400"
-                  size={20}
+                  size={16}
                 />
-                <p className="absolute left-10 top-1.5 font-normal">+998</p>
+                <p className="absolute left-8 sm:left-10 top-1.5 font-normal text-sm">+998</p>
               </div>
             </div>
-            <div className="grid w-full max-w-sm items-center gap-3">
-              <Label htmlFor="password">{t("auth.passwordLabel")}</Label>
+            <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
+              <Label htmlFor="password" className="text-sm">{t("auth.passwordLabel")}</Label>
               <div className="relative">
                 <Input
                   autoComplete="new-password"
@@ -254,7 +269,7 @@ function Register() {
                   value={form.password}
                   onChange={handleChange}
                   required
-                  className="pl-10"
+                  className="pl-10 h-8 sm:h-9 text-sm sm:text-base"
                 />
                 <button
                   type="button"
@@ -262,16 +277,16 @@ function Register() {
                   onClick={() => setShowPassword((v) => !v)}
                   tabIndex={-1}
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <EyeOff size={16} className="sm:w-4 sm:h-4" /> : <Eye size={16} className="sm:w-4 sm:h-4" />}
                 </button>
                 <Lock
                   className="absolute left-2 top-2 text-gray-400 pointer-events-none"
-                  size={20}
+                  size={16}
                 />
               </div>
             </div>
-            <div className="grid w-full max-w-sm items-center gap-3">
-              <Label htmlFor="password_confirmation">{lang === "ru" ? "Подтвердите пароль" : "Parolni tekshirish"}</Label>
+            <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
+              <Label htmlFor="password_confirmation" className="text-sm">{lang === "ru" ? "Подтвердите пароль" : "Parolni tekshirish"}</Label>
               <div className="relative">
                 <Input
                   autoComplete="new-password"
@@ -282,7 +297,7 @@ function Register() {
                   value={form.password_confirmation}
                   onChange={handleChange}
                   required
-                  className="pl-10"
+                  className="pl-10 h-8 sm:h-9 text-sm sm:text-base"
                 />
                 <button
                   type="button"
@@ -291,35 +306,35 @@ function Register() {
                   tabIndex={-1}
                 >
                   {showConfirmPassword ? (
-                    <EyeOff size={18} />
+                    <EyeOff size={16} className="sm:w-4 sm:h-4" />
                   ) : (
-                    <Eye size={18} />
+                    <Eye size={16} className="sm:w-4 sm:h-4" />
                   )}
                 </button>
                 <Lock
                   className="absolute left-2 top-2 text-gray-400 pointer-events-none"
-                  size={20}
+                  size={16}
                 />
               </div>
             </div>
-            {error && <div className="text-red-500 text-sm">{error}</div>}
-            {success && <div className="text-green-600 text-sm">{success}</div>}
+            {error && <div className="text-red-500 text-xs sm:text-sm">{error}</div>}
+            {success && <div className="text-green-600 text-xs sm:text-sm">{success}</div>}
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-700"
+              className="w-full bg-green-700 h-8 sm:h-9 text-sm sm:text-base"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <Loader2 className="animate-spin" size={18} />
+                  <Loader2 className="animate-spin" size={16} />
                   {t("auth.signupProgress")}
                 </span>
               ) : (
                 t("auth.signupBtn")
               )}
             </Button>
-            <div className="flex justify-center items-center text-sm">
-              <p>
+            <div className="flex justify-center items-center text-xs sm:text-sm">
+              <p className="text-center">
                 {t("auth.haveAccount")} {" "}
                 <Link className="underline" to="/login">
                   {t("auth.goLogin")}

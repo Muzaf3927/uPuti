@@ -69,19 +69,19 @@ function Requests() {
 
   return (
     <Tabs defaultValue="allTrips" className="w-full">
-      <TabsList className="px-2 w-full  mb-6">
-        <TabsTrigger value="allTrips" className="relative">
+      <TabsList className="px-1 sm:px-2 w-full mb-4 sm:mb-6">
+        <TabsTrigger value="allTrips" className="relative text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">
           {t("requests.mineTab")}
           {unreadCounts?.my_pending_unread > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] sm:text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold">
               {unreadCounts.my_pending_unread > 9 ? '9+' : unreadCounts.my_pending_unread}
             </span>
           )}
         </TabsTrigger>
-        <TabsTrigger value="myTrips" className="relative">
+        <TabsTrigger value="myTrips" className="relative text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">
           {t("requests.toMeTab")}
           {unreadCounts?.to_my_trips_pending_unread > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] sm:text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold">
               {unreadCounts.to_my_trips_pending_unread > 9 ? '9+' : unreadCounts.to_my_trips_pending_unread}
             </span>
           )}
@@ -89,29 +89,29 @@ function Requests() {
       </TabsList>
       <TabsContent value="allTrips">
         <Card className="bg-gray-500/5">
-          <CardContent className="flex flex-col gap-5 sm:py-6">
+          <CardContent className="flex flex-col gap-3 sm:gap-5 py-4 sm:py-6">
             {mineLoading ? (
-              <div>{t("requests.loading")}</div>
+              <div className="text-sm">{t("requests.loading")}</div>
             ) : mineError ? (
-              <div className="text-red-600">Xatolik: {mineError.message}</div>
+              <div className="text-red-600 text-sm">Xatolik: {mineError.message}</div>
             ) : mine.length === 0 ? (
-              <div>{t("requests.emptyMine")}</div>
+              <div className="text-sm">{t("requests.emptyMine")}</div>
             ) : (
               mine.map((b) => (
-                <div key={b.id} className="bg-green-500/5 border border-green-100 p-2 sm:p-5 rounded-2xl">
-                  <h2 className="flex items-center font-bold text-green-700">
-                    <MapPin className="mr-2" />
+                <div key={b.id} className="bg-green-500/5 border border-green-100 p-3 sm:p-5 rounded-2xl">
+                  <h2 className="flex items-center font-bold text-green-700 text-sm sm:text-base">
+                    <MapPin className="mr-1 sm:mr-2 w-4 h-4" />
                     {b.trip?.from_city}
-                    <ArrowRight size={17} />
+                    <ArrowRight size={14} className="mx-1" />
                     {b.trip?.to_city}
                   </h2>
-                  <div className="flex justify-between mt-2 text-sm">
+                  <div className="flex justify-between mt-2 text-xs sm:text-sm">
                     <p>
                       {b.trip?.date} • {b.trip?.time}
                     </p>
-                    <span className="bg-green-700 text-white py-1 px-2 rounded-2xl">{t("requests.pending")}</span>
+                    <span className="bg-green-700 text-white py-1 px-2 rounded-2xl text-xs">{t("requests.pending")}</span>
                   </div>
-                  <div className="flex justify-between items-center mt-2 text-sm">
+                  <div className="flex justify-between items-center mt-2 text-xs sm:text-sm">
                     <span>
                       {b.seats} {t("requests.seats")}
                     </span>
@@ -126,7 +126,7 @@ function Requests() {
                     )}
                   </div>
                   {b.comment ? (
-                    <div className="text-sm sm:text-md bg-white border border-green-100 p-3 sm:p-5 rounded-2xl mt-2">
+                    <div className="text-xs sm:text-sm bg-white border border-green-100 p-2 sm:p-3 lg:p-5 rounded-2xl mt-2">
                       {b.comment}
                     </div>
                   ) : null}
@@ -138,35 +138,35 @@ function Requests() {
       </TabsContent>
       <TabsContent value="myTrips">
         <Card className="bg-gray-500/5">
-          <CardContent className="flex flex-col gap-5 sm:py-6">
+          <CardContent className="flex flex-col gap-3 sm:gap-5 py-4 sm:py-6">
             {toMeLoading ? (
-              <div>{t("requests.loading")}</div>
+              <div className="text-sm">{t("requests.loading")}</div>
             ) : toMeError ? (
-              <div className="text-red-600">Xatolik: {toMeError.message}</div>
+              <div className="text-red-600 text-sm">Xatolik: {toMeError.message}</div>
             ) : toMe.length === 0 ? (
-              <div>{t("requests.emptyToMe")}</div>
+              <div className="text-sm">{t("requests.emptyToMe")}</div>
             ) : (
               toMe.map((b) => (
-                <div key={b.id} className="bg-green-500/5 border border-green-100 p-2 sm:p-5 rounded-2xl">
+                <div key={b.id} className="bg-green-500/5 border border-green-100 p-3 sm:p-5 rounded-2xl">
                   <div className="flex justify-between items-center">
                     <div className="flex gap-2 items-center">
-                      <Avatar className="size-8 sm:size-10">
-                        <AvatarFallback>{getInitials(b.user?.name)}</AvatarFallback>
+                      <Avatar className="size-6 sm:size-8 lg:size-10">
+                        <AvatarFallback className="text-xs sm:text-sm">{getInitials(b.user?.name)}</AvatarFallback>
                       </Avatar>
-                      <div className="text-sm sm:text-2xl">
+                      <div className="text-xs sm:text-sm lg:text-base">
                         <h2 className="font-bold text-green-700">{b.user?.name || "Foydalanuvchi"}</h2>
                       </div>
                     </div>
-                    <p className="bg-green-700 text-white py-1 px-2 rounded-2xl text-sm sm:text-md">{t("requests.pending")}</p>
+                    <p className="bg-green-700 text-white py-1 px-2 rounded-2xl text-xs sm:text-sm">{t("requests.pending")}</p>
                   </div>
-                  <div className="bg-white/70 border border-green-100 p-2 sm:p-4 rounded-2xl mt-2">
-                    <h3 className="flex items-center font-bold text-green-700 text-sm">
-                      <MapPin className="mr-2" />
+                  <div className="bg-white/70 border border-green-100 p-2 sm:p-3 lg:p-4 rounded-2xl mt-2">
+                    <h3 className="flex items-center font-bold text-green-700 text-xs sm:text-sm">
+                      <MapPin className="mr-1 sm:mr-2 w-4 h-4" />
                       {b.trip?.from_city}
-                      <ArrowRight size={17} />
+                      <ArrowRight size={14} className="mx-1" />
                       {b.trip?.to_city}
                     </h3>
-                    <div className="flex justify-between mt-2 text-sm">
+                    <div className="flex justify-between mt-2 text-xs sm:text-sm">
                       <p>
                         {b.trip?.date} • {b.trip?.time}
                       </p>
@@ -181,21 +181,21 @@ function Requests() {
                       )}
                     </div>
                     {b.comment ? (
-                      <div className="text-sm text-gray-700 mt-1">{b.comment}</div>
+                      <div className="text-xs sm:text-sm text-gray-700 mt-1">{b.comment}</div>
                     ) : null}
                   </div>
-                  <div className="w-full flex gap-3 mt-3">
+                  <div className="w-full flex gap-2 sm:gap-3 mt-3">
                     <button
                       onClick={() => handleConfirm(b.id)}
-                      className="w-full flex justify-center items-center gap-2 bg-green-700 text-white rounded-3xl py-2 px-3 text-sm sm:text-base hover:shadow-[0px_54px_55px_theme(colors.green.700/0.25),0px_-12px_30px_theme(colors.green.700/0.12),0px_4px_6px_theme(colors.green.700/0.12),0px_12px_13px_theme(colors.green.700/0.17),0px_-3px_5px_theme(colors.green.700/0.09)] transition-all duration-300 cursor-pointer"
+                      className="w-full flex justify-center items-center gap-1 sm:gap-2 bg-green-700 text-white rounded-3xl py-2 px-2 sm:px-3 text-xs sm:text-sm hover:shadow-[0px_54px_55px_theme(colors.green.700/0.25),0px_-12px_30px_theme(colors.green.700/0.12),0px_4px_6px_theme(colors.green.700/0.12),0px_12px_13px_theme(colors.green.700/0.17),0px_-3px_5px_theme(colors.green.700/0.09)] transition-all duration-300 cursor-pointer"
                     >
-                      <Check size={16} /> {t("requests.accept")}
+                      <Check size={14} className="sm:w-4 sm:h-4" /> {t("requests.accept")}
                     </button>
                     <button
                       onClick={() => handleDecline(b.id)}
-                      className="w-full flex justify-center items-center gap-2 border border-amber-500 text-amber-500 rounded-3xl py-2 px-3 text-sm sm:text-base hover:shadow-[0px_-12px_30px_theme(colors.amber.500/0.12),0px_4px_6px_theme(colors.amber.500/0.12),0px_12px_13px_theme(colors.amber.500/0.17),0px_-3px_5px_theme(colors.amber.500/0.09)] transition-all duration-300 cursor-pointer"
+                      className="w-full flex justify-center items-center gap-1 sm:gap-2 border border-amber-500 text-amber-500 rounded-3xl py-2 px-2 sm:px-3 text-xs sm:text-sm hover:shadow-[0px_-12px_30px_theme(colors.amber.500/0.12),0px_4px_6px_theme(colors.amber.500/0.12),0px_12px_13px_theme(colors.amber.500/0.17),0px_-3px_5px_theme(colors.amber.500/0.09)] transition-all duration-300 cursor-pointer"
                     >
-                      <X size={16} /> {t("requests.decline")}
+                      <X size={14} className="sm:w-4 sm:h-4" /> {t("requests.decline")}
                     </button>
                   </div>
                 </div>

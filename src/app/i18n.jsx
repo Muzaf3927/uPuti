@@ -42,6 +42,16 @@ const dict = {
       cancel: "Bekor qilish",
       seats: "o'rindiq",
       priceSuffix: "sum",
+      commentPlaceholder: "Shuncha so'm taklif qila olaman",
+      bookingTitle: "Necha o'rin band qilmoqchisiz?",
+      offerTitle: "Narx taklif qilish",
+      seatsLabel: "O'rindiqlar soni",
+      seatsPlaceholder: "1-4 o'rin",
+      priceLabel: "Taklif narxi (so'm)",
+      commentLabel: "Izoh",
+      submitBooking: "Yuborish",
+      submitOffer: "Yuborish",
+      cancelButton: "Bekor qilish"
     },
     profile: {
       back: "Orqaga qaytish",
@@ -56,6 +66,48 @@ const dict = {
       create: "Safar yaratish",
       search: "Safar qidirish",
       empty: "Hozirda hali sizda safarlar yo'q.",
+      commentPlaceholder: "(ixtiyoriy) Cherez Samarqand ketaman/ Pochta olaman",
+      form: {
+        from: "Qayerdan",
+        to: "Qayerga",
+        date: "Sana",
+        time: "Vaqt",
+        cost: "Xizmat haqqi",
+        carModel: "Mashina modeli",
+        carColor: "Mashina rangi",
+        carNumber: "Mashina raqami",
+        carSeats: "O'rindiqlar soni",
+        note: "Izoh",
+        cancel: "Bekor qilish",
+        submit: "Yaratish",
+        fromPlaceholder: "Toshkent",
+        toPlaceholder: "Buxoro",
+        costPlaceholder: "50000",
+        carModelPlaceholder: "Nexia",
+        carColorPlaceholder: "Oq",
+        carNumberPlaceholder: "01A123BC",
+        carSeatsPlaceholder: "4",
+        validationError: "Iltimos, barcha majburiy maydonlarni to'ldiring",
+        successMessage: "Safar yaratildi.",
+        errorMessage: "Safar yaratishda xatolik yuz berdi."
+      },
+      searchForm: {
+        from: "Qayerdan",
+        to: "Qayerga",
+        date: "Sana",
+        fromPlaceholder: "Qaysi shahardan",
+        toPlaceholder: "Qaysi shaharga",
+        datePlaceholder: "06.09.2025",
+        search: "Qidirish",
+        cancel: "Bekor qilish",
+        clear: "Qidiruvni tozalash"
+      },
+      confirmation: {
+        title: "Tasdiqlash",
+        message: "Sizning so'rovingiz haydovchi tomonidan qabul qilinishi kerak. Qabul qilingandan keyin sizning telefon raqamingiz unga ko'rinadi.",
+        continue: "Davom etish",
+        cancel: "Bekor qilish"
+      }
     },
     auth: {
       slogan: "Birgalikda yo‘l — hamyonbop va ishonchli",
@@ -121,10 +173,16 @@ const dict = {
       balance: "Balans",
       logout: "Tizimdan chiqish",
     },
+    support: {
+      title: "Savollar va takliflar",
+      description: "Telegram orqali biz bilan bog'laning",
+      button: "UPuti",
+      close: "Yopish",
+    },
   },
   ru: {
     nav: {
-      requests: "Запросы",
+      requests: "Заявки",
       booking: "Брони",
       history: "История",
       trips: "Поездки",
@@ -137,7 +195,7 @@ const dict = {
     },
     booking: {
       myBookings: "Мои брони",
-      toMe: "Брони на мои поездки",
+      toMe: "Брони пассажиров",
       loading: "Загрузка...",
       none: "Пока нет броней.",
       myTripsNone: "Пока нет ваших поездок.",
@@ -145,8 +203,8 @@ const dict = {
       writePassenger: "Написать пассажиру",
     },
     history: {
-      driverTab: "Мои завершённые поездки",
-      passengerTab: "Где я пассажир",
+      driverTab: "Как водитель",
+      passengerTab: "Как пассажир",
       empty: "История поездок пуста",
       totalEarn: "Общий заработок",
       completed: "завершено",
@@ -161,6 +219,16 @@ const dict = {
       cancel: "Отменить",
       seats: "мест",
       priceSuffix: "сум",
+      commentPlaceholder: "Могу предложить столько сумм",
+      bookingTitle: "Сколько мест хотите забронировать?",
+      offerTitle: "Предложить цену",
+      seatsLabel: "Количество мест",
+      seatsPlaceholder: "1-4 места",
+      priceLabel: "Предложенная цена (сум)",
+      commentLabel: "Комментарий",
+      submitBooking: "Отправить",
+      submitOffer: "Отправить",
+      cancelButton: "Отмена"
     },
     profile: {
       back: "Назад",
@@ -175,6 +243,48 @@ const dict = {
       create: "Создать поездку",
       search: "Поиск поездки",
       empty: "Пока у вас нет поездок.",
+      commentPlaceholder: "(не обязательно) Через Самарканд поеду/ Беру почта",
+      form: {
+        from: "Откуда",
+        to: "Куда",
+        date: "Дата",
+        time: "Время",
+        cost: "Стоимость",
+        carModel: "Модель машины",
+        carColor: "Цвет машины",
+        carNumber: "Номер машины",
+        carSeats: "Количество мест",
+        note: "Примечание",
+        cancel: "Отмена",
+        submit: "Создать",
+        fromPlaceholder: "Ташкент",
+        toPlaceholder: "Бухара",
+        costPlaceholder: "50000",
+        carModelPlaceholder: "Nexia",
+        carColorPlaceholder: "Белый",
+        carNumberPlaceholder: "01А123БЦ",
+        carSeatsPlaceholder: "4",
+        validationError: "Пожалуйста, заполните все обязательные поля",
+        successMessage: "Поездка создана.",
+        errorMessage: "Ошибка при создании поездки."
+      },
+      searchForm: {
+        from: "Откуда",
+        to: "Куда",
+        date: "Дата",
+        fromPlaceholder: "Из какого города",
+        toPlaceholder: "В какой город",
+        datePlaceholder: "06.09.2025",
+        search: "Поиск",
+        cancel: "Отмена",
+        clear: "Очистить поиск"
+      },
+      confirmation: {
+        title: "Подтверждение",
+        message: "Ваш запрос должен быть принят водителем. После принятия ваш номер телефона будет ему виден.",
+        continue: "Продолжить",
+        cancel: "Отмена"
+      }
     },
     auth: {
       slogan: "В путь вместе — доступно и надёжно",
@@ -217,7 +327,7 @@ const dict = {
     },
     requests: {
       mineTab: "Мои заявки",
-      toMeTab: "Заявки на мои поездки",
+      toMeTab: "Заявки ко мне",
       loading: "Загрузка...",
       emptyMine: "Пока нет отправленных заявок.",
       emptyToMe: "Пока нет заявок на ваши поездки.",
@@ -240,29 +350,44 @@ const dict = {
       balance: "Баланс",
       logout: "Выйти",
     },
+    support: {
+      title: "Вопросы и предложения",
+      description: "Свяжитесь с нами в Telegram",
+      button: "UPuti",
+      close: "Закрыть",
+    },
   },
 };
 
 export function I18nProvider({ children }) {
   const [lang, setLang] = useState("uz");
+  const [isReady, setIsReady] = useState(false);
+  
   useEffect(() => {
     const saved = localStorage.getItem("lang");
-    if (saved === "ru" || saved === "uz") setLang(saved);
+    if (saved === "ru" || saved === "uz") {
+      setLang(saved);
+    }
+    setIsReady(true);
   }, []);
   const t = useMemo(() => {
     const d = dict[lang] || dict.uz;
-    return (key) => key.split(".").reduce((acc, k) => (acc && acc[k] !== undefined ? acc[k] : key), d);
+    return (key) => {
+      const result = key.split(".").reduce((acc, k) => (acc && acc[k] !== undefined ? acc[k] : undefined), d);
+      return result !== undefined ? result : key;
+    };
   }, [lang]);
   const value = useMemo(
     () => ({
       lang,
+      isReady,
       setLang: (l) => {
         localStorage.setItem("lang", l);
         setLang(l);
       },
       t,
     }),
-    [lang, t]
+    [lang, isReady, t]
   );
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }

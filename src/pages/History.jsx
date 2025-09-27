@@ -149,9 +149,9 @@ function History() {
     <Card>
       <CardContent className="py-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
         <Tabs defaultValue="asDriver">
-          <TabsList className="w-full">
-            <TabsTrigger value="asDriver">{t("history.driverTab")}</TabsTrigger>
-            <TabsTrigger value="asPassenger">{t("history.passengerTab")}</TabsTrigger>
+          <TabsList className="px-1 sm:px-2 w-full mb-4 sm:mb-6">
+            <TabsTrigger value="asDriver" className="text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">{t("history.driverTab")}</TabsTrigger>
+            <TabsTrigger value="asPassenger" className="text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">{t("history.passengerTab")}</TabsTrigger>
           </TabsList>
           <TabsContent value="asDriver">
             {asDriver && asDriver.length > 0 ? (

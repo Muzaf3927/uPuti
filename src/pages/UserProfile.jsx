@@ -19,7 +19,6 @@ import {
   CheckCircle2,
   CalendarDays,
   ArrowLeft,
-  LucideBadgeDollarSign,
   Star,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
@@ -98,19 +97,10 @@ function UserProfile() {
 
         <CardContent className="grid gap-4 pt-2">
           <div className="flex items-center gap-2 text-base">
-            <Phone className="h-4 w-4 text-muted-foreground" />
-            <span>{user?.phone || "—"}</span>
+            <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <span className="whitespace-nowrap">{user?.phone ? `+998${user.phone}` : "—"}</span>
           </div>
 
-          <div className="flex items-center gap-2 text-base text-green-700">
-            <span>
-              <LucideBadgeDollarSign />
-            </span>
-            <span className="font-medium text-green-600">Balance:</span>
-            <span className="text-black font-bold">
-              {Number(user?.balance).toLocaleString()} UZS
-            </span>
-          </div>
           <div className="flex items-center gap-2 text-base text-green-700">
             <span>
               <Star />

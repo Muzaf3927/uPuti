@@ -1,4 +1,4 @@
-import { ArrowRight, MapPin, MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowRight, MapPin, MessageCircle, ChevronDown, ChevronUp, Phone } from "lucide-react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -48,19 +48,19 @@ function Booking() {
   return (
     <>
       <Tabs defaultValue="fromMe" className="">
-        <TabsList className="w-full rounded-2xl bg-white/70 backdrop-blur-sm">
-          <TabsTrigger value="fromMe" className="relative">
+        <TabsList className="px-1 sm:px-2 w-full mb-4 sm:mb-6">
+          <TabsTrigger value="fromMe" className="relative text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">
             {t("booking.myBookings")}
             {unreadCounts?.my_confirmed_unread > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] sm:text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold">
                 {unreadCounts.my_confirmed_unread > 9 ? '9+' : unreadCounts.my_confirmed_unread}
               </span>
             )}
           </TabsTrigger>
-          <TabsTrigger value="toMe" className="relative">
+          <TabsTrigger value="toMe" className="relative text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">
             {t("booking.toMe")}
             {unreadCounts?.to_my_trips_confirmed_unread > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] sm:text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold">
                 {unreadCounts.to_my_trips_confirmed_unread > 9 ? '9+' : unreadCounts.to_my_trips_confirmed_unread}
               </span>
             )}
@@ -133,26 +133,61 @@ function Booking() {
                     </div>
                     
                     {/* Показываем брони для этой поездки */}
-                    <div className="flex flex-col gap-3 mt-3">
+                    <div className="flex flex-col gap-2 mt-3">
                       {bookings.map((b) => (
-                        <div key={b.id} className="border rounded-2xl p-3 flex items-center justify-between bg-green-50">
-                          <div className="flex items-center gap-3">
-                            <Avatar className="size-8">
-                              <AvatarFallback>{getInitials(b.user?.name)}</AvatarFallback>
-                            </Avatar>
-                            <div className="flex flex-col text-sm">
-                              <span className="font-semibold">{b.user?.name || "Foydalanuvchi"}</span>
-                              <span>{b.seats} ta o'rin • Подтверждено</span>
-                              {b.offered_price ? <span>Taklif: {b.offered_price} so'm</span> : null}
-                              {b.comment ? <span className="text-gray-600">{b.comment}</span> : null}
+                        <div key={b.id} className="bg-white/90 border border-green-200 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-start gap-3 flex-1">
+                              <Avatar className="size-10 sm:size-12 flex-shrink-0">
+                                <AvatarFallback className="text-sm font-semibold">{getInitials(b.user?.name)}</AvatarFallback>
+                              </Avatar>
+                              <div className="flex flex-col gap-1 min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold text-gray-900 text-sm sm:text-base">{b.user?.name || "Foydalanuvchi"}</span>
+                                  <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">Подтверждено</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                                  <span>{b.seats} мест</span>
+                                  {b.offered_price ? (
+                                    <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
+                                      Предложение: {b.offered_price} сум
+                                    </span>
+                                  ) : (
+                                    <span>Цена: {trip.price} сум</span>
+                                  )}
+                                </div>
+                                {b.user?.phone && (
+                                  <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-600">
+                                    <Phone size={12} />
+                                    <span>+998{b.user.phone}</span>
+                                  </div>
+                                )}
+                                {b.comment && (
+                                  <div className="text-xs sm:text-sm text-gray-600 bg-gray-50 rounded-lg p-2 mt-1">
+                                    "{b.comment}"
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex flex-col gap-2 flex-shrink-0">
+                              <Link
+                                to={`/chats?tripId=${trip.id}&receiverId=${b.user?.id}`}
+                                className="flex items-center gap-1.5 bg-green-600 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-green-700 transition-colors shadow-sm hover:shadow-md"
+                              >
+                                <MessageCircle size={14} />
+                                <span className="hidden sm:inline">Написать</span>
+                              </Link>
+                              {b.user?.phone && (
+                                <a
+                                  href={`tel:+998${b.user.phone}`}
+                                  className="flex items-center gap-1.5 bg-blue-600 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md"
+                                >
+                                  <Phone size={14} />
+                                  <span className="hidden sm:inline">Позвонить</span>
+                                </a>
+                              )}
                             </div>
                           </div>
-                          <Link
-                            to={`/chats?tripId=${trip.id}&receiverId=${b.user?.id}`}
-                            className="inline-flex items-center gap-2 text-green-700 border-2 border-green-700 px-3 py-1 rounded-2xl hover:bg-green-700 hover:text-white transition"
-                          >
-                            <MessageCircle size={16} /> {t("booking.writePassenger")}
-                          </Link>
                         </div>
                       ))}
                     </div>

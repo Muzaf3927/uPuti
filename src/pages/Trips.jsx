@@ -49,14 +49,21 @@ function Trips() {
     time: "",
   });
 
+  const [activeFilters, setActiveFilters] = useState({
+    from: "",
+    to: "",
+    date: "",
+    time: "",
+  });
+
   const [filteredUrl, setFilteredUrl] = useState("");
   const [allPage, setAllPage] = useState(1);
   const [myPage, setMyPage] = useState(1);
   const ALL_PER_PAGE = 10;
   const MY_PER_PAGE = 5;
 
-  const baseQuery = searchFilters.from
-    ? `?from_city=${searchFilters.from}&to_city=${searchFilters.to}`
+  const baseQuery = activeFilters.from
+    ? `?from_city=${activeFilters.from}&to_city=${activeFilters.to}`
     : "?";
   const allTripsUrl = `/trips${baseQuery}${baseQuery.includes("?") && baseQuery !== "?" ? "&" : ""}page=${allPage}&per_page=${ALL_PER_PAGE}`;
   const { data, isLoading, error, refetch } = useGetData(allTripsUrl);
@@ -69,24 +76,14 @@ function Trips() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const from = formData.get("from");
-    const to = formData.get("to");
-    const date = formData.get("date");
-    const time = formData.get("time");
-
-    setSearchFilters({ from, to, date, time });
-
-    // const params = new URLSearchParams();
-
-    // if (from) params.set("from_city", from);
-    // if (to) params.set("to_city", to);
-
-    // const query = params.toString() ? `?${params.toString()}` : "";
-
-    // setFilteredUrl(query);
-
+    // Устанавливаем активные фильтры только при нажатии кнопки поиска
+    setActiveFilters({ ...searchFilters });
     setSearchDialog(false);
+  };
+
+  const handleClearSearch = () => {
+    setActiveFilters({ from: "", to: "", date: "", time: "" });
+    setSearchFilters({ from: "", to: "", date: "", time: "" });
   };
 
   const {
@@ -132,6 +129,19 @@ function Trips() {
       errors.carNumber = "Mashina raqami kiritilishi shart";
     }
     
+    // Проверка даты и времени
+    const selectedDate = formData.get("date");
+    const selectedTimeValue = selectedTime;
+    
+    if (selectedDate && selectedTimeValue) {
+      const now = new Date();
+      const selectedDateTime = new Date(`${selectedDate}T${selectedTimeValue}:00`);
+      
+      if (selectedDateTime <= now) {
+        errors.dateTime = "Sana va vaqt kelajakda bo'lishi kerak";
+      }
+    }
+    
     return errors;
   };
 
@@ -143,7 +153,7 @@ function Trips() {
     const errors = validateForm(formData);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
-      toast.error("Iltimos, barcha majburiy maydonlarni to'ldiring");
+      toast.error(t("trips.form.validationError"));
       return;
     }
 
@@ -177,7 +187,7 @@ function Trips() {
     try {
       const res = await tripPostMutation.mutateAsync(resultData);
       if (res.message === "Trip created!") {
-        toast.success("Safar yaratildi.");
+        toast.success(t("trips.form.successMessage"));
         setDialog(false);
         refetch();
         myTripsRefetch();
@@ -195,7 +205,7 @@ function Trips() {
       } else if (err.message) {
         toast.error(err.message);
       } else {
-        toast.error("Safar yaratishda xatolik yuz berdi.");
+        toast.error(t("trips.form.errorMessage"));
       }
     }
   };
@@ -209,9 +219,9 @@ function Trips() {
       <div className="w-full flex text-green-600 gap-2.5 mb-5">
         <Dialog className="w-full" open={dialog} onOpenChange={setDialog}>
           <DialogTrigger className="w-full cursor-pointer">
-            <div className="border-2 w-full py-2 sm:px-10 sm:py-4 bg-gray-500/6 rounded-3xl flex flex-col items-center">
+            <div className="border-2 w-full py-2 sm:px-10 sm:py-4 bg-green-50 rounded-3xl flex flex-col items-center">
               <Route className="md:size-6 size-4" />
-              <h4 className="text-sm md:text-md">{t("trips.create")}</h4>
+              <h4 className="text-sm md:text-md font-bold">{t("trips.create")}</h4>
             </div>
           </DialogTrigger>
           <DialogContent className="max-w-[95vw] sm:max-w-[760px] p-4 sm:p-6 max-h-[95vh]">
@@ -221,104 +231,107 @@ function Trips() {
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto pr-1 max-h-[70vh]">
               <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="from">Qayerdan *</Label>
+                <Label htmlFor="from">{t("trips.form.from")} *</Label>
                 <Input 
                   type="text" 
                   id="from" 
                   name="from" 
-                  placeholder="Toshkent" 
+                  placeholder={t("trips.form.fromPlaceholder")} 
                   required
                   className={formErrors.from ? "border-red-500" : ""}
                 />
                 {formErrors.from && <span className="text-red-500 text-xs">{formErrors.from}</span>}
               </div>
               <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="to">Qayerga *</Label>
+                <Label htmlFor="to">{t("trips.form.to")} *</Label>
                 <Input 
                   type="text" 
                   id="to" 
                   name="to" 
-                  placeholder="Buxoro" 
+                  placeholder={t("trips.form.toPlaceholder")} 
                   required
                   className={formErrors.to ? "border-red-500" : ""}
                 />
                 {formErrors.to && <span className="text-red-500 text-xs">{formErrors.to}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="date">Sana *</Label>
+                <Label htmlFor="date">{t("trips.form.date")} *</Label>
                 <Input 
                   type="date" 
                   id="date" 
                   name="date" 
                   required
-                  className={formErrors.date ? "border-red-500" : ""}
+                  min={new Date().toISOString().split('T')[0]}
+                  className={formErrors.date || formErrors.dateTime ? "border-red-500" : ""}
                 />
                 {formErrors.date && <span className="text-red-500 text-xs">{formErrors.date}</span>}
+                {formErrors.dateTime && <span className="text-red-500 text-xs">{formErrors.dateTime}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="time">Vaqt *</Label>
+                <Label htmlFor="time">{t("trips.form.time")} *</Label>
                 <TimePicker
                   value={selectedTime}
                   onChange={setSelectedTime}
-                  className={`w-full ${formErrors.time ? "border-red-500" : ""}`}
+                  className={`w-full ${formErrors.time || formErrors.dateTime ? "border-red-500" : ""}`}
                 />
                 {formErrors.time && <span className="text-red-500 text-xs">{formErrors.time}</span>}
+                {formErrors.dateTime && <span className="text-red-500 text-xs">{formErrors.dateTime}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="cost">Xizmat haqqi *</Label>
+                <Label htmlFor="cost">{t("trips.form.cost")} *</Label>
                 <Input 
                   type="number" 
                   id="cost" 
                   name="cost" 
-                  placeholder="50000" 
+                  placeholder={t("trips.form.costPlaceholder")} 
                   required
                   className={formErrors.cost ? "border-red-500" : ""}
                 />
                 {formErrors.cost && <span className="text-red-500 text-xs">{formErrors.cost}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="carSeats">O'rindiqlar soni *</Label>
+                <Label htmlFor="carSeats">{t("trips.form.carSeats")} *</Label>
                 <Input 
                   type="number" 
                   id="carSeats" 
                   name="carSeats" 
-                  placeholder="4" 
+                  placeholder={t("trips.form.carSeatsPlaceholder")} 
                   required
                   className={formErrors.carSeats ? "border-red-500" : ""}
                 />
                 {formErrors.carSeats && <span className="text-red-500 text-xs">{formErrors.carSeats}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="car">Mashina rusumi *</Label>
+                <Label htmlFor="car">{t("trips.form.carModel")} *</Label>
                 <Input 
                   type="text" 
                   id="car" 
                   name="carModel" 
-                  placeholder="Toyota Camry" 
+                  placeholder={t("trips.form.carModelPlaceholder")} 
                   required
                   className={formErrors.carModel ? "border-red-500" : ""}
                 />
                 {formErrors.carModel && <span className="text-red-500 text-xs">{formErrors.carModel}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="carColor">Mashina rangi *</Label>
+                <Label htmlFor="carColor">{t("trips.form.carColor")} *</Label>
                 <Input 
                   type="text" 
                   id="carColor" 
                   name="carColor" 
-                  placeholder="Oq" 
+                  placeholder={t("trips.form.carColorPlaceholder")} 
                   required
                   className={formErrors.carColor ? "border-red-500" : ""}
                 />
                 {formErrors.carColor && <span className="text-red-500 text-xs">{formErrors.carColor}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="carNumber">Mashina raqami *</Label>
+                <Label htmlFor="carNumber">{t("trips.form.carNumber")} *</Label>
                 <Input 
                   type="text" 
                   id="carNumber" 
                   name="carNumber" 
-                  placeholder="01A123BC" 
+                  placeholder={t("trips.form.carNumberPlaceholder")} 
                   className={`uppercase ${formErrors.carNumber ? "border-red-500" : ""}`}
                   required
                   onChange={(e) => {
@@ -328,15 +341,15 @@ function Trips() {
                 {formErrors.carNumber && <span className="text-red-500 text-xs">{formErrors.carNumber}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="note">Izoh</Label>
-                <Input type="text" id="note" name="note" placeholder="Qisqa izoh (ixtiyoriy)" />
+                <Label htmlFor="note">{t("trips.form.note")}</Label>
+                <Input type="text" id="note" name="note" placeholder={t("trips.commentPlaceholder")} />
               </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 w-full">
                 <DialogClose asChild>
-                  <Button type="button" className="rounded-2xl w-full h-10 text-sm">Bekor qilish</Button>
+                  <Button type="button" className="rounded-2xl w-full h-10 text-sm">{t("trips.form.cancel")}</Button>
                 </DialogClose>
-                <Button className="bg-green-600 rounded-2xl w-full h-10 text-sm">Yuborish</Button>
+                <Button className="bg-green-600 rounded-2xl w-full h-10 text-sm">{t("trips.form.submit")}</Button>
               </div>
             </form>
           </DialogContent>
@@ -347,69 +360,61 @@ function Trips() {
           onOpenChange={setSearchDialog}
         >
           <DialogTrigger className="w-full cursor-pointer">
-            <div className="border-2 w-full py-2 sm:px-10 sm:py-4 bg-gray-500/6 rounded-3xl flex flex-col items-center">
+            <div className="border-2 w-full py-2 sm:px-10 sm:py-4 bg-green-50 rounded-3xl flex flex-col items-center">
               <Search className="md:size-6 size-4" />
-              <h4 className="text-sm md:text-md">{t("trips.search")}</h4>
+              <h4 className="text-sm md:text-md font-bold">{t("trips.searchForm.search")}</h4>
             </div>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">
-                {t("trips.search")}
+                {t("trips.searchForm.search")}
               </DialogTitle>
               <form onSubmit={handleSearch} className="flex flex-col gap-3">
                 <div className="grid w-full items-center gap-3">
-                  <Label htmlFor="from">Qayerdan</Label>
+                  <Label htmlFor="from">{t("trips.searchForm.from")}</Label>
                   <Input
                     type="text"
                     id="from"
                     name="from"
-                    placeholder="Qaysi shahardan"
+                    value={searchFilters.from}
+                    onChange={(e) => setSearchFilters(prev => ({ ...prev, from: e.target.value }))}
+                    placeholder={t("trips.searchForm.fromPlaceholder")}
                   />
                 </div>
                 <div className="grid w-full items-center gap-3">
-                  <Label htmlFor="to">Qayerga</Label>
+                  <Label htmlFor="to">{t("trips.searchForm.to")}</Label>
                   <Input
                     type="text"
                     id="to"
                     name="to"
-                    placeholder="Qaysi shaharga"
+                    value={searchFilters.to}
+                    onChange={(e) => setSearchFilters(prev => ({ ...prev, to: e.target.value }))}
+                    placeholder={t("trips.searchForm.toPlaceholder")}
                   />
                 </div>
-                <div className="flex gap-2">
-                  <div className="grid w-full items-center gap-3">
-                    <Label htmlFor="date">Sana</Label>
-                    <InputMask
-                      mask="__.__.____"
-                      replacement={{ _: /\d/ }}
-                      // type="number"
-                      id="date"
-                      name="date"
-                      placeholder="06.09.2025"
-                      className="font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                    />
-                  </div>
-                  <div className="grid w-full items-center gap-3">
-                    <Label htmlFor="time">Vaqt</Label>
-                    <InputMask
-                      mask="__:__"
-                      replacement={{ _: /\d/ }}
-                      type="text"
-                      id="time"
-                      name="time"
-                      placeholder="12 : 30"
-                      className="font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                    />
-                  </div>
+                <div className="grid w-full items-center gap-3">
+                  <Label htmlFor="date">{t("trips.searchForm.date")}</Label>
+                  <InputMask
+                    mask="__.__.____"
+                    replacement={{ _: /\d/ }}
+                    // type="number"
+                    id="date"
+                    name="date"
+                    value={searchFilters.date}
+                    onChange={(e) => setSearchFilters(prev => ({ ...prev, date: e.target.value }))}
+                    placeholder={t("trips.searchForm.datePlaceholder")}
+                    className="font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                  />
                 </div>
                 <div className="w-full flex gap-2 ">
                   <DialogClose className="w-[48%]" asChild>
                     <Button className="rounded-2xl max-w-full ">
-                      Bekor qilish
+                      {t("trips.searchForm.cancel")}
                     </Button>
                   </DialogClose>
                   <Button className="bg-green-600 rounded-2xl w-[48%]">
-                    Qidirish
+                    {t("trips.searchForm.search")}
                   </Button>
                 </div>
               </form>
@@ -420,10 +425,28 @@ function Trips() {
       <Card className="px-0 rounded-3xl shadow-sm">
         <CardContent className="px-0 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
           <Tabs defaultValue="allTrips" className="w-full">
-            <TabsList className="px-2 w-full rounded-2xl bg-white/70 backdrop-blur-sm">
-              <TabsTrigger value="allTrips">{t("trips.all")}</TabsTrigger>
-              <TabsTrigger value="myTrips">{t("trips.mine")}</TabsTrigger>
+            <TabsList className="px-1 sm:px-2 w-full mb-4 sm:mb-6">
+              <TabsTrigger value="allTrips" className="text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">{t("trips.all")}</TabsTrigger>
+              <TabsTrigger value="myTrips" className="text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">{t("trips.mine")}</TabsTrigger>
             </TabsList>
+            {activeFilters.from && (
+              <div className="px-4 mb-2">
+                <div className="flex items-center justify-between bg-blue-50 rounded-lg p-2">
+                  <div className="text-sm text-blue-700">
+                    <span className="font-medium">Поиск:</span> {activeFilters.from} → {activeFilters.to}
+                    {activeFilters.date && ` • ${activeFilters.date}`}
+                  </div>
+                  <Button
+                    onClick={handleClearSearch}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs h-6 px-2"
+                  >
+                    {t("trips.searchForm.clear")}
+                  </Button>
+                </div>
+              </div>
+            )}
             <TabsContent value="allTrips">
               <div className="p-4 space-y-4">
                 {isLoading

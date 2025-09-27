@@ -22,7 +22,6 @@ import {
   Copy,
   MessageCircle,
   Star,
-  LucideBadgeDollarSign,
   ArrowLeft,
 } from "lucide-react";
 import { useGetData } from "@/api/api";
@@ -100,17 +99,8 @@ function Profile() {
 
         <CardContent className="grid gap-4 pt-2">
           <div className="flex items-center gap-2 text-base">
-            <Phone className="h-4 w-4 text-muted-foreground" />
-            <span>{data.phone || "—"}</span>
-          </div>
-          <div className="flex items-center gap-2 text-base text-green-700">
-            <span>
-              <LucideBadgeDollarSign />
-            </span>
-            <span className="font-medium text-green-600">Balance:</span>
-            <span className="text-black font-bold">
-              {Number(data?.balance).toLocaleString()} UZS
-            </span>
+            <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <span className="whitespace-nowrap">{data.phone ? `+998${data.phone}` : "—"}</span>
           </div>
           <div className="flex items-center gap-2 text-base text-green-700">
             <span>
