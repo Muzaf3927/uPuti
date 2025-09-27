@@ -357,7 +357,7 @@ const dict = {
     support: {
       title: "Вопросы и предложения",
       description: "Свяжитесь с нами в Telegram",
-      button: "UPuti",
+      button: "Написать",
       close: "Закрыть",
     },
   },
