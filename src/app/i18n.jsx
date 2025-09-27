@@ -24,6 +24,8 @@ const dict = {
       myTripsNone: "Hali siz yaratgan safarlar yo'q.",
       writeDriver: "Haydovchiga yozish",
       writePassenger: "Yo'lovchiga yozish",
+      write: "Yozish",
+      call: "Qo'ng'iroq qilish",
     },
     history: {
       driverTab: "Mening tugagan safarlarim",
@@ -201,6 +203,8 @@ const dict = {
       myTripsNone: "Пока нет ваших поездок.",
       writeDriver: "Написать водителю",
       writePassenger: "Написать пассажиру",
+      write: "Написать",
+      call: "Позвонить",
     },
     history: {
       driverTab: "Как водитель",
