@@ -134,8 +134,8 @@ function Login() {
           </CardHeader>
         </Card>
       </div>
-      <Card className="w-full max-w-md">
-        <CardHeader className="relative p-4 sm:p-6">
+      <Card className="w-full max-w-md -mt-4">
+        <CardHeader className="relative p-0.5 sm:p-1">
           <CardTitle className="text-green-700 mx-auto text-lg sm:text-xl font-bold">
             {t("auth.loginTitle")}
           </CardTitle>
@@ -148,7 +148,7 @@ function Login() {
             {lang === "uz" ? "🇷🇺 RU" : "🇺🇿 UZ"}
           </button>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6">
+        <CardContent className="p-0.5 sm:p-1">
           <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
               <Label htmlFor="phone" className="text-sm">{t("auth.phoneLabel")}</Label>
@@ -166,7 +166,7 @@ function Login() {
                   placeholder={t("auth.phonePlaceholder")}
                   required
                   autoComplete="tel"
-                  className="pl-16 sm:pl-20 font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-8 sm:h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm sm:text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-6 sm:file:h-7 file:border-0 file:bg-transparent file:text-xs sm:file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                  className="pl-20 sm:pl-24 font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-8 sm:h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm sm:text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-6 sm:file:h-7 file:border-0 file:bg-transparent file:text-xs sm:file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                 />
                 <p className="absolute left-8 sm:left-10 top-1.5 font-normal select-none text-sm">
                   +998

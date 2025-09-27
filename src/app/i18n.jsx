@@ -114,7 +114,7 @@ const dict = {
     auth: {
       slogan: "Birgalikda yo‘l — hamyonbop va ishonchli",
       loginTitle: "Tizimga kirish",
-      loginSubtitle: "Hisobingizga kiring",
+      loginSubtitle: "Prifilingizga kiring",
       loginBtn: "Kirish",
       loginLoading: "Kirilmoqda...",
       forgot: "Parol esdan chiqdimi?",
@@ -123,7 +123,7 @@ const dict = {
       phoneLabel: "Telefon raqami",
       passwordLabel: "Parol",
       signupTitle: "Ro'yhatdan o'tish",
-      signupSubtitle: "Hisob yaratish",
+      signupSubtitle: "Profil yaratish",
       nameLabel: "Ism",
       phonePlaceholder: "(90) 123 45 67",
       signupBtn: "Ro'yhatdan o'tish",
