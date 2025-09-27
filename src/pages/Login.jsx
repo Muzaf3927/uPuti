@@ -96,13 +96,13 @@ function Login() {
         <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-3 shadow-sm border border-green-100">
           <h2 className="text-sm sm:text-lg lg:text-xl font-bold text-gray-800 mb-1">
             {lang === "uz" 
-              ? "Qo'l ko'tarib yo'lda Poputi mashina kutish vaqti o'td!" 
+              ? "Qo'l ko'tarib yo'lda Poputi mashina kutish vaqti o'tdi!" 
               : "Эпоха голосования на дороге прошла!"
             }
           </h2>
           <p className="text-xs sm:text-sm lg:text-base text-gray-600 leading-relaxed">
             {lang === "uz" 
-              ? "«Popoutchik» lar uchun endi - arzon, xavfsiz va qulay hamsafar flatformasi:"
+              ? "«Popoutchik» lar uchun endi - arzon, xavfsiz va qulay hamsafar platformasi:"
               : "Теперь для «попутчиков» — доступная, безопасная и удобная платформа совместных поездок"
             }
           </p>
