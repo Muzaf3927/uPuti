@@ -35,9 +35,9 @@ function Navbar() {
 
   if (!isReady) {
     return (
-      <div className="flex justify-between p-2 rounded-3xl bg-white/70 backdrop-blur-sm border shadow-sm">
+      <div className="flex justify-between p-1 sm:p-2 rounded-3xl bg-white/70 backdrop-blur-sm border shadow-sm">
         {Array(5).fill(0).map((_, i) => (
-          <div key={i} className="bg-white text-gray-700 text-center flex justify-center items-center flex-col w-[68px] sm:w-[88px] text-xs h-[58px] sm:h-[72px] border-2 border-green-200 rounded-2xl animate-pulse">
+          <div key={i} className="bg-white text-gray-700 text-center flex justify-center items-center flex-col w-[68px] sm:w-[88px] text-xs h-[60px] sm:h-[72px] border-2 border-green-200 rounded-2xl animate-pulse">
             <div className="w-5 h-5 bg-gray-300 rounded mb-1"></div>
             <div className="w-12 h-3 bg-gray-300 rounded"></div>
           </div>
@@ -47,7 +47,7 @@ function Navbar() {
   }
 
   return (
-    <div className="flex justify-between p-2 rounded-3xl bg-white/70 backdrop-blur-sm border shadow-sm">
+    <div className="flex justify-between p-1 sm:p-2 rounded-3xl bg-white/70 backdrop-blur-sm border shadow-sm">
       {links.map((link) => {
         const isActive = location.pathname === link.path;
         return (
@@ -56,7 +56,7 @@ function Navbar() {
             to={link.path}
             className={`${
               isActive ? "bg-green-500 text-white shadow" : "bg-white text-gray-700"
-            } text-center flex justify-center items-center flex-col w-[68px] sm:w-[88px] text-xs h-[58px] sm:h-[72px] border-2 border-green-200 rounded-2xl transition-all duration-300 hover:bg-green-100 hover:shadow-[0px_5px_15px_rgba(134,239,172,0.35)] relative`}
+            } text-center flex justify-center items-center flex-col w-[68px] sm:w-[88px] text-xs h-[60px] sm:h-[72px] border-2 border-green-200 rounded-2xl transition-all duration-300 hover:bg-green-100 hover:shadow-[0px_5px_15px_rgba(134,239,172,0.35)] relative`}
           >
             <div className="relative">
               {link.icon}
@@ -66,7 +66,7 @@ function Navbar() {
                 </span>
               )}
             </div>
-            <span className="text-xs sm:text-sm hidden ss:block leading-tight px-1">{link.name}</span>
+            <span className="text-[10px] sm:text-xs md:text-sm leading-tight px-1 text-center">{link.name}</span>
           </Link>
         );
       })}

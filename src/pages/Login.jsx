@@ -18,11 +18,12 @@ import { usePostData } from "@/api/api";
 import { toast } from "sonner";
 import { useI18n } from "@/app/i18n.jsx";
 import Onboarding from "@/components/Onboarding";
+import { safeLocalStorage } from "@/lib/localStorage";
 
 function Login() {
   const { t, lang, setLang } = useI18n();
   const [showPassword, setShowPassword] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);  
 
   const loginMutation = usePostData("/login");
   const dispatch = useDispatch();
@@ -57,8 +58,8 @@ function Login() {
         toast.success("Tizimga muvaffaqiyatli kirdingiz!");
       }
       dispatch(login(res));
-      localStorage.setItem("token", res.access_token);
-      localStorage.setItem("showOnboarding", "true");
+      safeLocalStorage.setItem("token", res.access_token);
+      safeLocalStorage.setItem("showOnboarding", "true");
     } catch (err) {
       //
 
@@ -78,9 +79,9 @@ function Login() {
             },
           };
           dispatch(login(mockResponse));
-          localStorage.setItem("user", JSON.stringify(mockResponse));
-          localStorage.setItem("token", mockResponse.access_token);
-          localStorage.setItem("showOnboarding", "true");
+          safeLocalStorage.setItem("user", JSON.stringify(mockResponse));
+          safeLocalStorage.setItem("token", mockResponse.access_token);
+          safeLocalStorage.setItem("showOnboarding", "true");
         } catch (mockError) {
           //
         }

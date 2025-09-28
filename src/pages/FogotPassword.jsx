@@ -57,6 +57,7 @@ function FogotPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [modal, setModal] = useState(false);
+  const [verifyLoading, setVerifyLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -112,11 +113,20 @@ function FogotPassword() {
   };
   const handleVerify = async (e) => {
     e.preventDefault();
+    
+    // Защита от множественных нажатий
+    if (verifyLoading) return;
+    
     const formData = new FormData(e.target);
 
     const verifyText = formData.get("verifyText");
     const password = formData.get("password");
     const password_confirmation = formData.get("password_confirmation");
+
+    if (!verifyText || !password || !password_confirmation) {
+      setError("Iltimos hammasini to'ldiring.");
+      return;
+    }
 
     if (password !== password_confirmation) {
       setError("Parollar mos emas!");
@@ -130,19 +140,20 @@ function FogotPassword() {
       message: verifyText,
     };
 
+    setVerifyLoading(true);
+    setError("");
+    
     try {
       const res = await fogotPasswordMutationTwo.mutateAsync(resultData);
-      //
 
       toast.success(t("auth.forgotPassword.successMessage"));
       setTimeout(() => {
         window.location.href = "/login";
       }, 3000);
     } catch (err) {
-      //
       setError("Failed to connect to API.");
     } finally {
-      setLoading(false);
+      setVerifyLoading(false);
     }
   };
 
@@ -341,7 +352,20 @@ function FogotPassword() {
                   </div>
                 </div>
                 <div>
-                  <Button>{t("auth.forgotPassword.submitButton")}</Button>
+                  <Button 
+                    type="submit" 
+                    disabled={verifyLoading}
+                    className="w-full"
+                  >
+                    {verifyLoading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <Loader2 className="animate-spin" size={16} />
+                        {t("auth.signupProgress")}
+                      </span>
+                    ) : (
+                      t("auth.forgotPassword.submitButton")
+                    )}
+                  </Button>
                 </div>
               </form>
             </DialogContent>

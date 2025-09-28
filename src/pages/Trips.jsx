@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import TripsCard from "@/components/TripsCard";
 
 // icons
-import { Car, MapPin, Route, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Car, MapPin, Route, Search, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
 // router
 import { useLocation } from "react-router-dom";
@@ -46,6 +46,7 @@ function Trips() {
   const [formErrors, setFormErrors] = useState({});
   const [dialogBron, setDialogBron] = useState(false);
   const [dialogPrice, setDialogPrice] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchFilters, setSearchFilters] = useState({
     from: "",
     to: "",
@@ -159,6 +160,10 @@ function Trips() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Защита от множественных нажатий
+    if (isSubmitting) return;
+    
     const formData = new FormData(e.target);
 
     // Валидация формы
@@ -171,6 +176,7 @@ function Trips() {
 
     // Очищаем ошибки если валидация прошла
     setFormErrors({});
+    setIsSubmitting(true);
 
     const from_city = formData.get("from");
     const to_city = formData.get("to");
@@ -219,6 +225,8 @@ function Trips() {
       } else {
         toast.error(t("trips.form.errorMessage"));
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -361,7 +369,20 @@ function Trips() {
                 <DialogClose asChild>
                   <Button type="button" className="rounded-2xl w-full h-10 text-sm">{t("trips.form.cancel")}</Button>
                 </DialogClose>
-                <Button className="bg-green-600 rounded-2xl w-full h-10 text-sm">{t("trips.form.submit")}</Button>
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="bg-green-600 rounded-2xl w-full h-10 text-sm"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="animate-spin" size={16} />
+                      {t("trips.form.submitting")}
+                    </span>
+                  ) : (
+                    t("trips.form.submit")
+                  )}
+                </Button>
               </div>
             </form>
           </DialogContent>

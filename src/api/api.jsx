@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { safeLocalStorage } from "@/lib/localStorage";
 
 const { VITE_API_BASE } = import.meta.env;
 
@@ -13,7 +14,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = safeLocalStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -24,7 +25,7 @@ api.interceptors.request.use(
 
 const refreshAccessToken = async () => {
   try {
-    const refreshToken = localStorage.getItem("reFreshToken");
+    const refreshToken = safeLocalStorage.getItem("reFreshToken");
     if (!refreshToken) throw new Error("No refresh token available");
 
     const { data } = await axios.post(
@@ -36,13 +37,13 @@ const refreshAccessToken = async () => {
       }
     );
 
-    localStorage.setItem("token", data.access_token);
+    safeLocalStorage.setItem("token", data.access_token);
     api.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${data.access_token}`;
   } catch (error) {
-    localStorage.removeItem("token");
-    localStorage.removeItem("reFreshToken");
+    safeLocalStorage.removeItem("token");
+    safeLocalStorage.removeItem("reFreshToken");
     window.location.href = "/login";
   }
 };

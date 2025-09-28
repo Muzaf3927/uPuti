@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { safeLocalStorage } from "@/lib/localStorage";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
@@ -6,6 +7,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 import {
   ArrowRight,
@@ -18,6 +20,7 @@ import {
   MoveRight,
   Pencil,
   Route,
+  Star,
   Trash2,
   Users,
 } from "lucide-react";
@@ -33,6 +36,10 @@ function MyTripsCard({ trip }) {
   const [editOpen, setEditOpen] = useState(false);
   const [requestsOpen, setRequestsOpen] = useState(false);
   const [bookingsOpen, setBookingsOpen] = useState(false);
+  const [ratePassengersOpen, setRatePassengersOpen] = useState(false);
+  const [ratingValue, setRatingValue] = useState(5);
+  const [ratingComment, setRatingComment] = useState("");
+  const [currentPassengerIndex, setCurrentPassengerIndex] = useState(0);
   const [form, setForm] = useState({
     from_city: trip.from_city || "",
     to_city: trip.to_city || "",
@@ -89,7 +96,7 @@ function MyTripsCard({ trip }) {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          Authorization: `Bearer ${safeLocalStorage.getItem("token") || ""}`,
         },
       });
       if (!res.ok) throw new Error("Delete failed");
@@ -107,8 +114,57 @@ function MyTripsCard({ trip }) {
       toast.success(t("myTripsCard.completeToast"));
       queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
       queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
+      
+      // Показываем диалог для оценки пассажиров
+      if (confirmedBookings.length > 0) {
+        setRatePassengersOpen(true);
+      }
     } catch (err) {
       toast.error(t("myTripsCard.completeError"));
+    }
+  };
+
+  // Функции для оценки пассажиров
+  const handleRatePassenger = async () => {
+    const currentPassenger = confirmedBookings[currentPassengerIndex];
+    if (!currentPassenger) return;
+
+    try {
+      await postData("/rate", {
+        trip_id: trip.id,
+        to_user_id: currentPassenger.user?.id,
+        rating: ratingValue,
+        comment: ratingComment,
+      });
+
+      // Переходим к следующему пассажиру или закрываем диалог
+      if (currentPassengerIndex < confirmedBookings.length - 1) {
+        setCurrentPassengerIndex(currentPassengerIndex + 1);
+        setRatingValue(5);
+        setRatingComment("");
+      } else {
+        setRatePassengersOpen(false);
+        setCurrentPassengerIndex(0);
+        setRatingValue(5);
+        setRatingComment("");
+        toast.success(t("history.ratingSubmitted"));
+      }
+    } catch (err) {
+      toast.error("Ошибка при отправке оценки");
+    }
+  };
+
+  const handleSkipRating = () => {
+    // Переходим к следующему пассажиру или закрываем диалог
+    if (currentPassengerIndex < confirmedBookings.length - 1) {
+      setCurrentPassengerIndex(currentPassengerIndex + 1);
+      setRatingValue(5);
+      setRatingComment("");
+    } else {
+      setRatePassengersOpen(false);
+      setCurrentPassengerIndex(0);
+      setRatingValue(5);
+      setRatingComment("");
     }
   };
 
@@ -366,6 +422,89 @@ function MyTripsCard({ trip }) {
               ))
             )}
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Диалог для оценки пассажиров */}
+      <Dialog open={ratePassengersOpen} onOpenChange={setRatePassengersOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              {t("history.ratingTitle")} ({currentPassengerIndex + 1}/{confirmedBookings.length})
+            </DialogTitle>
+          </DialogHeader>
+          
+          {confirmedBookings[currentPassengerIndex] && (
+            <div className="space-y-4">
+              {/* Информация о пассажире */}
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <Avatar className="size-10">
+                  <AvatarFallback>
+                    {getInitials(confirmedBookings[currentPassengerIndex].user?.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className="font-medium">
+                    {confirmedBookings[currentPassengerIndex].user?.name}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {confirmedBookings[currentPassengerIndex].user?.phone}
+                  </div>
+                </div>
+              </div>
+
+              {/* Звездочки для рейтинга */}
+              <div className="flex justify-center gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setRatingValue(star)}
+                    className="p-1"
+                  >
+                    <Star
+                      className={`w-8 h-8 ${
+                        star <= ratingValue
+                          ? "text-yellow-400 fill-current"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+
+              {/* Комментарий */}
+              <div className="space-y-2">
+                <Label htmlFor="ratingComment">
+                  {t("history.ratingComment")}
+                </Label>
+                <Textarea
+                  id="ratingComment"
+                  value={ratingComment}
+                  onChange={(e) => setRatingComment(e.target.value)}
+                  placeholder="Оставьте комментарий (необязательно)"
+                  rows={3}
+                />
+              </div>
+
+              {/* Кнопки */}
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleSkipRating}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  {currentPassengerIndex < confirmedBookings.length - 1 ? t("history.skip") : t("history.finish")}
+                </Button>
+                <Button
+                  onClick={handleRatePassenger}
+                  className="flex-1 bg-green-600 hover:bg-green-700"
+                >
+                  {currentPassengerIndex < confirmedBookings.length - 1 ? t("history.next") : t("history.finish")}
+                </Button>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </Card>

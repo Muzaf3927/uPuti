@@ -45,6 +45,7 @@ import { InputMask } from "@react-input/mask";
 import { usePostData } from "@/api/api";
 import { toast } from "sonner";
 import { useI18n } from "@/app/i18n.jsx";
+import { safeLocalStorage } from "@/lib/localStorage";
 
 function Register() {
   const { t, lang, setLang } = useI18n();
@@ -60,6 +61,7 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [modal, setModal] = useState(false);
+  const [verifyLoading, setVerifyLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -127,31 +129,39 @@ function Register() {
 
   const handleVerify = async (e) => {
     e.preventDefault();
+    
+    // Защита от множественных нажатий
+    if (verifyLoading) return;
+    
     const formData = new FormData(e.target);
-
     const verifyText = formData.get("verifyText");
 
-    //
+    if (!verifyText) {
+      setError("Iltimos kodni kiriting.");
+      return;
+    }
 
     const resultData = {
       verification_id: registerDataRef.current?.verification_id,
       message: verifyText,
     };
 
+    setVerifyLoading(true);
+    setError("");
+    
     try {
       const res = await verifyMuatation.mutateAsync(resultData);
 
       dispatch(login(res));
-      localStorage.setItem("token", res?.access_token);
-      localStorage.setItem("showOnboarding", "true");
+      safeLocalStorage.setItem("token", res?.access_token);
+      safeLocalStorage.setItem("showOnboarding", "true");
       toast.success("Muvaffaqiyatli royhatdan o'tdingiz!");
 
       setSuccess("Registration successful!");
     } catch (err) {
-      //
       setError("Failed to connect to API.");
     } finally {
-      setLoading(false);
+      setVerifyLoading(false);
     }
   };
 
@@ -364,7 +374,20 @@ function Register() {
                   />
                 </div>
                 <div>
-                  <Button>{t("auth.send")}</Button>
+                  <Button 
+                    type="submit" 
+                    disabled={verifyLoading}
+                    className="w-full"
+                  >
+                    {verifyLoading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <Loader2 className="animate-spin" size={16} />
+                        {t("auth.signupProgress")}
+                      </span>
+                    ) : (
+                      t("auth.send")
+                    )}
+                  </Button>
                 </div>
               </form>
             </DialogContent>

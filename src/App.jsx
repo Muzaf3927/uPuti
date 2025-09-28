@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { safeLocalStorage } from "@/lib/localStorage";
 import {
   Login,
   Register,
@@ -75,7 +76,7 @@ function App() {
   ]);
 
   useEffect(() => {
-    const isUser = localStorage.getItem("token");
+    const isUser = safeLocalStorage.getItem("token");
 
     if (isUser) {
       dispatch(login(isUser));

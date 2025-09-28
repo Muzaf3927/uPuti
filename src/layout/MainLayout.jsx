@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
+import { safeLocalStorage } from "@/lib/localStorage";
 import { Bell, Car, CircleUser, LogOut, Phone, MessageCircle, Headphones, User } from "lucide-react";
 import { useI18n } from "@/app/i18n.jsx";
 import { useDispatch } from "react-redux";
@@ -36,10 +37,10 @@ function MainLayout() {
 
   // Проверяем, нужно ли показать онбординг
   React.useEffect(() => {
-    const shouldShowOnboarding = localStorage.getItem("showOnboarding");
+    const shouldShowOnboarding = safeLocalStorage.getItem("showOnboarding");
     if (shouldShowOnboarding === "true") {
       setShowOnboarding(true);
-      localStorage.removeItem("showOnboarding");
+      safeLocalStorage.removeItem("showOnboarding");
     }
   }, []);
 
@@ -61,7 +62,7 @@ function MainLayout() {
 
       dispatch(logout());
 
-      localStorage.setItem("token", "");
+      safeLocalStorage.setItem("token", "");
       toast.success("Muvaffaqiyatli tizimdan chiqdingiz!");
     } catch {
       // silently ignore

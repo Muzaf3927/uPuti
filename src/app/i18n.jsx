@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useMemo, useState, useEffect } from "react";
+import { safeLocalStorage } from "@/lib/localStorage";
 
 const I18nContext = createContext({ lang: "uz", t: (k) => k, setLang: () => {} });
 
@@ -42,6 +43,10 @@ const dict = {
       rated: "baxolangan",
       yourTrip: "Sizning safaringiz",
       earned: "Zarobitno",
+      ratingSubmitted: "Baxo yuborildi",
+      skip: "O'tkazib yuborish",
+      next: "Keyingi",
+      finish: "Yakunlash",
     },
     tripsCard: {
       book: "Bron qilish",
@@ -87,6 +92,7 @@ const dict = {
         note: "Izoh",
         cancel: "Bekor qilish",
         submit: "Yaratish",
+        submitting: "Yaratilmoqda...",
         fromPlaceholder: "Toshkent",
         toPlaceholder: "Buxoro",
         costPlaceholder: "50000",
@@ -248,6 +254,10 @@ const dict = {
       rated: "оценено",
       yourTrip: "Ваша поездка",
       earned: "Заработано",
+      ratingSubmitted: "Оценка отправлена",
+      skip: "Пропустить",
+      next: "Далее",
+      finish: "Завершить",
     },
     tripsCard: {
       book: "Забронировать",
@@ -293,6 +303,7 @@ const dict = {
         note: "Примечание",
         cancel: "Отмена",
         submit: "Создать",
+        submitting: "Создается...",
         fromPlaceholder: "Ташкент",
         toPlaceholder: "Бухара",
         costPlaceholder: "50000",
@@ -422,7 +433,7 @@ export function I18nProvider({ children }) {
   const [isReady, setIsReady] = useState(false);
   
   useEffect(() => {
-    const saved = localStorage.getItem("lang");
+    const saved = safeLocalStorage.getItem("lang");
     if (saved === "ru" || saved === "uz") {
       setLang(saved);
     }
@@ -440,7 +451,7 @@ export function I18nProvider({ children }) {
       lang,
       isReady,
       setLang: (l) => {
-        localStorage.setItem("lang", l);
+        safeLocalStorage.setItem("lang", l);
         setLang(l);
       },
       t,
