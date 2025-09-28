@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
 import { safeLocalStorage } from "@/lib/localStorage";
+import { sessionManager } from "@/lib/sessionManager";
 import { Bell, Car, CircleUser, LogOut, Phone, MessageCircle, Headphones, User } from "lucide-react";
 import { useI18n } from "@/app/i18n.jsx";
 import { useDispatch } from "react-redux";
@@ -21,6 +22,7 @@ import {
 
 // others
 import { usePostData, useGetData, useNotifications, useNotificationsUnread, useMarkAllNotificationsRead, useMarkNotificationRead } from "@/api/api";
+import { toast } from "sonner";
 
 // get firstName
 function getNthWord(str, n) {
@@ -59,13 +61,17 @@ function MainLayout() {
   const handleLogout = async () => {
     try {
       const res = await logoutMutation.mutateAsync();
-
+    } catch (error) {
+      console.error("Logout API error:", error);
+      // Продолжаем с локальным logout даже если API не работает
+    } finally {
+      // Всегда выполняем локальную очистку
       dispatch(logout());
-
-      safeLocalStorage.setItem("token", "");
+      
+      // Полная очистка всех данных сессии
+      sessionManager.clearSession();
+      
       toast.success("Muvaffaqiyatli tizimdan chiqdingiz!");
-    } catch {
-      // silently ignore
     }
   };
   return (

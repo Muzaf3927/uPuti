@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { safeLocalStorage } from "@/lib/localStorage";
+import { sessionManager } from "@/lib/sessionManager";
 import {
   Login,
   Register,
@@ -76,10 +77,18 @@ function App() {
   ]);
 
   useEffect(() => {
-    const isUser = safeLocalStorage.getItem("token");
-
-    if (isUser) {
-      dispatch(login(isUser));
+    // Проверяем, есть ли активная и валидная сессия
+    if (sessionManager.hasActiveSession() && !sessionManager.isSessionExpired()) {
+      const userData = sessionManager.getUserData();
+      if (userData) {
+        dispatch(login(userData));
+      } else {
+        // Очищаем невалидные данные
+        sessionManager.clearSession();
+      }
+    } else {
+      // Если сессия истекла или невалидна, очищаем её
+      sessionManager.clearSession();
     }
   }, []);
 

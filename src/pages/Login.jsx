@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { useI18n } from "@/app/i18n.jsx";
 import Onboarding from "@/components/Onboarding";
 import { safeLocalStorage } from "@/lib/localStorage";
+import { sessionManager } from "@/lib/sessionManager";
 
 function Login() {
   const { t, lang, setLang } = useI18n();
@@ -57,8 +58,13 @@ function Login() {
       if (res.message === "Вход выполнен успешно") {
         toast.success("Tizimga muvaffaqiyatli kirdingiz!");
       }
+      
+      // Принудительно завершаем все предыдущие сессии
+      sessionManager.forceLogoutAllSessions();
+      
+      // Создаем новую сессию
+      sessionManager.createSession(res, res.access_token);
       dispatch(login(res));
-      safeLocalStorage.setItem("token", res.access_token);
       safeLocalStorage.setItem("showOnboarding", "true");
     } catch (err) {
       //
@@ -78,9 +84,13 @@ function Login() {
               email: "test@example.com",
             },
           };
+          
+          // Принудительно завершаем все предыдущие сессии
+          sessionManager.forceLogoutAllSessions();
+          
+          // Создаем новую сессию
+          sessionManager.createSession(mockResponse, mockResponse.access_token);
           dispatch(login(mockResponse));
-          safeLocalStorage.setItem("user", JSON.stringify(mockResponse));
-          safeLocalStorage.setItem("token", mockResponse.access_token);
           safeLocalStorage.setItem("showOnboarding", "true");
         } catch (mockError) {
           //
