@@ -73,7 +73,7 @@ function MainLayout() {
         <div className="flex justify-between items-center py-2 sm:py-3 custom-container overflow-hidden">
           <div className="flex gap-2 sm:gap-3 items-center">
             <Link className="rounded-2xl p-0" to="/">
-              <img src="/logo.png" alt="UPuti" className="h-10 sm:h-12 lg:h-14 w-auto object-contain opacity-85 hover:opacity-100 transition-opacity brightness-110 contrast-95" />
+              <img src="/logo.png" alt="UPuti" className="h-10 sm:h-12 lg:h-14 w-auto object-contain-50 hover:opacity-100 transition-opacity mix-blend-multiply" />
             </Link>
           </div>
           <div className="flex gap-1 sm:gap-2 items-center">
