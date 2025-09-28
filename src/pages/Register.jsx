@@ -87,11 +87,15 @@ function Register() {
     const password_confirmation = formData.get("password_confirmation");
 
     if (!name || !phone || !password || !password_confirmation) {
-      setError("Iltimos hammasini to'ldiring.");
+      setError(t("auth.fillAllFields"));
+      return;
+    }
+    if (password.length < 6) {
+      setError(t("auth.passwordMinLength"));
       return;
     }
     if (password !== password_confirmation) {
-      setError("Parol mos emas!");
+      setError(t("auth.passwordsNotMatch"));
       return;
     }
 
@@ -139,6 +143,7 @@ function Register() {
 
       dispatch(login(res));
       localStorage.setItem("token", res?.access_token);
+      localStorage.setItem("showOnboarding", "true");
       toast.success("Muvaffaqiyatli royhatdan o'tdingiz!");
 
       setSuccess("Registration successful!");
