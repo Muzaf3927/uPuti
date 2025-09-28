@@ -178,7 +178,7 @@ function Register() {
           <CardHeader className="p-2">
             <CardTitle className="text-green-700 text-xs sm:text-sm text-center flex flex-col items-center gap-1">
               <Users className="w-4 h-4 sm:w-5 sm:h-5" />
-              <p className="text-xs sm:text-sm leading-tight">Ishonchli sayohat hamrohlari</p>
+              <p className="text-xs sm:text-sm leading-tight">{t("auth.reliableCompanions")}</p>
             </CardTitle>
           </CardHeader>
         </Card>
@@ -186,7 +186,7 @@ function Register() {
           <CardHeader className="p-2">
             <CardTitle className="text-green-700 text-xs sm:text-sm text-center flex flex-col items-center gap-1">
               <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
-              <p className="text-xs sm:text-sm leading-tight">Qulay yo'nalishlar</p>
+              <p className="text-xs sm:text-sm leading-tight">{t("auth.convenientRoutes")}</p>
             </CardTitle>
           </CardHeader>
         </Card>

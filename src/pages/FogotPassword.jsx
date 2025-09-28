@@ -42,8 +42,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useI18n } from "@/app/i18n.jsx";
 
 function FogotPassword() {
+  const { t, lang, setLang } = useI18n();
   const [form, setForm] = useState({
     phone: "",
     password: "",
@@ -132,7 +134,7 @@ function FogotPassword() {
       const res = await fogotPasswordMutationTwo.mutateAsync(resultData);
       //
 
-      toast.success("Parol muvaffaqiyatli yangilandi!");
+      toast.success(t("auth.forgotPassword.successMessage"));
       setTimeout(() => {
         window.location.href = "/login";
       }, 3000);
@@ -145,28 +147,73 @@ function FogotPassword() {
   };
 
   return (
-    <div className="py-10 px-2 flex gap-5 flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="flex items-center gap-5 text-green-700 font-bold text-3xl sm:text-4xl">
-        <span className="rounded-full inline-block text-white bg-green-700 size-15 sm:size-18 py-2">
-          <Car className="mx-auto size-12" />
-        </span>
-        RideShare
+    <div className="pt-2 pb-6 px-1 flex gap-3 flex-col items-center justify-center min-h-screen bg-gray-100">
+      {/* Верхний текст */}
+      <div className="w-full max-w-4xl text-center px-2 mb-0">
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-3 shadow-sm border border-green-100">
+          <h2 className="text-sm sm:text-lg lg:text-xl font-bold text-gray-800 mb-1">
+            {lang === "uz" 
+              ? "Qo'l ko'tarib yo'lda Poputi mashina kutish vaqti o'td!" 
+              : "Эпоха голосования на дороге прошла!"
+            }
+          </h2>
+          <p className="text-xs sm:text-sm lg:text-base text-gray-600 leading-relaxed">
+            {lang === "uz" 
+              ? "«Popoutchik» lar uchun endi - arzon, xavfsiz va qulay hamsafar flatformasi:"
+              : "Теперь для «попутчиков» — доступная, безопасная и удобная платформа совместных поездок"
+            }
+          </p>
+        </div>
+      </div>
+      
+      <h1 className="flex items-center justify-center text-green-700 font-bold">
+        <img
+          src="/logo.png"
+          alt="UPuti"
+          className="h-16 sm:h-20 lg:h-24 w-auto object-contain mix-blend-multiply"
+        />
       </h1>
-      <p>Find travel companions for comfortable trips</p>
-      <div className="flex gap-2 w-full max-w-[450px] py-1"></div>
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-green-700 mx-auto text-md sm:text-xl font-bold">
-            Parolni yangilash
+      <div className="flex gap-1 w-full max-w-[450px] py-1">
+        <Card className="w-full py-1 h-[70px] sm:h-[80px]">
+          <CardHeader className="p-2">
+            <CardTitle className="text-green-700 text-xs sm:text-sm text-center flex flex-col items-center gap-1">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+              <p className="text-xs sm:text-sm leading-tight">{t("auth.reliableCompanions")}</p>
+            </CardTitle>
+          </CardHeader>
+        </Card>
+        <Card className="w-full h-[70px] sm:h-[80px] py-1">
+          <CardHeader className="p-2">
+            <CardTitle className="text-green-700 text-xs sm:text-sm text-center flex flex-col items-center gap-1">
+              <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+              <p className="text-xs sm:text-sm leading-tight">{t("auth.convenientRoutes")}</p>
+            </CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+      <Card className="w-full max-w-md -mt-4">
+        <CardHeader className="relative p-0.5 sm:p-1">
+          <CardTitle className="text-green-700 mx-auto text-lg sm:text-xl font-bold">
+            {t("auth.forgotPassword.title")}
           </CardTitle>
+          <p className="text-gray-500 mx-auto text-sm">
+            {t("auth.forgotPassword.subtitle")}
+          </p>
+          <button
+            type="button"
+            onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
+            className="absolute top-2 right-2 sm:top-4 sm:right-4 px-2 py-1 sm:px-3 sm:py-1 rounded-full border bg-white hover:bg-green-50 text-xs"
+          >
+            {lang === "uz" ? "🇷🇺 RU" : "🇺🇿 UZ"}
+          </button>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid w-full max-w-sm items-center gap-3">
-              <Label htmlFor="phone">Telefon Raqamingiz</Label>
+        <CardContent className="p-0.5 sm:p-1">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+            <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
+              <Label htmlFor="phone" className="text-sm">{t("auth.forgotPassword.phoneLabel")}</Label>
               <div className="relative">
                 <InputMask
-                  mask="(__) ___-__-__"
+                  mask="_________"
                   replacement={{ _: /\d/ }}
                   value={form.phone}
                   onChange={(e) => {
@@ -176,41 +223,42 @@ function FogotPassword() {
                   }}
                   id="phone"
                   name="phone"
-                  type="text"
+                  type="tel"
                   inputMode="numeric"
-                  placeholder="(90) 123 45 67"
+                  placeholder={t("auth.forgotPassword.phonePlaceholder")}
                   required
-                  className="pl-20 font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                  autoComplete="tel"
+                  className="pl-20 sm:pl-24 font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-8 sm:h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm sm:text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-6 sm:file:h-7 file:border-0 file:bg-transparent file:text-xs sm:file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                 />
                 <Phone
                   className="absolute left-2 top-2 text-gray-400"
-                  size={20}
+                  size={16}
                 />
-                <p className="absolute left-10 top-1.5 font-normal">+998</p>
+                <p className="absolute left-8 sm:left-10 top-1.5 font-normal select-none text-sm">+998</p>
               </div>
             </div>
 
-            {error && <div className="text-red-500 text-sm">{error}</div>}
-            {success && <div className="text-green-600 text-sm">{success}</div>}
+            {error && <div className="text-red-500 text-xs sm:text-sm">{error}</div>}
+            {success && <div className="text-green-600 text-xs sm:text-sm">{success}</div>}
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-700"
+              className="w-full bg-green-700 h-8 sm:h-9 text-sm sm:text-base"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <Loader2 className="animate-spin" size={18} />
-                  Parol yangilanmoqda...
+                  <Loader2 className="animate-spin" size={16} />
+                  {t("auth.forgotPassword.loading")}
                 </span>
               ) : (
-                "Parolni yangilash"
+                t("auth.forgotPassword.button")
               )}
             </Button>
-            <div className="flex justify-center items-center text-sm">
+            <div className="flex justify-center items-center text-xs sm:text-sm">
               <p>
-                Allaqachon hisobingiz bormi?{" "}
+                {t("auth.forgotPassword.haveAccount")}{" "}
                 <Link className="underline" to="/login">
-                  Tizimga kiring
+                  {t("auth.forgotPassword.goLogin")}
                 </Link>
               </p>
             </div>
@@ -218,11 +266,11 @@ function FogotPassword() {
           <Dialog open={modal} onOpenChange={setModal}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Raqamingizga kelgan kodni kiriting</DialogTitle>
+                <DialogTitle>{t("auth.forgotPassword.resetTitle")}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleVerify} className="flex flex-col gap-3">
                 <div className="flex flex-col gap-2 mb-2">
-                  <Label htmlFor="verifyText">Kod</Label>
+                  <Label htmlFor="verifyText">{t("auth.code")}</Label>
                   <Input
                     type="text"
                     id="verifyText"
@@ -231,14 +279,14 @@ function FogotPassword() {
                   />
                 </div>
                 <div className="grid w-full max-w-sm items-center gap-3">
-                  <Label htmlFor="password">Parol</Label>
+                  <Label htmlFor="password">{t("auth.forgotPassword.passwordLabel")}</Label>
                   <div className="relative">
                     <Input
                       autoComplete="new-password"
                       type={showPassword ? "text" : "password"}
                       id="password"
                       name="password"
-                      placeholder="Parol"
+                      placeholder={t("auth.forgotPassword.passwordPlaceholder")}
                       value={form.password}
                       onChange={handleChange}
                       required
@@ -260,7 +308,7 @@ function FogotPassword() {
                 </div>
                 <div className="grid w-full max-w-sm items-center gap-3">
                   <Label htmlFor="password_confirmation">
-                    Parolni tekshirish
+                    {t("auth.forgotPassword.confirmPasswordLabel")}
                   </Label>
                   <div className="relative">
                     <Input
@@ -268,7 +316,7 @@ function FogotPassword() {
                       type={showConfirmPassword ? "text" : "password"}
                       id="password_confirmation"
                       name="password_confirmation"
-                      placeholder="Parolni tekshirish"
+                      placeholder={t("auth.forgotPassword.confirmPasswordPlaceholder")}
                       value={form.password_confirmation}
                       onChange={handleChange}
                       required
@@ -293,7 +341,7 @@ function FogotPassword() {
                   </div>
                 </div>
                 <div>
-                  <Button>Yuborish</Button>
+                  <Button>{t("auth.forgotPassword.submitButton")}</Button>
                 </div>
               </form>
             </DialogContent>
