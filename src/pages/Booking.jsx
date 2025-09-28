@@ -1,6 +1,6 @@
 import { ArrowRight, MapPin, MessageCircle, ChevronDown, ChevronUp, Phone } from "lucide-react";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 // shad ui
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,15 +16,24 @@ import { useI18n } from "@/app/i18n.jsx";
 
 function Booking() {
   const { t } = useI18n();
+  const location = useLocation();
 
   // API для моих подтвержденных броней (где я пассажир)
-  const { data: myConfirmedBookingsRes, isPending: myConfirmedBookingsLoading, error: myConfirmedBookingsError } = useGetData("/bookings/my/confirmed");
+  const { data: myConfirmedBookingsRes, isPending: myConfirmedBookingsLoading, error: myConfirmedBookingsError, refetch: refetchMyConfirmed } = useGetData("/bookings/my/confirmed");
 
   // API для подтвержденных броней на мои поездки (где я водитель)
-  const { data: confirmedBookingsToMyTripsRes, isPending: confirmedBookingsToMyTripsLoading, error: confirmedBookingsToMyTripsError } = useGetData("/bookings/to-my-trips/confirmed");
+  const { data: confirmedBookingsToMyTripsRes, isPending: confirmedBookingsToMyTripsLoading, error: confirmedBookingsToMyTripsError, refetch: refetchConfirmedToMyTrips } = useGetData("/bookings/to-my-trips/confirmed");
 
   // Получаем количество непрочитанных сообщений
   const { data: unreadCounts } = useBookingsUnreadCount();
+
+  // Автоматическое обновление данных при переходе на страницу
+  useEffect(() => {
+    if (location.pathname === "/booking") {
+      refetchMyConfirmed();
+      refetchConfirmedToMyTrips();
+    }
+  }, [location.pathname, refetchMyConfirmed, refetchConfirmedToMyTrips]);
 
   const myConfirmedBookings = myConfirmedBookingsRes?.bookings || [];
   const confirmedBookingsToMyTrips = confirmedBookingsToMyTripsRes?.bookings || [];

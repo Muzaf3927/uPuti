@@ -6,6 +6,9 @@ import TripsCard from "@/components/TripsCard";
 // icons
 import { Car, MapPin, Route, Search, ChevronLeft, ChevronRight } from "lucide-react";
 
+// router
+import { useLocation } from "react-router-dom";
+
 // shad cn
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
@@ -36,6 +39,7 @@ import MyTripsCard from "@/components/MyTripsCard";
 
 function Trips() {
   const { t } = useI18n();
+  const location = useLocation();
   const [dialog, setDialog] = useState(false);
   const [searchDialog, setSearchDialog] = useState(false);
   const [selectedTime, setSelectedTime] = useState("12:00");
@@ -68,12 +72,6 @@ function Trips() {
   const allTripsUrl = `/trips${baseQuery}${baseQuery.includes("?") && baseQuery !== "?" ? "&" : ""}page=${allPage}&per_page=${ALL_PER_PAGE}`;
   const { data, isLoading, error, refetch } = useGetData(allTripsUrl);
 
-  //
-
-  // useEffect(() => {
-  //   refetch();
-  // }, [filteredUrl]);
-
   const handleSearch = (e) => {
     e.preventDefault();
     // Устанавливаем активные фильтры только при нажатии кнопки поиска
@@ -92,6 +90,20 @@ function Trips() {
     error: myTripsError,
     refetch: myTripsRefetch,
   } = useGetData(`/my-trips?page=${myPage}&per_page=${MY_PER_PAGE}`);
+
+  // Автоматическое обновление данных при переходе на страницу
+  useEffect(() => {
+    if (location.pathname === "/") {
+      refetch();
+      myTripsRefetch();
+    }
+  }, [location.pathname, refetch, myTripsRefetch]);
+
+  //
+
+  // useEffect(() => {
+  //   refetch();
+  // }, [filteredUrl]);
 
   const myTripsList = (myTrips && (myTrips.trips || myTrips.data)) || [];
 

@@ -11,11 +11,13 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { History as HistoryIcon, Star } from "lucide-react";
 import { useI18n } from "@/app/i18n.jsx";
+import { useLocation } from "react-router-dom";
 
 function History() {
   const { t } = useI18n();
-  const { data: asDriverRes, isPending: asDriverLoading, error: asDriverError } = useGetData("/trips/completed/mine");
-  const { data: asPassengerRes, isPending: asPassengerLoading, error: asPassengerError } = useGetData("/trips/completed/as-passenger");
+  const location = useLocation();
+  const { data: asDriverRes, isPending: asDriverLoading, error: asDriverError, refetch: refetchAsDriver } = useGetData("/trips/completed/mine");
+  const { data: asPassengerRes, isPending: asPassengerLoading, error: asPassengerError, refetch: refetchAsPassenger } = useGetData("/trips/completed/as-passenger");
 
   const asDriver = asDriverRes?.trips || [];
   const asPassenger = asPassengerRes?.trips || [];
@@ -26,6 +28,14 @@ function History() {
   const [ratingValue, setRatingValue] = useState(5);
   const [ratingComment, setRatingComment] = useState("");
   const queryClient = useQueryClient();
+
+  // Автоматическое обновление данных при переходе на страницу
+  useEffect(() => {
+    if (location.pathname === "/history") {
+      refetchAsDriver();
+      refetchAsPassenger();
+    }
+  }, [location.pathname, refetchAsDriver, refetchAsPassenger]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -82,24 +92,69 @@ function History() {
 
   const currency = (n) => `${Number(n || 0).toLocaleString("ru-RU")} сум`;
 
-  const TripItem = ({ t, showEarn = false, role = "driver" }) => (
-    <div className="border rounded-2xl p-4 flex items-center justify-between bg-white/80 backdrop-blur-sm shadow-sm">
-      <div className="flex items-center gap-3">
-        <Avatar className="size-8 ring-2 ring-white shadow">
-          <AvatarFallback>{getInitials(t?.driver?.name)}</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col text-sm">
-          <span className="font-semibold">{t.from_city} → {t.to_city}</span>
-          <span className="text-gray-600">{t.date} • {t.time}</span>
-          {role === "driver" && Array.isArray(t.participants) && t.participants.length > 0 ? (
-            <div className="flex flex-wrap gap-2 mt-2">
-              {t.participants.map((p, idx) => (
-                <div key={idx} className="flex items-center gap-2 border rounded-full px-2 py-1">
-                  <span className="text-xs">{p.user?.name}</span>
+  const TripItem = ({ t: trip, showEarn = false, role = "driver" }) => (
+    <div className="border rounded-3xl p-3 sm:p-4 bg-white/80 backdrop-blur-sm shadow-sm">
+      <div className="flex flex-col gap-2">
+        {/* Route and Status Row */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-green-700 font-bold text-sm sm:text-base min-w-0">
+            <span className="truncate">{trip.from_city}</span>
+            <span className="text-green-600">→</span>
+            <span className="truncate">{trip.to_city}</span>
+          </div>
+          <span className="text-xs bg-green-700 text-white py-1 px-2 rounded-2xl whitespace-nowrap">{t("history.completed")}</span>
+        </div>
+
+        {/* Date and Time */}
+        <div className="flex items-center gap-3 text-sm text-gray-700">
+          <span>{trip.date}</span>
+          <span>•</span>
+          <span>{trip.time}</span>
+        </div>
+
+        {/* Driver Info - показываем разную информацию в зависимости от роли */}
+        <div className="flex items-center gap-3">
+          <Avatar className="size-8 ring-2 ring-white shadow">
+            <AvatarFallback>
+              {role === "driver" 
+                ? getInitials("Вы") // Показываем "Вы" для водителя
+                : getInitials(trip?.driver?.name)
+              }
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex items-center gap-2 text-sm text-gray-800">
+            {role === "driver" ? (
+              <>
+                <span className="font-medium truncate">{t("history.yourTrip")}</span>
+                <span className="text-gray-500">•</span>
+                <span className="text-gray-600">💰 {currency(trip.price || 0)}</span>
+              </>
+            ) : (
+              <>
+                <span className="font-medium truncate">{trip.driver?.name}</span>
+                <span className="text-gray-500">•</span>
+                <span className="text-gray-600">⭐ {trip.driver?.rating}</span>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Earnings or Rating Button */}
+        <div className="flex items-center justify-between">
+          {showEarn ? (
+            <span className="text-xs bg-amber-100 text-amber-800 py-1 px-2 rounded-2xl border border-amber-200">
+              {t("history.earned")}: {currency(driverTotals.byTrip[trip.id] || 0)}
+            </span>
+          ) : null}
+          
+          {role === "driver" && Array.isArray(trip.participants) && trip.participants.length > 0 ? (
+            <div className="flex flex-wrap gap-1">
+              {trip.participants.map((p, idx) => (
+                <div key={idx} className="flex items-center gap-1">
                   {p.can_rate ? (
                     <button
                       onClick={() => {
-                        setRateTarget({ tripId: t.id, toUserId: p.user?.id, toName: p.user?.name || "" });
+                        setRateTarget({ tripId: trip.id, toUserId: p.user?.id, toName: p.user?.name || "" });
                         setRatingValue(5);
                         setRatingComment("");
                         setRateOpen(true);
@@ -107,40 +162,31 @@ function History() {
                       className="text-xs px-2 py-0.5 rounded-full bg-amber-500 text-white"
                       type="button"
                     >
-                      Оценить
+                      {t("history.rate")}
                     </button>
                   ) : (
-                    <span className="text-[10px] text-gray-500">оценено</span>
+                    <span className="text-[10px] text-gray-500">{t("history.rated")}</span>
                   )}
                 </div>
               ))}
             </div>
           ) : null}
-          {role === "passenger" && t.can_rate ? (
-            <div className="mt-2">
-              <button
-                onClick={() => {
-                  setRateTarget({ tripId: t.id, toUserId: t.driver?.id, toName: t.driver?.name || "" });
-                  setRatingValue(5);
-                  setRatingComment("");
-                  setRateOpen(true);
-                }}
-                className="text-xs px-3 py-1 rounded-full bg-amber-500 text-white"
-                type="button"
-              >
-                Оценить водителя
-              </button>
-            </div>
+          
+          {role === "passenger" && trip.can_rate ? (
+            <button
+              onClick={() => {
+                setRateTarget({ tripId: trip.id, toUserId: trip.driver?.id, toName: trip.driver?.name || "" });
+                setRatingValue(5);
+                setRatingComment("");
+                setRateOpen(true);
+              }}
+              className="text-xs px-3 py-1 rounded-full bg-amber-500 text-white"
+              type="button"
+            >
+              {t("history.rateDriver")}
+            </button>
           ) : null}
         </div>
-      </div>
-      <div className="flex items-center gap-2">
-        {showEarn ? (
-          <span className="text-xs bg-amber-100 text-amber-800 py-1 px-2 rounded-2xl border border-amber-200">
-            Заработано: {currency(driverTotals.byTrip[t.id] || 0)}
-          </span>
-        ) : null}
-        <span className="text-xs bg-green-700 text-white py-1 px-2 rounded-2xl">completed</span>
       </div>
     </div>
   );
@@ -168,8 +214,8 @@ function History() {
               <Empty />
             ) : (
               <div className="flex flex-col gap-3">
-                {asDriver.map((t) => (
-                  <TripItem key={t.id} t={t} showEarn role="driver" />
+                {asDriver.map((trip) => (
+                  <TripItem key={trip.id} t={trip} showEarn role="driver" />
                 ))}
               </div>
             )}
@@ -183,8 +229,8 @@ function History() {
               <Empty />
             ) : (
               <div className="flex flex-col gap-3">
-                {asPassenger.map((t) => (
-                  <TripItem key={t.id} t={t} role="passenger" />
+                {asPassenger.map((trip) => (
+                  <TripItem key={trip.id} t={trip} role="passenger" />
                 ))}
               </div>
             )}
@@ -196,7 +242,7 @@ function History() {
       <Dialog open={rateOpen} onOpenChange={setRateOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Оценка пользователю {rateTarget.toName}</DialogTitle>
+            <DialogTitle>{t("history.ratingTitle")} {rateTarget.toName}</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-1">
@@ -216,13 +262,13 @@ function History() {
               <span className="ml-2 text-sm">{ratingValue} / 5</span>
             </div>
             <Input
-              placeholder="Комментарий (необязательно)"
+              placeholder={t("history.ratingComment")}
               value={ratingComment}
               onChange={(e) => setRatingComment(e.target.value)}
             />
             <div className="w-full flex gap-2">
               <DialogClose asChild>
-                <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">Отмена</Button>
+                <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">{t("history.cancel")}</Button>
               </DialogClose>
               <Button
                 className="w-1/2 bg-green-600 rounded-2xl"
@@ -241,7 +287,7 @@ function History() {
                 }}
                 type="button"
               >
-                Сохранить
+                {t("history.save")}
               </Button>
             </div>
           </div>

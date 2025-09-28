@@ -45,8 +45,15 @@ function Chats() {
   const inputRef = useRef(null);
   const queryClient = useQueryClient();
   
-  const { data: chatsRes } = useGetUserChats();
+  const { data: chatsRes, refetch: refetchChats } = useGetUserChats();
   const chats = chatsRes?.chats || [];
+
+  // Автоматическое обновление данных при переходе на страницу
+  useEffect(() => {
+    if (location.pathname === "/chats") {
+      refetchChats();
+    }
+  }, [location.pathname, refetchChats]);
 
   // Если есть параметры в URL, автоматически открываем чат
   useEffect(() => {

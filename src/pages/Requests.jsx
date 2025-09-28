@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // shad cn
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -18,10 +18,12 @@ import { useGetData, usePostData, postData, useBookingsUnreadCount } from "@/api
 import { useI18n } from "@/app/i18n.jsx";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 
 function Requests() {
   const { t } = useI18n();
   const queryClient = useQueryClient();
+  const location = useLocation();
   
   // API для моих pending запросов (где я пассажир)
   const { data: mineRes, isPending: mineLoading, error: mineError, refetch: refetchMine } = useGetData(
@@ -35,6 +37,14 @@ function Requests() {
   
   // Получаем количество непрочитанных сообщений
   const { data: unreadCounts } = useBookingsUnreadCount();
+
+  // Автоматическое обновление данных при переходе на страницу
+  useEffect(() => {
+    if (location.pathname === "/requests") {
+      refetchMine();
+      refetchToMe();
+    }
+  }, [location.pathname, refetchMine, refetchToMe]);
 
   const handleConfirm = async (bookingId) => {
     try {
