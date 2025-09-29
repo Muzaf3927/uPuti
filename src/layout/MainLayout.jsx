@@ -2,7 +2,16 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import { safeLocalStorage } from "@/lib/localStorage";
 import { sessionManager } from "@/lib/sessionManager";
-import { Bell, Car, CircleUser, LogOut, Phone, MessageCircle, Headphones, User } from "lucide-react";
+import {
+  Bell,
+  Car,
+  CircleUser,
+  LogOut,
+  Phone,
+  MessageCircle,
+  Headphones,
+  User,
+} from "lucide-react";
 import { useI18n } from "@/app/i18n.jsx";
 import { useDispatch } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
@@ -21,7 +30,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 // others
-import { usePostData, useGetData, useNotifications, useNotificationsUnread, useMarkAllNotificationsRead, useMarkNotificationRead } from "@/api/api";
+import {
+  usePostData,
+  useGetData,
+  useNotifications,
+  useNotificationsUnread,
+  useMarkAllNotificationsRead,
+  useMarkNotificationRead,
+} from "@/api/api";
 import { toast } from "sonner";
 
 // get firstName
@@ -67,10 +83,10 @@ function MainLayout() {
     } finally {
       // Всегда выполняем локальную очистку
       dispatch(logout());
-      
+
       // Полная очистка всех данных сессии
       sessionManager.clearSession();
-      
+
       toast.success("Muvaffaqiyatli tizimdan chiqdingiz!");
     }
   };
@@ -80,7 +96,11 @@ function MainLayout() {
         <div className="flex justify-between items-center py-2 sm:py-3 custom-container overflow-hidden">
           <div className="flex gap-2 sm:gap-3 items-center">
             <Link className="rounded-2xl p-0" to="/">
-              <img src="/logo.png" alt="UPuti" className="h-10 sm:h-12 lg:h-14 w-auto object-contain-50 hover:opacity-100 transition-opacity mix-blend-multiply" />
+              <img
+                src="/logo.png"
+                alt="UPuti"
+                className="h-10 sm:h-12 lg:h-14 w-auto object-contain-50 hover:opacity-100 transition-opacity mix-blend-multiply"
+              />
             </Link>
           </div>
           <div className="flex gap-1 sm:gap-2 items-center">
@@ -90,7 +110,17 @@ function MainLayout() {
               className="px-2 py-1 sm:px-3 sm:py-1 rounded-full border bg-white/80 hover:bg-green-50 text-xs sm:text-sm"
               title={lang === "uz" ? "RU" : "UZ"}
             >
-              {lang === "uz" ? "🇷🇺 RU" : "🇺🇿 UZ"}
+              {lang === "uz" ? (
+                <div className="flex gap-1 py-1">
+                  <img src="/rus.png" alt="Uzbekistan" width="24" height="24" />
+                  <span>RU</span>
+                </div>
+              ) : (
+                <div className="flex gap-1 py-1">
+                  <img src="/uzb.png" alt="Uzbekistan" width="24" height="24" />
+                  <span>UZ</span>
+                </div>
+              )}
             </button>
             <div className="flex gap-1 sm:gap-2 items-center">
               <DropdownMenu>
@@ -102,40 +132,74 @@ function MainLayout() {
                     </span>
                   )}
                 </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 sm:w-72 max-h-96 overflow-auto">
-                <div className="flex items-center justify-between px-2 py-1">
-                  <DropdownMenuLabel className="text-xs sm:text-sm">Уведомления</DropdownMenuLabel>
-                  <button disabled={markAll.isPending} onClick={() => markAll.mutate()} className="text-xs text-green-700 hover:underline">
-                    Прочитать все
-                  </button>
-                </div>
-                <DropdownMenuSeparator />
-                {!notifications?.notifications?.filter(n => !n.is_read)?.length && (
-                  <DropdownMenuLabel className="text-center text-xs py-6 text-gray-500">
-                    Уведомлений нет
-                  </DropdownMenuLabel>
-                )}
-                {notifications?.notifications?.filter(n => !n.is_read)?.map((n) => (
-                  <DropdownMenuItem key={n.id} className="whitespace-normal py-1 sm:py-2">
-                    <div className="flex items-start justify-between gap-1 sm:gap-2 w-full">
-                      <div className="flex-1">
-                        <div className={`text-xs sm:text-sm ${n.is_read ? "text-gray-600" : "text-gray-900 font-semibold"}`}>{n.message}</div>
-                        {n.created_at && (
-                          <div className="text-[9px] sm:text-[10px] text-gray-400 mt-0.5">{new Date(n.created_at).toLocaleString()}</div>
-                        )}
-                      </div>
-                      {!n.is_read && (
-                        <button onClick={(e) => { e.stopPropagation(); markRead.mutate(n.id); }} className="text-xs text-blue-600 hover:underline">
-                          Прочитать
-                        </button>
-                      )}
-                    </div>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
+                <DropdownMenuContent className="w-64 sm:w-72 max-h-96 overflow-auto">
+                  <div className="flex items-center justify-between px-2 py-1">
+                    <DropdownMenuLabel className="text-xs sm:text-sm">
+                      Уведомления
+                    </DropdownMenuLabel>
+                    <button
+                      disabled={markAll.isPending}
+                      onClick={() => markAll.mutate()}
+                      className="text-xs text-green-700 hover:underline"
+                    >
+                      Прочитать все
+                    </button>
+                  </div>
+                  <DropdownMenuSeparator />
+                  {!notifications?.notifications?.filter((n) => !n.is_read)
+                    ?.length && (
+                    <DropdownMenuLabel className="text-center text-xs py-6 text-gray-500">
+                      Уведомлений нет
+                    </DropdownMenuLabel>
+                  )}
+                  {notifications?.notifications
+                    ?.filter((n) => !n.is_read)
+                    ?.map((n) => (
+                      <DropdownMenuItem
+                        key={n.id}
+                        className="whitespace-normal py-1 sm:py-2"
+                      >
+                        <div className="flex items-start justify-between gap-1 sm:gap-2 w-full">
+                          <div className="flex-1">
+                            <div
+                              className={`text-xs sm:text-sm ${
+                                n.is_read
+                                  ? "text-gray-600"
+                                  : "text-gray-900 font-semibold"
+                              }`}
+                            >
+                              {n.message}
+                            </div>
+                            {n.created_at && (
+                              <div className="text-[9px] sm:text-[10px] text-gray-400 mt-0.5">
+                                {new Date(n.created_at).toLocaleString()}
+                              </div>
+                            )}
+                          </div>
+                          {!n.is_read && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                markRead.mutate(n.id);
+                              }}
+                              className="text-xs text-blue-600 hover:underline"
+                            >
+                              Прочитать
+                            </button>
+                          )}
+                        </div>
+                      </DropdownMenuItem>
+                    ))}
+                </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <button type="button" onClick={() => { setProfileOpen(true); userRefetch(); }}>
+            <button
+              type="button"
+              onClick={() => {
+                setProfileOpen(true);
+                userRefetch();
+              }}
+            >
               <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-xs sm:text-sm cursor-pointer hover:bg-green-700 transition">
                 {getInitials(userData?.name)}
               </div>
@@ -152,35 +216,57 @@ function MainLayout() {
       {/* Right Panel Profile */}
       {profileOpen && (
         <div className="fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setProfileOpen(false)} />
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setProfileOpen(false)}
+          />
           <div className="absolute right-1 top-1 sm:right-2 sm:top-2 h-[290px] sm:h-[340px] w-[220px] sm:w-[250px] bg-white shadow-xl rounded-2xl flex flex-col overflow-hidden">
             <div className="p-3 sm:p-4 border-b flex items-center justify-between">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-sm">
-                  {(userData?.name || "U").slice(0,1)}
+                  {(userData?.name || "U").slice(0, 1)}
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-semibold text-sm sm:text-base">{userData?.name}</span>
-                  <span className="text-xs text-gray-500">{userData?.phone}</span>
+                  <span className="font-semibold text-sm sm:text-base">
+                    {userData?.name}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {userData?.phone}
+                  </span>
                 </div>
               </div>
-              <button onClick={() => setProfileOpen(false)} className="text-sm text-gray-500 hover:text-gray-700">✕</button>
+              <button
+                onClick={() => setProfileOpen(false)}
+                className="text-sm text-gray-500 hover:text-gray-700"
+              >
+                ✕
+              </button>
             </div>
             <div className="p-3 sm:p-4 flex-1 overflow-y-auto">
               <div className="border rounded-2xl p-3 sm:p-4 bg-white/70 min-w-[280px]">
                 <div className="space-y-2 text-xs sm:text-sm">
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-500">{t("profilePanel.name")}:</span>
+                    <span className="text-gray-500">
+                      {t("profilePanel.name")}:
+                    </span>
                     <span className="font-medium">{userData?.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-500">{t("profilePanel.phone")}:</span>
-                    <span className="font-medium">{userData?.phone ? `+998${userData.phone}` : "—"}</span>
+                    <span className="text-gray-500">
+                      {t("profilePanel.phone")}:
+                    </span>
+                    <span className="font-medium">
+                      {userData?.phone ? `+998${userData.phone}` : "—"}
+                    </span>
                   </div>
                   {userData?.rating !== undefined && (
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-500">{t("profilePanel.rating")}:</span>
-                      <span className="font-medium">⭐ {userData?.rating} ({userData?.rating_count || 0})</span>
+                      <span className="text-gray-500">
+                        {t("profilePanel.rating")}:
+                      </span>
+                      <span className="font-medium">
+                        ⭐ {userData?.rating} ({userData?.rating_count || 0})
+                      </span>
                     </div>
                   )}
                 </div>
@@ -191,22 +277,27 @@ function MainLayout() {
                   className="w-full flex items-center gap-2 hover:bg-gray-50 rounded-lg p-2 transition-colors"
                 >
                   <Headphones className="w-4 h-4 text-green-600" />
-                  <span className="text-sm font-semibold text-gray-700">{t("profilePanel.support")}</span>
+                  <span className="text-sm font-semibold text-gray-700">
+                    {t("profilePanel.support")}
+                  </span>
                 </button>
               </div>
             </div>
             <div className="p-3 sm:p-4 border-t">
-              <button onClick={handleLogout} className="w-full bg-red-600 text-white rounded-2xl py-2 flex items-center justify-center gap-2 text-sm">
+              <button
+                onClick={handleLogout}
+                className="w-full bg-red-600 text-white rounded-2xl py-2 flex items-center justify-center gap-2 text-sm"
+              >
                 <LogOut className="w-4 h-4" /> {t("profilePanel.logout")}
               </button>
             </div>
           </div>
         </div>
       )}
-      
+
       {showOnboarding && (
-        <Onboarding 
-          onComplete={() => setShowOnboarding(false)} 
+        <Onboarding
+          onComplete={() => setShowOnboarding(false)}
           setLang={setLang}
         />
       )}
@@ -214,7 +305,10 @@ function MainLayout() {
       {/* Support Modal */}
       {supportOpen && (
         <div className="fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setSupportOpen(false)} />
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setSupportOpen(false)}
+          />
           <div className="absolute inset-0 flex items-center justify-center p-4">
             <div className="bg-white rounded-xl shadow-lg w-full max-w-[280px] p-4 text-center">
               <div className="mb-3">
@@ -222,8 +316,12 @@ function MainLayout() {
                   <User className="w-10 h-10 text-green-600 absolute top-1 left-1" />
                   <Headphones className="w-6 h-6 text-green-500 absolute -top-1 -right-1" />
                 </div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-1">{t("support.title")}</h3>
-                <p className="text-xs text-gray-600 mb-3">{t("support.description")}</p>
+                <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  {t("support.title")}
+                </h3>
+                <p className="text-xs text-gray-600 mb-3">
+                  {t("support.description")}
+                </p>
               </div>
               <a
                 href="https://t.me/Khamroev_3"
@@ -238,7 +336,7 @@ function MainLayout() {
                 onClick={() => setSupportOpen(false)}
                 className="mt-8 text-xs text-red-500 hover:text-red-700"
               >
-{t("support.close")}
+                {t("support.close")}
               </button>
             </div>
           </div>

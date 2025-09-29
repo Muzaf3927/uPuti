@@ -13,25 +13,29 @@ function Onboarding({ onComplete, setLang }) {
     uz: {
       title: "UPuti ga xush kelibsiz!",
       subtitle: "Bu yerda yo'lovchilar va haydovchilar bir-birini topadilar.",
-      description: "Siz tezda safar yaratishingiz yoki poputka topishingiz mumkin.",
+      description:
+        "Siz tezda safar yaratishingiz yoki poputka topishingiz mumkin.",
       passengerTitle: "Yo'lovchilar uchun:",
-      passengerDesc: "kerakli yo'nalish bo'yicha safarni toping — taksidan arzonroq va qulayroq.",
+      passengerDesc:
+        "kerakli yo'nalish bo'yicha safarni toping — taksidan arzonroq va qulayroq.",
       driverTitle: "Haydovchilar uchun:",
-      driverDesc: "kim bilan ketishingizni oldindan biling va benzin xarajatini qoplang.",
+      driverDesc:
+        "kim bilan ketishingizni oldindan biling va benzin xarajatini qoplang.",
       cta: "👉 Ortiqcha tashvishlarsiz: bron qiling va yo'lga chiqing!",
-      button: "Boshlash"
+      button: "Boshlash",
     },
     ru: {
       title: "Добро пожаловать в UPuti!",
       subtitle: "Здесь пассажиры и водители находят друг друга.",
       description: "Вы можете быстро создать поездку или найти попутку.",
       passengerTitle: "Для пассажиров:",
-      passengerDesc: "найдёшь поездку по нужному маршруту дешевле и удобнее, чем такси или автобус.",
+      passengerDesc:
+        "найдёшь поездку по нужному маршруту дешевле и удобнее, чем такси или автобус.",
       driverTitle: "Для водителей:",
       driverDesc: "заранее знаешь, кто поедет с тобой, и экономишь на бензине.",
       cta: "👉 Без лишних хлопот: бронируй и езжай!",
-      button: "Начать"
-    }
+      button: "Начать",
+    },
   };
 
   const currentContent = content[isUzbek ? "uz" : "ru"];
@@ -46,9 +50,19 @@ function Onboarding({ onComplete, setLang }) {
             onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
             className="absolute top-2 right-2 sm:top-4 sm:right-4 px-2 py-1 sm:px-3 sm:py-1 rounded-full border bg-white hover:bg-green-50 text-xs font-medium shadow-sm"
           >
-            {lang === "uz" ? "🇷🇺 RU" : "🇺🇿 UZ"}
+            {lang === "uz" ? (
+              <div className="flex gap-1 py-1">
+                <img src="/rus.png" alt="Uzbekistan" width="24" height="24" />
+                <span>RU</span>
+              </div>
+            ) : (
+              <div className="flex gap-1 py-1">
+                <img src="/uzb.png" alt="Uzbekistan" width="24" height="24" />
+                <span>UZ</span>
+              </div>
+            )}
           </button>
-          
+
           <div className="text-center mb-4 sm:mb-6 lg:mb-8">
             <div className="flex justify-center mb-3 sm:mb-4">
               <img

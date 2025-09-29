@@ -113,10 +113,10 @@ function FogotPassword() {
   };
   const handleVerify = async (e) => {
     e.preventDefault();
-    
+
     // Защита от множественных нажатий
     if (verifyLoading) return;
-    
+
     const formData = new FormData(e.target);
 
     const verifyText = formData.get("verifyText");
@@ -142,7 +142,7 @@ function FogotPassword() {
 
     setVerifyLoading(true);
     setError("");
-    
+
     try {
       const res = await fogotPasswordMutationTwo.mutateAsync(resultData);
 
@@ -163,20 +163,18 @@ function FogotPassword() {
       <div className="w-full max-w-4xl text-center px-2 mb-0">
         <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-3 shadow-sm border border-green-100">
           <h2 className="text-sm sm:text-lg lg:text-xl font-bold text-gray-800 mb-1">
-            {lang === "uz" 
-              ? "Qo'l ko'tarib yo'lda Poputi mashina kutish vaqti o'td!" 
-              : "Эпоха голосования на дороге прошла!"
-            }
+            {lang === "uz"
+              ? "Qo'l ko'tarib yo'lda Poputi mashina kutish vaqti o'td!"
+              : "Эпоха голосования на дороге прошла!"}
           </h2>
           <p className="text-xs sm:text-sm lg:text-base text-gray-600 leading-relaxed">
-            {lang === "uz" 
+            {lang === "uz"
               ? "«Popoutchik» lar uchun endi - arzon, xavfsiz va qulay hamsafar flatformasi:"
-              : "Теперь для «попутчиков» — доступная, безопасная и удобная платформа совместных поездок"
-            }
+              : "Теперь для «попутчиков» — доступная, безопасная и удобная платформа совместных поездок"}
           </p>
         </div>
       </div>
-      
+
       <h1 className="flex items-center justify-center text-green-700 font-bold">
         <img
           src="/logo.png"
@@ -189,7 +187,9 @@ function FogotPassword() {
           <CardHeader className="p-2">
             <CardTitle className="text-green-700 text-xs sm:text-sm text-center flex flex-col items-center gap-1">
               <Users className="w-4 h-4 sm:w-5 sm:h-5" />
-              <p className="text-xs sm:text-sm leading-tight">{t("auth.reliableCompanions")}</p>
+              <p className="text-xs sm:text-sm leading-tight">
+                {t("auth.reliableCompanions")}
+              </p>
             </CardTitle>
           </CardHeader>
         </Card>
@@ -197,12 +197,14 @@ function FogotPassword() {
           <CardHeader className="p-2">
             <CardTitle className="text-green-700 text-xs sm:text-sm text-center flex flex-col items-center gap-1">
               <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
-              <p className="text-xs sm:text-sm leading-tight">{t("auth.convenientRoutes")}</p>
+              <p className="text-xs sm:text-sm leading-tight">
+                {t("auth.convenientRoutes")}
+              </p>
             </CardTitle>
           </CardHeader>
         </Card>
       </div>
-      <Card className="w-full max-w-md -mt-4">
+      <Card className="w-full max-w-md -mt-2 px-4">
         <CardHeader className="relative p-0.5 sm:p-1">
           <CardTitle className="text-green-700 mx-auto text-lg sm:text-xl font-bold">
             {t("auth.forgotPassword.title")}
@@ -215,13 +217,25 @@ function FogotPassword() {
             onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
             className="absolute top-2 right-2 sm:top-4 sm:right-4 px-2 py-1 sm:px-3 sm:py-1 rounded-full border bg-white hover:bg-green-50 text-xs"
           >
-            {lang === "uz" ? "🇷🇺 RU" : "🇺🇿 UZ"}
+            {lang === "uz" ? (
+              <div className="flex gap-1 py-1">
+                <img src="/rus.png" alt="Uzbekistan" width="24" height="24" />
+                <span>RU</span>
+              </div>
+            ) : (
+              <div className="flex gap-1 py-1">
+                <img src="/uzb.png" alt="Uzbekistan" width="24" height="24" />
+                <span>UZ</span>
+              </div>
+            )}
           </button>
         </CardHeader>
         <CardContent className="p-0.5 sm:p-1">
           <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
-              <Label htmlFor="phone" className="text-sm">{t("auth.forgotPassword.phoneLabel")}</Label>
+              <Label htmlFor="phone" className="text-sm">
+                {t("auth.forgotPassword.phoneLabel")}
+              </Label>
               <div className="relative">
                 <InputMask
                   mask="_________"
@@ -245,12 +259,18 @@ function FogotPassword() {
                   className="absolute left-2 top-2 text-gray-400"
                   size={16}
                 />
-                <p className="absolute left-8 sm:left-10 top-1.5 font-normal select-none text-sm">+998</p>
+                <p className="absolute left-8 sm:left-10 top-1.5 font-normal select-none text-sm">
+                  +998
+                </p>
               </div>
             </div>
 
-            {error && <div className="text-red-500 text-xs sm:text-sm">{error}</div>}
-            {success && <div className="text-green-600 text-xs sm:text-sm">{success}</div>}
+            {error && (
+              <div className="text-red-500 text-xs sm:text-sm">{error}</div>
+            )}
+            {success && (
+              <div className="text-green-600 text-xs sm:text-sm">{success}</div>
+            )}
             <Button
               type="submit"
               disabled={loading}
@@ -290,7 +310,9 @@ function FogotPassword() {
                   />
                 </div>
                 <div className="grid w-full max-w-sm items-center gap-3">
-                  <Label htmlFor="password">{t("auth.forgotPassword.passwordLabel")}</Label>
+                  <Label htmlFor="password">
+                    {t("auth.forgotPassword.passwordLabel")}
+                  </Label>
                   <div className="relative">
                     <Input
                       autoComplete="new-password"
@@ -327,7 +349,9 @@ function FogotPassword() {
                       type={showConfirmPassword ? "text" : "password"}
                       id="password_confirmation"
                       name="password_confirmation"
-                      placeholder={t("auth.forgotPassword.confirmPasswordPlaceholder")}
+                      placeholder={t(
+                        "auth.forgotPassword.confirmPasswordPlaceholder"
+                      )}
                       value={form.password_confirmation}
                       onChange={handleChange}
                       required
@@ -352,8 +376,8 @@ function FogotPassword() {
                   </div>
                 </div>
                 <div>
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     disabled={verifyLoading}
                     className="w-full"
                   >

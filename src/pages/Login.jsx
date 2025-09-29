@@ -24,7 +24,7 @@ import { sessionManager } from "@/lib/sessionManager";
 function Login() {
   const { t, lang, setLang } = useI18n();
   const [showPassword, setShowPassword] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(false);  
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   const loginMutation = usePostData("/login");
   const dispatch = useDispatch();
@@ -58,10 +58,10 @@ function Login() {
       if (res.message === "Вход выполнен успешно") {
         toast.success("Tizimga muvaffaqiyatli kirdingiz!");
       }
-      
+
       // Принудительно завершаем все предыдущие сессии
       sessionManager.forceLogoutAllSessions();
-      
+
       // Создаем новую сессию
       sessionManager.createSession(res, res.access_token);
       dispatch(login(res));
@@ -84,10 +84,10 @@ function Login() {
               email: "test@example.com",
             },
           };
-          
+
           // Принудительно завершаем все предыдущие сессии
           sessionManager.forceLogoutAllSessions();
-          
+
           // Создаем новую сессию
           sessionManager.createSession(mockResponse, mockResponse.access_token);
           dispatch(login(mockResponse));
@@ -106,20 +106,18 @@ function Login() {
       <div className="w-full max-w-4xl text-center px-2 mb-0">
         <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-3 shadow-sm border border-green-100">
           <h2 className="text-sm sm:text-lg lg:text-xl font-bold text-gray-800 mb-1">
-            {lang === "uz" 
-              ? "Qo'l ko'tarib yo'lda Poputi mashina kutish vaqti o'tdi!" 
-              : "Эпоха голосования на дороге прошла!"
-            }
+            {lang === "uz"
+              ? "Qo'l ko'tarib yo'lda Poputi mashina kutish vaqti o'tdi!"
+              : "Эпоха голосования на дороге прошла!"}
           </h2>
           <p className="text-xs sm:text-sm lg:text-base text-gray-600 leading-relaxed">
-            {lang === "uz" 
+            {lang === "uz"
               ? "«Popoutchik» lar uchun endi - arzon, xavfsiz va qulay hamsafar platformasi:"
-              : "Теперь для «попутчиков» — доступная, безопасная и удобная платформа совместных поездок"
-            }
+              : "Теперь для «попутчиков» — доступная, безопасная и удобная платформа совместных поездок"}
           </p>
         </div>
       </div>
-      
+
       <h1 className="flex items-center justify-center text-green-700 font-bold">
         <img
           src="/logo.png"
@@ -132,7 +130,9 @@ function Login() {
           <CardHeader className="p-2">
             <CardTitle className="text-green-700 text-xs sm:text-sm text-center flex flex-col items-center gap-1">
               <Users className="w-4 h-4 sm:w-5 sm:h-5" />
-              <p className="text-xs sm:text-sm leading-tight">{t("auth.reliableCompanions")}</p>
+              <p className="text-xs sm:text-sm leading-tight">
+                {t("auth.reliableCompanions")}
+              </p>
             </CardTitle>
           </CardHeader>
         </Card>
@@ -140,29 +140,45 @@ function Login() {
           <CardHeader className="p-2">
             <CardTitle className="text-green-700 text-xs sm:text-sm text-center flex flex-col items-center gap-1">
               <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
-              <p className="text-xs sm:text-sm leading-tight">{t("auth.convenientRoutes")}</p>
+              <p className="text-xs sm:text-sm leading-tight">
+                {t("auth.convenientRoutes")}
+              </p>
             </CardTitle>
           </CardHeader>
         </Card>
       </div>
-      <Card className="w-full max-w-md -mt-4">
-        <CardHeader className="relative p-0.5 sm:p-1">
+      <Card className="w-full max-w-md -mt-2 md:mt-1 px-4">
+        <CardHeader className="relative p-0.5 sm:p-1 ">
           <CardTitle className="text-green-700 mx-auto text-lg sm:text-xl font-bold">
             {t("auth.loginTitle")}
           </CardTitle>
-          <p className="text-gray-500 mx-auto text-sm">{t("auth.loginSubtitle")}</p>
+          <p className="text-gray-500 mx-auto text-sm">
+            {t("auth.loginSubtitle")}
+          </p>
           <button
             type="button"
             onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
             className="absolute top-2 right-2 sm:top-4 sm:right-4 px-2 py-1 sm:px-3 sm:py-1 rounded-full border bg-white hover:bg-green-50 text-xs"
           >
-            {lang === "uz" ? "🇷🇺 RU" : "🇺🇿 UZ"}
+            {lang === "uz" ? (
+              <div className="flex gap-1 py-1">
+                <img src="/rus.png" alt="Uzbekistan" width="24" height="24" />
+                <span>RU</span>
+              </div>
+            ) : (
+              <div className="flex gap-1 py-1">
+                <img src="/uzb.png" alt="Uzbekistan" width="24" height="24" />
+                <span>UZ</span>
+              </div>
+            )}
           </button>
         </CardHeader>
-        <CardContent className="p-0.5 sm:p-1">
-          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+        <CardContent className="px-6 sm:p-1">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y -px-10">
             <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
-              <Label htmlFor="phone" className="text-sm">{t("auth.phoneLabel")}</Label>
+              <Label htmlFor="phone" className="text-sm">
+                {t("auth.phoneLabel")}
+              </Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                   <User size={16} className="sm:w-5 sm:h-5" />
@@ -185,7 +201,9 @@ function Login() {
               </div>
             </div>
             <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
-              <Label htmlFor="password" className="text-sm">{t("auth.passwordLabel")}</Label>
+              <Label htmlFor="password" className="text-sm">
+                {t("auth.passwordLabel")}
+              </Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                   <Lock size={16} className="sm:w-5 sm:h-5" />
@@ -196,7 +214,11 @@ function Login() {
                   onClick={() => setShowPassword((v) => !v)}
                   tabIndex={-1}
                 >
-                  {showPassword ? <EyeOff size={16} className="sm:w-4 sm:h-4" /> : <Eye size={16} className="sm:w-4 sm:h-4" />}
+                  {showPassword ? (
+                    <EyeOff size={16} className="sm:w-4 sm:h-4" />
+                  ) : (
+                    <Eye size={16} className="sm:w-4 sm:h-4" />
+                  )}
                 </button>
                 <Input
                   autoComplete="current-password"
@@ -242,7 +264,6 @@ function Login() {
           </form>
         </CardContent>
       </Card>
-      
     </div>
   );
 }
