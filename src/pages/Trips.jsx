@@ -486,11 +486,13 @@ function Trips() {
                   ? Array(4)
                       .fill(1)
                       .map((_, index) => <TripsCardSkeleton key={index} />)
-                  : data.data
-                      ?.filter((trip) => trip.status !== "completed")
-                      .map((trip) => (
-                        <TripsCard trip={trip} key={trip.id} />
-                      ))}
+                  : Array.isArray(data?.data)
+                      ? data.data
+                          .filter((trip) => trip.status !== "completed")
+                          .map((trip) => (
+                            <TripsCard trip={trip} key={trip.id} />
+                          ))
+                      : null}
               </div>
               <div className="flex items-center justify-center gap-3 px-4 py-2">
                 <Button variant="outline" disabled={allPage === 1} onClick={() => setAllPage((p) => Math.max(1, p - 1))} aria-label="Prev page">
@@ -499,7 +501,7 @@ function Trips() {
                 <span className="text-sm">{allPage}</span>
                 <Button
                   variant="outline"
-                  disabled={Array.isArray(data?.data) && data.data.length < ALL_PER_PAGE}
+                  disabled={!Array.isArray(data?.data) || data.data.length < ALL_PER_PAGE}
                   onClick={() => setAllPage((p) => p + 1)}
                   aria-label="Next page"
                 >

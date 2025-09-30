@@ -26,51 +26,69 @@ function App() {
   const { user, isAuth } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
+  const ErrorElement = () => (
+    <div style={{ padding: 16 }}>
+      <h2>Unexpected error</h2>
+      <p>Something went wrong. Please try again.</p>
+    </div>
+  );
+
   const routes = createBrowserRouter([
     {
       path: "/login",
       element: user ? <Navigate to="/" /> : <Login />,
+      errorElement: <ErrorElement />,
     },
     {
       path: "/fogotPassword",
       element: user ? <Navigate to="/" /> : <FogotPassword />,
+      errorElement: <ErrorElement />,
     },
     {
       path: "/register",
       element: user ? <Navigate to="/" /> : <Register />,
+      errorElement: <ErrorElement />,
     },
     {
       path: "/",
       element: user ? <MainLayout /> : <Navigate to="/login" />,
+      errorElement: <ErrorElement />,
       children: [
         {
           index: true,
           element: <Trips />,
+          errorElement: <ErrorElement />,
         },
         {
           path: "/requests",
           element: <Requests />,
+          errorElement: <ErrorElement />,
         },
         {
           path: "/booking",
           element: <Booking />,
+          errorElement: <ErrorElement />,
         },
         {
           path: "/history",
           element: <History />,
+          errorElement: <ErrorElement />,
         },
         {
           path: "/chats",
           element: <Chats />,
+          errorElement: <ErrorElement />,
         },
         {
           path: "/profile",
           element: <Profile />,
+          errorElement: <ErrorElement />,
         },
 
         {
           path: "/user/:id",
           element: <UserProfile />,
+          errorElement: <ErrorElement />,
         },
       ],
     },
