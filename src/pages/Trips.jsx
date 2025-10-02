@@ -481,7 +481,7 @@ function Trips() {
               </div>
             )}
             <TabsContent value="allTrips">
-              <div className="p-4 space-y-4">
+              <div className="p-3 space-y-3">
                 {isLoading
                   ? Array(4)
                       .fill(1)
@@ -524,7 +524,7 @@ function Trips() {
                       </Button>
                     </div>
                   ) : (
-                    <div className="p-4 space-y-4">
+                    <div className="p-3 space-y-3">
                       {myTrips &&
                         myTripsList
                           .filter((item) => item.status !== "completed")

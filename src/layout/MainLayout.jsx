@@ -103,26 +103,26 @@ function MainLayout() {
               />
             </Link>
           </div>
-          <div className="flex gap-1 sm:gap-2 items-center">
+          <div className="flex gap-2 sm:gap-3 items-center">
             <button
               type="button"
               onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
-              className="px-2 py-1 sm:px-3 sm:py-1 rounded-full border bg-white/80 hover:bg-green-50 text-xs sm:text-sm"
+              className="px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded-full border bg-white/80 hover:bg-green-50 text-[10px] sm:text-xs"
               title={lang === "uz" ? "RU" : "UZ"}
             >
               {lang === "uz" ? (
-                <div className="flex gap-1 py-1">
-                  <img src="/rus.png" alt="Uzbekistan" width="24" height="24" />
+                <div className="flex gap-1 py-0">
+                  <img src="/rus.png" alt="Uzbekistan" width="18" height="18" />
                   <span>RU</span>
                 </div>
               ) : (
-                <div className="flex gap-1 py-1">
-                  <img src="/uzb.png" alt="Uzbekistan" width="24" height="24" />
+                <div className="flex gap-1 py-0">
+                  <img src="/uzb.png" alt="Uzbekistan" width="18" height="18" />
                   <span>UZ</span>
                 </div>
               )}
             </button>
-            <div className="flex gap-1 sm:gap-2 items-center">
+            <div className="flex gap-2 sm:gap-3 items-center">
               <DropdownMenu>
                 <DropdownMenuTrigger className="relative">
                   <Bell className="cursor-pointer text-gray-700 hover:text-green-600 transition w-5 h-5 sm:w-6 sm:h-6" />

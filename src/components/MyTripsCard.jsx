@@ -33,6 +33,7 @@ import { toast } from "sonner";
 
 function MyTripsCard({ trip }) {
   const { t } = useI18n();
+  const [isExpanded, setIsExpanded] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [requestsOpen, setRequestsOpen] = useState(false);
   const [bookingsOpen, setBookingsOpen] = useState(false);
@@ -130,11 +131,9 @@ function MyTripsCard({ trip }) {
     if (!currentPassenger) return;
 
     try {
-      await postData("/rate", {
-        trip_id: trip.id,
-        to_user_id: currentPassenger.user?.id,
+      await postData(`/ratings/${trip.id}/to/${currentPassenger.user?.id}`, {
         rating: ratingValue,
-        comment: ratingComment,
+        comment: ratingComment || null,
       });
 
       // Переходим к следующему пассажиру или закрываем диалог
@@ -196,9 +195,16 @@ function MyTripsCard({ trip }) {
     }
   };
 
+  React.useEffect(() => {
+    try {
+      const isDesktop = window.matchMedia && window.matchMedia('(min-width: 640px)').matches;
+      setIsExpanded(isDesktop);
+    } catch (_e) {}
+  }, []);
+
   return (
-    <Card className="shadow-sm rounded-3xl bg-white/80 backdrop-blur-sm border border-green-100 w-full">
-      <CardContent className="p-4 sm:p-5 flex flex-col gap-3">
+    <Card onClick={() => setIsExpanded((v) => !v)} className="shadow-sm rounded-3xl bg-white/80 backdrop-blur-sm border-0 w-full cursor-pointer py-0">
+      <CardContent className={`flex flex-col ${isExpanded ? 'p-4 sm:p-5 gap-3' : 'px-2 py-1 gap-1'}`}>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
           <div className="flex items-center gap-2 text-green-700 font-bold text-sm sm:text-lg">
             <MapPin className="text-green-600" />
@@ -210,16 +216,36 @@ function MyTripsCard({ trip }) {
             {Number(trip.price).toLocaleString()} сум
           </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm text-gray-700">
+        <div className={`grid grid-cols-2 ${isExpanded ? 'sm:grid-cols-4 gap-3' : 'gap-1'} text-sm text-gray-700`}>
           <span className="flex items-center gap-1"><Calendar size={16} /> {trip.date}</span>
           <span className="flex items-center gap-1"><Clock size={16} /> {trip.time}</span>
-          <span className="flex items-center gap-1"><Users size={16} /> {trip.seats} o'rindiq</span>
-          <span className="flex items-center gap-1"><Car size={16} /> {trip.carModel}</span>
+          {isExpanded && (
+            <>
+              <span className="flex items-center gap-1"><Users size={16} /> {trip.seats} o'rindiq</span>
+              <span className="flex items-center gap-1"><Car size={16} /> {trip.carModel}</span>
+            </>
+          )}
         </div>
+        {/* В компактном виде показываем модель авто справа от даты/времени на мобильном */}
+        {!isExpanded && (
+          <div className="flex sm:hidden items-center justify-between text-gray-700">
+            <span className="inline-flex items-center gap-1 text-gray-700"><Car size={16} /> {trip.carModel || ""}</span>
+            <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm">{Number(trip.price).toLocaleString()} сум</span>
+          </div>
+        )}
       </CardContent>
-      <CardFooter className="w-full">
+      {isExpanded && (
+      <CardFooter className="w-full" onClick={(e) => e.stopPropagation()}>
+        {/* В развернутом виде добавим строку с номером авто */}
+        <div className="w-full hidden sm:block mb-2">
+          <span className="inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
+        </div>
         {/* Mobile layout ≤ 640px: grid 3 text buttons above, 2 icon buttons on right below */}
         <div className="w-full sm:hidden">
+          <div className="flex items-center justify-between mb-2">
+            <span className="inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
+            <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm">{Number(trip.price).toLocaleString()} сум</span>
+          </div>
           <div className="grid grid-cols-2 gap-1 mb-2">
             <Button onClick={() => setRequestsOpen(true)} className="min-h-9 px-2 py-2 rounded-full bg-blue-600 text-white text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center">
               <Mail className="size-4" />
@@ -289,6 +315,7 @@ function MyTripsCard({ trip }) {
           </div>
         </div>
       </CardFooter>
+      )}
 
       {/* Edit Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>

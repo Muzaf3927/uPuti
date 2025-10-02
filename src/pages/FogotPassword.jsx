@@ -215,16 +215,16 @@ function FogotPassword() {
           <button
             type="button"
             onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
-            className="absolute top-2 right-2 sm:top-4 sm:right-4 px-2 py-1 sm:px-3 sm:py-1 rounded-full border bg-white hover:bg-green-50 text-xs"
+            className="absolute top-2 right-2 sm:top-4 sm:right-4 px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded-full border bg-white hover:bg-green-50 text-[10px] sm:text-xs"
           >
             {lang === "uz" ? (
-              <div className="flex gap-1 py-1">
-                <img src="/rus.png" alt="Uzbekistan" width="24" height="24" />
+              <div className="flex gap-1 py-0">
+                <img src="/rus.png" alt="Uzbekistan" width="18" height="18" />
                 <span>RU</span>
               </div>
             ) : (
-              <div className="flex gap-1 py-1">
-                <img src="/uzb.png" alt="Uzbekistan" width="24" height="24" />
+              <div className="flex gap-1 py-0">
+                <img src="/uzb.png" alt="Uzbekistan" width="18" height="18" />
                 <span>UZ</span>
               </div>
             )}

@@ -27,6 +27,7 @@ import { toast } from "sonner";
 
 function TripsCard({ trip }) {
   const { t } = useI18n();
+  const [isExpanded, setIsExpanded] = useState(false);
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [offerDialogOpen, setOfferDialogOpen] = useState(false);
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
@@ -37,6 +38,14 @@ function TripsCard({ trip }) {
 
   const queryClient = useQueryClient();
   const tripPostMutation = usePostData(`/trips/${trip?.id}/booking`);
+
+  // По умолчанию на десктопе развернуто, на мобиле свернуто
+  React.useEffect(() => {
+    try {
+      const isDesktop = window.matchMedia && window.matchMedia('(min-width: 640px)').matches;
+      setIsExpanded(isDesktop);
+    } catch (_e) {}
+  }, []);
 
   const openBookingDialog = (e) => {
     e.stopPropagation();
@@ -132,8 +141,8 @@ function TripsCard({ trip }) {
 
   return (
     <>
-      <Card className="shadow-sm rounded-3xl bg-white/80 backdrop-blur-sm">
-        <CardContent className="p-3 sm:p-4 flex flex-col gap-2">
+      <Card onClick={() => setIsExpanded((v) => !v)} className="shadow-sm rounded-3xl bg-white/80 backdrop-blur-sm cursor-pointer border-0 py-0">
+        <CardContent className={`flex flex-col ${isExpanded ? 'p-3 sm:p-4 gap-2' : 'px-2 py-1 gap-1'}`}>
           <div className="flex items-center justify-between gap-2 text-green-700 font-bold text-sm sm:text-lg">
             <div className="flex items-center gap-2 min-w-0">
               <MapPin className="text-green-600" />
@@ -147,77 +156,88 @@ function TripsCard({ trip }) {
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-sm">
+          {/* Компактный блок: только дата, время и цена (на мобиле цена справа ниже) */}
+          <div className={`grid grid-cols-2 ${isExpanded ? 'sm:grid-cols-4 gap-2 sm:gap-3' : 'gap-1'} text-sm`}>
             <div className="flex items-center gap-1 text-gray-700">
               <Calendar size={16} /> {trip.date}
             </div>
             <div className="flex items-center gap-1 text-gray-700">
               <Clock size={16} /> {trip.time}
             </div>
-            <div className="flex items-center gap-1 text-gray-700">
-              <Users size={16} /> {trip.seats} {t("tripsCard.seats")}
-            </div>
-            <div className="flex items-center gap-1 text-gray-700">
-              <Car size={16} /> {trip.carModel}
-            </div>
+            {isExpanded && (
+              <>
+                <div className="flex items-center gap-1 text-gray-700">
+                  <Users size={16} /> {trip.seats} {t("tripsCard.seats")}
+                </div>
+                <div className="flex items-center gap-1 text-gray-700">
+                  <Car size={16} /> {trip.carModel}
+                </div>
+              </>
+            )}
             <div className="col-span-2 sm:col-span-2 flex items-center justify-between text-gray-700">
-              {/* Desktop: only car number on the left */}
-              <span className="hidden sm:inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
-              {/* Mobile: number and price sit next to each other */}
-              <div className="flex sm:hidden items-center gap-2">
+              {isExpanded ? (
                 <span className="inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
+              ) : (
+                <span className="inline-flex items-center gap-1 sm:hidden text-gray-700">
+                  <Car size={16} /> {trip.carModel || ""}
+                </span>
+              )}
+              <div className="flex sm:hidden items-center gap-2">
                 <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm">{Number(trip.price).toLocaleString()} сум</span>
               </div>
-              {/* Filler to keep structure consistent */}
               <span className="hidden sm:inline-block" />
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Link to={`/user/${trip?.driver?.id}`}>
-              <Avatar className="size-9 ring-2 ring-white shadow">
-                <AvatarFallback>{getInitials(trip.driver?.name)}</AvatarFallback>
-              </Avatar>
-            </Link>
-            <div className="flex items-center gap-2 text-sm text-gray-800">
-              <span className="font-medium truncate max-w-[150px] sm:max-w-[220px]">{trip.driver.name}</span>
-              <span className="text-gray-500">•</span>
-              <span className="text-gray-600">⭐ {trip.driver.rating}</span>
-            </div>
-          </div>
+          {isExpanded && (
+            <>
+              <div className="flex items-center gap-3">
+                <Link to={`/user/${trip?.driver?.id}`} onClick={(e) => e.stopPropagation()}>
+                  <Avatar className="size-9 ring-2 ring-white shadow">
+                    <AvatarFallback>{getInitials(trip.driver?.name)}</AvatarFallback>
+                  </Avatar>
+                </Link>
+                <div className="flex items-center gap-2 text-sm text-gray-800">
+                  <span className="font-medium truncate max-w-[150px] sm:max-w-[220px]">{trip.driver.name}</span>
+                  <span className="text-gray-500">•</span>
+                  <span className="text-gray-600">⭐ {trip.driver.rating}</span>
+                </div>
+              </div>
 
-          {trip.note ? (
-            <div className="text-xs sm:text-sm text-gray-700 bg-white rounded-2xl p-3 border">
-              {trip.note}
-            </div>
-          ) : null}
+              {trip.note ? (
+                <div className="text-xs sm:text-sm text-gray-700 bg-white rounded-2xl p-3 border">
+                  {trip.note}
+                </div>
+              ) : null}
 
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
-            {trip?.my_booking ? (
-              <button
-                onClick={handleCancelBooking}
-                disabled={trip?.my_booking?.can_cancel === false}
-                className="bg-red-600 disabled:bg-gray-300 disabled:text-gray-500 h-9 text-sm rounded-2xl text-white w-full"
-              >
-                {t("tripsCard.cancel")}
-              </button>
-            ) : (
-              <>
-                <button
-                  onClick={openBookingDialog}
-                  className="bg-green-700 h-9 rounded-2xl text-white w-full text-xs sm:text-base px-2 whitespace-normal leading-tight"
-                >
-                  {t("tripsCard.book")}
-                </button>
-                <button
-                  onClick={openOfferDialog}
-                  className="w-full bg-white h-9 border-green-700 text-green-700 border-2 rounded-2xl text-xs sm:text-base px-2 whitespace-normal leading-tight"
-                >
-                  {t("tripsCard.offer")}
-                </button>
-              </>
-            )}
-          </div>
+              <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+                {trip?.my_booking ? (
+                  <button
+                    onClick={handleCancelBooking}
+                    disabled={trip?.my_booking?.can_cancel === false}
+                    className="bg-red-600 disabled:bg-gray-300 disabled:text-gray-500 h-9 text-sm rounded-2xl text-white w-full"
+                  >
+                    {t("tripsCard.cancel")}
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={openBookingDialog}
+                      className="bg-green-700 h-9 rounded-2xl text-white w-full text-xs sm:text-base px-2 whitespace-normal leading-tight"
+                    >
+                      {t("tripsCard.book")}
+                    </button>
+                    <button
+                      onClick={openOfferDialog}
+                      className="w-full bg-white h-9 border-green-700 text-green-700 border-2 rounded-2xl text-xs sm:text-base px-2 whitespace-normal leading-tight"
+                    >
+                      {t("tripsCard.offer")}
+                    </button>
+                  </>
+                )}
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
       {/* Booking Dialog */}
