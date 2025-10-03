@@ -137,7 +137,7 @@ function FogotPassword() {
       password,
       password_confirmation,
       verification_id: readyDataRef.current?.verification_id,
-      message: verifyText,
+      code: verifyText,
     };
 
     setVerifyLoading(true);
@@ -306,7 +306,7 @@ function FogotPassword() {
                     type="text"
                     id="verifyText"
                     name="verifyText"
-                    placeholder="*********"
+                    placeholder="Введите код из SMS"
                   />
                 </div>
                 <div className="grid w-full max-w-sm items-center gap-3">

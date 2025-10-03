@@ -143,7 +143,7 @@ function Register() {
 
     const resultData = {
       verification_id: registerDataRef.current?.verification_id,
-      message: verifyText,
+      code: verifyText,
     };
 
     setVerifyLoading(true);
@@ -404,7 +404,7 @@ function Register() {
                     type="text"
                     id="verifyText"
                     name="verifyText"
-                    placeholder="*********"
+                    placeholder="Введите код из SMS"
                   />
                 </div>
                 <div>
