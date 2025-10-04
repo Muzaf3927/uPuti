@@ -182,6 +182,10 @@ const dict = {
       declinedToast: "Bekor qilindi.",
       completeToast: "Safar yakunlandi.",
       completeError: "Yakunlashda xatolik.",
+      call: "Qo'ng'iroq",
+      message: "Xabar",
+      callPassenger: "Qo'ng'iroq",
+      writePassenger: "Yozish",
     },
     requests: {
       mineTab: "Junatilqan so'rovlar",
@@ -393,6 +397,10 @@ const dict = {
       declinedToast: "Отклонено.",
       completeToast: "Поездка завершена.",
       completeError: "Ошибка при завершении.",
+      call: "Позвонить",
+      message: "Сообщение",
+      callPassenger: "Позвонить",
+      writePassenger: "Написать",
     },
     requests: {
       mineTab: "Мои заявки",

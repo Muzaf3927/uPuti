@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -9,24 +9,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { History as HistoryIcon, Star } from "lucide-react";
+import { History as HistoryIcon, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { useI18n } from "@/app/i18n.jsx";
 import { useLocation } from "react-router-dom";
 
 function History() {
   const { t } = useI18n();
   const location = useLocation();
-  const { data: asDriverRes, isPending: asDriverLoading, error: asDriverError, refetch: refetchAsDriver } = useGetData("/trips/completed/mine");
-  const { data: asPassengerRes, isPending: asPassengerLoading, error: asPassengerError, refetch: refetchAsPassenger } = useGetData("/trips/completed/as-passenger");
+  
+  // Состояние пагинации
+  const [driverPage, setDriverPage] = useState(1);
+  const [passengerPage, setPassengerPage] = useState(1);
+  const PER_PAGE = 5; // По 5 записей на страницу для истории
+  
+  const { data: asDriverRes, isPending: asDriverLoading, error: asDriverError, refetch: refetchAsDriver } = useGetData(`/trips/completed/mine?page=${driverPage}&per_page=${PER_PAGE}`);
+  const { data: asPassengerRes, isPending: asPassengerLoading, error: asPassengerError, refetch: refetchAsPassenger } = useGetData(`/trips/completed/as-passenger?page=${passengerPage}&per_page=${PER_PAGE}`);
 
-  const asDriver = asDriverRes?.trips || [];
-  const asPassenger = asPassengerRes?.trips || [];
+  const asDriver = asDriverRes?.data || [];
+  const asPassenger = asPassengerRes?.data || [];
 
-  const [driverTotals, setDriverTotals] = useState({ total: 0, byTrip: {} });
-  const [rateOpen, setRateOpen] = useState(false);
-  const [rateTarget, setRateTarget] = useState({ tripId: null, toUserId: null, toName: "" });
-  const [ratingValue, setRatingValue] = useState(5);
-  const [ratingComment, setRatingComment] = useState("");
+  // Временно закомментирована функциональность оценки
+  // const [rateOpen, setRateOpen] = useState(false);
+  // const [rateTarget, setRateTarget] = useState({ tripId: null, toUserId: null, toName: "" });
+  // const [ratingValue, setRatingValue] = useState(5);
+  // const [ratingComment, setRatingComment] = useState("");
+  const [confirmedBookings, setConfirmedBookings] = useState([]);
   const queryClient = useQueryClient();
 
   // Автоматическое обновление данных при переходе на страницу
@@ -37,49 +44,67 @@ function History() {
     }
   }, [location.pathname, refetchAsDriver, refetchAsPassenger]);
 
+  // Обновление данных при изменении страниц
+  useEffect(() => {
+    refetchAsDriver();
+  }, [driverPage, refetchAsDriver]);
+
+  useEffect(() => {
+    refetchAsPassenger();
+  }, [passengerPage, refetchAsPassenger]);
+
+  // Загружаем подтвержденные брони отдельно
   useEffect(() => {
     let isCancelled = false;
-    async function calcTotals() {
-      if (!asDriver || asDriver.length === 0) {
-        if (!isCancelled) setDriverTotals({ total: 0, byTrip: {} });
-        return;
-      }
+    async function loadBookings() {
       try {
-        let grand = 0;
-        const byTripLocal = {};
-        // Получаем все подтвержденные брони на мои поездки одним запросом
         const confirmedBookingsRes = await getData("/bookings/to-my-trips/confirmed");
-        const confirmedBookings = confirmedBookingsRes?.bookings || [];
-        
-        // Группируем брони по поездкам
-        const bookingsByTrip = {};
-        confirmedBookings.forEach(booking => {
-          const tripId = booking.trip.id;
-          if (!bookingsByTrip[tripId]) {
-            bookingsByTrip[tripId] = [];
-          }
-          bookingsByTrip[tripId].push(booking);
-        });
-        
-        // Считаем суммы для каждой поездки
-        for (const t of asDriver) {
-          const tripBookings = bookingsByTrip[t.id] || [];
-          const tripSum = tripBookings.reduce((sum, b) => {
-            // если есть offered_price, считаем его как итог за бронирование, иначе считаем цена*места
-            const add = b.offered_price ? Number(b.offered_price) : Number(t.price) * Number(b.seats || 1);
-            return sum + (isNaN(add) ? 0 : add);
-          }, 0);
-          byTripLocal[t.id] = tripSum;
-          grand += tripSum;
+        if (!isCancelled) {
+          setConfirmedBookings(confirmedBookingsRes?.bookings || []);
         }
-        if (!isCancelled) setDriverTotals({ total: grand, byTrip: byTripLocal });
       } catch (_e) {
-        if (!isCancelled) setDriverTotals({ total: 0, byTrip: {} });
+        if (!isCancelled) {
+          setConfirmedBookings([]);
+        }
       }
     }
-    calcTotals();
+    loadBookings();
     return () => { isCancelled = true; };
-  }, [asDriver]);
+  }, []);
+
+  // Мемоизированный расчет доходов
+  const driverTotals = useMemo(() => {
+    if (!asDriver || asDriver.length === 0 || !confirmedBookings.length) {
+      return { total: 0, byTrip: {} };
+    }
+
+    let grand = 0;
+    const byTripLocal = {};
+    
+    // Группируем брони по поездкам
+    const bookingsByTrip = {};
+    confirmedBookings.forEach(booking => {
+      const tripId = booking.trip.id;
+      if (!bookingsByTrip[tripId]) {
+        bookingsByTrip[tripId] = [];
+      }
+      bookingsByTrip[tripId].push(booking);
+    });
+    
+    // Считаем суммы для каждой поездки
+    for (const t of asDriver) {
+      const tripBookings = bookingsByTrip[t.id] || [];
+      const tripSum = tripBookings.reduce((sum, b) => {
+        // если есть offered_price, считаем его как итог за бронирование, иначе считаем цена*места
+        const add = b.offered_price ? Number(b.offered_price) : Number(t.price) * Number(b.seats || 1);
+        return sum + (isNaN(add) ? 0 : add);
+      }, 0);
+      byTripLocal[t.id] = tripSum;
+      grand += tripSum;
+    }
+
+    return { total: grand, byTrip: byTripLocal };
+  }, [asDriver, confirmedBookings]);
 
   const Empty = () => (
     <Card className="flex flex-col items-center bg-gradient-to-br from-gray-50 to-gray-100 py-20 rounded-3xl shadow-sm">
@@ -147,7 +172,8 @@ function History() {
             </span>
           ) : null}
           
-          {role === "driver" && Array.isArray(trip.participants) && trip.participants.length > 0 ? (
+          {/* Временно закомментирована функциональность оценки */}
+          {/* {role === "driver" && Array.isArray(trip.participants) && trip.participants.length > 0 ? (
             <div className="flex flex-wrap gap-1">
               {trip.participants.map((p, idx) => (
                 <div key={idx} className="flex items-center gap-1">
@@ -185,7 +211,7 @@ function History() {
             >
               {t("history.rateDriver")}
             </button>
-          ) : null}
+          ) : null} */}
         </div>
       </div>
     </div>
@@ -194,7 +220,14 @@ function History() {
   return (
     <Card>
       <CardContent className="py-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
-        <Tabs defaultValue="asDriver">
+        <Tabs defaultValue="asDriver" onValueChange={(value) => {
+          // Сбрасываем страницы при переключении вкладок
+          if (value === "asDriver") {
+            setDriverPage(1);
+          } else if (value === "asPassenger") {
+            setPassengerPage(1);
+          }
+        }}>
           <TabsList className="px-1 sm:px-2 w-full mb-4 sm:mb-6">
             <TabsTrigger value="asDriver" className="text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">{t("history.driverTab")}</TabsTrigger>
             <TabsTrigger value="asPassenger" className="text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">{t("history.passengerTab")}</TabsTrigger>
@@ -213,11 +246,35 @@ function History() {
             ) : asDriver.length === 0 ? (
               <Empty />
             ) : (
-              <div className="flex flex-col gap-3">
-                {asDriver.map((trip) => (
-                  <TripItem key={trip.id} t={trip} showEarn role="driver" />
-                ))}
-              </div>
+              <>
+                <div className="flex flex-col gap-3">
+                  {asDriver.map((trip) => (
+                    <TripItem key={trip.id} t={trip} showEarn role="driver" />
+                  ))}
+                </div>
+                {/* Пагинация для водителя */}
+                <div className="flex items-center justify-center gap-3 px-4 py-2 mt-4">
+                  <Button 
+                    variant="outline" 
+                    disabled={driverPage === 1} 
+                    onClick={() => setDriverPage((p) => Math.max(1, p - 1))} 
+                    aria-label="Prev page"
+                    className="h-8 w-8 p-0"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <span className="text-sm font-medium">{driverPage}</span>
+                  <Button
+                    variant="outline"
+                    disabled={Array.isArray(asDriver) && asDriver.length < PER_PAGE}
+                    onClick={() => setDriverPage((p) => p + 1)}
+                    aria-label="Next page"
+                    className="h-8 w-8 p-0"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </>
             )}
           </TabsContent>
           <TabsContent value="asPassenger">
@@ -228,18 +285,42 @@ function History() {
             ) : asPassenger.length === 0 ? (
               <Empty />
             ) : (
-              <div className="flex flex-col gap-3">
-                {asPassenger.map((trip) => (
-                  <TripItem key={trip.id} t={trip} role="passenger" />
-                ))}
-              </div>
+              <>
+                <div className="flex flex-col gap-3">
+                  {asPassenger.map((trip) => (
+                    <TripItem key={trip.id} t={trip} role="passenger" />
+                  ))}
+                </div>
+                {/* Пагинация для пассажира */}
+                <div className="flex items-center justify-center gap-3 px-4 py-2 mt-4">
+                  <Button 
+                    variant="outline" 
+                    disabled={passengerPage === 1} 
+                    onClick={() => setPassengerPage((p) => Math.max(1, p - 1))} 
+                    aria-label="Prev page"
+                    className="h-8 w-8 p-0"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <span className="text-sm font-medium">{passengerPage}</span>
+                  <Button
+                    variant="outline"
+                    disabled={Array.isArray(asPassenger) && asPassenger.length < PER_PAGE}
+                    onClick={() => setPassengerPage((p) => p + 1)}
+                    aria-label="Next page"
+                    className="h-8 w-8 p-0"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </>
             )}
           </TabsContent>
         </Tabs>
       </CardContent>
 
-      {/* Rate Dialog */}
-      <Dialog open={rateOpen} onOpenChange={setRateOpen}>
+      {/* Временно закомментирован диалог оценки */}
+      {/* <Dialog open={rateOpen} onOpenChange={setRateOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t("history.ratingTitle")} {rateTarget.toName}</DialogTitle>
@@ -292,7 +373,7 @@ function History() {
             </div>
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </Card>
   );
 }

@@ -13,40 +13,47 @@ import {
   ArrowRight,
   Calendar,
   Car,
+  ChevronDown,
   CircleCheck,
   Clock,
   Mail,
   MapPin,
+  MessageCircle,
   MoveRight,
   Pencil,
+  Phone,
   Route,
   Star,
   Trash2,
   Users,
+  X,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useI18n } from "@/app/i18n.jsx";
 import { useGetData } from "@/api/api";
 import { usePostData, useDeleteData, postData } from "@/api/api";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 function MyTripsCard({ trip }) {
   const { t } = useI18n();
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [requestsOpen, setRequestsOpen] = useState(false);
   const [bookingsOpen, setBookingsOpen] = useState(false);
-  const [ratePassengersOpen, setRatePassengersOpen] = useState(false);
-  const [ratingValue, setRatingValue] = useState(5);
-  const [ratingComment, setRatingComment] = useState("");
-  const [currentPassengerIndex, setCurrentPassengerIndex] = useState(0);
+  // Временно закомментирована функциональность оценки пассажиров
+  // const [ratePassengersOpen, setRatePassengersOpen] = useState(false);
+  // const [ratingValue, setRatingValue] = useState(5);
+  // const [ratingComment, setRatingComment] = useState("");
+  // const [currentPassengerIndex, setCurrentPassengerIndex] = useState(0);
   const [form, setForm] = useState({
     from_city: trip.from_city || "",
     to_city: trip.to_city || "",
     date: trip.date || "",
     time: trip.time || "",
-    seats: trip.seats || "",
+    seats: trip.seats_total || "",
     price: trip.price || "",
     note: trip.note || "",
     carModel: trip.carModel || "",
@@ -111,61 +118,63 @@ function MyTripsCard({ trip }) {
 
   const handleComplete = async () => {
     try {
+      console.log("Завершение поездки:", trip.id);
       await postData(`/trips/${trip.id}/complete`, {});
       toast.success(t("myTripsCard.completeToast"));
       queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
       queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
       
-      // Показываем диалог для оценки пассажиров
-      if (confirmedBookings.length > 0) {
-        setRatePassengersOpen(true);
-      }
+      // Временно закомментирована функциональность оценки пассажиров
+      // if (confirmedBookings.length > 0) {
+      //   setRatePassengersOpen(true);
+      // }
     } catch (err) {
+      console.error("Ошибка при завершении поездки:", err);
       toast.error(t("myTripsCard.completeError"));
     }
   };
 
-  // Функции для оценки пассажиров
-  const handleRatePassenger = async () => {
-    const currentPassenger = confirmedBookings[currentPassengerIndex];
-    if (!currentPassenger) return;
+  // Временно закомментированы функции для оценки пассажиров
+  // const handleRatePassenger = async () => {
+  //   const currentPassenger = confirmedBookings[currentPassengerIndex];
+  //   if (!currentPassenger) return;
 
-    try {
-      await postData(`/ratings/${trip.id}/to/${currentPassenger.user?.id}`, {
-        rating: ratingValue,
-        comment: ratingComment || null,
-      });
+  //   try {
+  //     await postData(`/ratings/${trip.id}/to/${currentPassenger.user?.id}`, {
+  //       rating: ratingValue,
+  //       comment: ratingComment || null,
+  //     });
 
-      // Переходим к следующему пассажиру или закрываем диалог
-      if (currentPassengerIndex < confirmedBookings.length - 1) {
-        setCurrentPassengerIndex(currentPassengerIndex + 1);
-        setRatingValue(5);
-        setRatingComment("");
-      } else {
-        setRatePassengersOpen(false);
-        setCurrentPassengerIndex(0);
-        setRatingValue(5);
-        setRatingComment("");
-        toast.success(t("history.ratingSubmitted"));
-      }
-    } catch (err) {
-      toast.error("Ошибка при отправке оценки");
-    }
-  };
+  //     // Переходим к следующему пассажиру или закрываем диалог
+  //     if (currentPassengerIndex < confirmedBookings.length - 1) {
+  //       setCurrentPassengerIndex(currentPassengerIndex + 1);
+  //       setRatingValue(5);
+  //       setRatingComment("");
+  //     } else {
+  //       setRatePassengersOpen(false);
+  //       setCurrentPassengerIndex(0);
+  //       setRatingValue(5);
+  //       setRatingComment("");
+  //       toast.success(t("history.ratingSubmitted"));
+  //     }
+  //   } catch (err) {
+  //     toast.error("Ошибка при отправке оценки");
+  //   }
+  // };
 
-  const handleSkipRating = () => {
-    // Переходим к следующему пассажиру или закрываем диалог
-    if (currentPassengerIndex < confirmedBookings.length - 1) {
-      setCurrentPassengerIndex(currentPassengerIndex + 1);
-      setRatingValue(5);
-      setRatingComment("");
-    } else {
-      setRatePassengersOpen(false);
-      setCurrentPassengerIndex(0);
-      setRatingValue(5);
-      setRatingComment("");
-    }
-  };
+  // const handleSkipRating = () => {
+  //   // Переходим к следующему пассажиру или закрываем диалог
+  //   if (currentPassengerIndex < confirmedBookings.length - 1) {
+  //     setCurrentPassengerIndex(currentPassengerIndex + 1);
+  //     setRatingValue(5);
+  //     setRatingComment("");
+  //   } else {
+  //     setRatePassengersOpen(false);
+  //     setCurrentPassengerIndex(0);
+  //     setRatingValue(5);
+  //     setRatingComment("");
+  //   }
+  // };
 
   // Используем данные пассажиров из trip объекта (приходят с /my-trips API)
   const pendingRequests = trip.pending_passengers || [];
@@ -195,58 +204,84 @@ function MyTripsCard({ trip }) {
     }
   };
 
+  // Функции для звонков и чата
+  const handleCall = (phoneNumber) => {
+    if (phoneNumber) {
+      window.open(`tel:${phoneNumber}`, '_self');
+    } else {
+      toast.error("Telefon raqami mavjud emas");
+    }
+  };
+
+  const handleChat = (passengerId, passengerName) => {
+    // Закрываем диалог бронирований
+    setBookingsOpen(false);
+    // Переходим на страницу чатов с конкретным пассажиром
+    // Используем receiverId вместо user, так как Chats.jsx ожидает receiverId
+    navigate(`/chats?receiverId=${passengerId}&tripId=${trip.id}`);
+  };
+
+  // По умолчанию карточки закрыты на всех устройствах
   React.useEffect(() => {
-    try {
-      const isDesktop = window.matchMedia && window.matchMedia('(min-width: 640px)').matches;
-      setIsExpanded(isDesktop);
-    } catch (_e) {}
+    setIsExpanded(false);
   }, []);
 
   return (
     <Card onClick={() => setIsExpanded((v) => !v)} className="shadow-sm rounded-3xl bg-white/80 backdrop-blur-sm border-0 w-full cursor-pointer py-0">
-      <CardContent className={`flex flex-col ${isExpanded ? 'p-4 sm:p-5 gap-3' : 'px-2 py-1 gap-1'}`}>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
-          <div className="flex items-center gap-2 text-green-700 font-bold text-sm sm:text-lg">
+      <CardContent className={`flex flex-col ${isExpanded ? 'p-4 sm:p-5 gap-3 pb-0' : 'px-2 py-1 gap-1'}`}>
+        <div className="flex items-center justify-between gap-2 text-green-700 font-bold text-sm sm:text-lg">
+          <div className="flex items-center gap-2 min-w-0">
             <MapPin className="text-green-600" />
             <span className="truncate max-w-[70vw] sm:max-w-none">{trip.from_city}</span>
             <Route className="text-green-600" />
             <span className="truncate max-w-[70vw] sm:max-w-none">{trip.to_city}</span>
           </div>
-          <div className="text-base sm:text-2xl font-extrabold text-gray-900 whitespace-nowrap">
-            {Number(trip.price).toLocaleString()} сум
-          </div>
+          {/* Expand indicator */}
+          <ChevronDown 
+            className={`text-gray-400 transition-transform duration-200 ${
+              isExpanded ? 'rotate-180' : ''
+            }`} 
+            size={20}
+          />
         </div>
         <div className={`grid grid-cols-2 ${isExpanded ? 'sm:grid-cols-4 gap-3' : 'gap-1'} text-sm text-gray-700`}>
-          <span className="flex items-center gap-1"><Calendar size={16} /> {trip.date}</span>
-          <span className="flex items-center gap-1"><Clock size={16} /> {trip.time}</span>
+          <span className="flex items-center gap-1"><Calendar size={16} className="text-green-600" /> {trip.date}</span>
+          <span className="flex items-center gap-1"><Clock size={16} className="text-green-600" /> {trip.time}</span>
           {isExpanded && (
             <>
-              <span className="flex items-center gap-1"><Users size={16} /> {trip.seats} o'rindiq</span>
-              <span className="flex items-center gap-1"><Car size={16} /> {trip.carModel}</span>
+              <span className="flex items-center gap-1"><Users size={16} /> {trip.seats_total} {t("tripsCard.seats")}</span>
+              <span className="flex items-center gap-1"><Car size={16} className="text-green-600" /> {trip.carModel}</span>
             </>
           )}
         </div>
         {/* В компактном виде показываем модель авто справа от даты/времени на мобильном */}
         {!isExpanded && (
           <div className="flex sm:hidden items-center justify-between text-gray-700">
-            <span className="inline-flex items-center gap-1 text-gray-700"><Car size={16} /> {trip.carModel || ""}</span>
+            <span className="inline-flex items-center gap-1 text-gray-700"><Car size={16} className="text-green-600" /> {trip.carModel || ""}</span>
             <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm">{Number(trip.price).toLocaleString()} сум</span>
+          </div>
+        )}
+        
+        {/* Отображение комментария при раскрытии */}
+        {isExpanded && trip.note && (
+          <div className="text-xs sm:text-sm text-gray-700 bg-white rounded-2xl p-3 border">
+            {trip.note}
           </div>
         )}
       </CardContent>
       {isExpanded && (
-      <CardFooter className="w-full" onClick={(e) => e.stopPropagation()}>
+      <CardFooter className="w-full pt-0" onClick={(e) => e.stopPropagation()}>
         {/* В развернутом виде добавим строку с номером авто */}
-        <div className="w-full hidden sm:block mb-2">
+        <div className="w-full hidden sm:block">
           <span className="inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
         </div>
         {/* Mobile layout ≤ 640px: grid 3 text buttons above, 2 icon buttons on right below */}
         <div className="w-full sm:hidden">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between">
             <span className="inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
             <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm">{Number(trip.price).toLocaleString()} сум</span>
           </div>
-          <div className="grid grid-cols-2 gap-1 mb-2">
+          <div className="grid grid-cols-2 gap-1">
             <Button onClick={() => setRequestsOpen(true)} className="min-h-9 px-2 py-2 rounded-full bg-blue-600 text-white text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center">
               <Mail className="size-4" />
               <span>{t("myTripsCard.requests")}</span>
@@ -265,7 +300,7 @@ function MyTripsCard({ trip }) {
                 </span>
               )}
             </Button>
-            <Button onClick={handleComplete} disabled={trip.status !== "active"} className="min-h-9 px-2 py-2 rounded-full bg-red-600 text-white text-[10px] leading-tight disabled:bg-gray-300 disabled:text-gray-500 flex items-center gap-1 justify-center whitespace-normal text-center col-span-2">
+            <Button onClick={handleComplete} className="min-h-9 px-2 py-2 rounded-full bg-red-600 hover:bg-red-700 text-white text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center col-span-2">
               <CircleCheck className="size-4" />
               <span>{t("myTripsCard.complete")}</span>
             </Button>
@@ -300,7 +335,7 @@ function MyTripsCard({ trip }) {
                 </span>
               )}
             </Button>
-            <Button onClick={handleComplete} disabled={trip.status !== "active"} className="h-10 px-3 rounded-full bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-300 disabled:text-gray-500 flex items-center gap-2 text-sm sm:text-base">
+            <Button onClick={handleComplete} className="h-10 px-3 rounded-full bg-red-600 text-white hover:bg-red-700 flex items-center gap-2 text-sm sm:text-base">
               <CircleCheck className="size-4" />
               <span className="text-sm">{t("myTripsCard.complete")}</span>
             </Button>
@@ -382,34 +417,78 @@ function MyTripsCard({ trip }) {
 
       {/* Requests Dialog */}
       <Dialog open={requestsOpen} onOpenChange={setRequestsOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>So'rovlar</DialogTitle>
+        <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4">
+          <DialogHeader className="pb-2">
+            <DialogTitle className="text-base sm:text-lg">
+              {t("myTripsCard.requests")} ({pendingRequests.length})
+            </DialogTitle>
           </DialogHeader>
-          <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto">
+          <div className="flex flex-col gap-2 max-h-[50vh] sm:max-h-[60vh] overflow-y-auto">
             {tripBookingsLoading ? (
-              <div>{t("myTripsCard.loading")}</div>
+              <div className="text-center py-3 text-sm">{t("myTripsCard.loading")}</div>
             ) : tripBookingsError ? (
-              <div className="text-red-600">Xatolik: {tripBookingsError.message}</div>
+              <div className="text-red-600 text-center py-3 text-sm">Xatolik: {tripBookingsError.message}</div>
             ) : pendingRequests.length === 0 ? (
-              <div>{t("myTripsCard.noRequests")}</div>
+              <div className="text-center py-6 text-gray-500">
+                <Users className="mx-auto mb-2 text-gray-400" size={24} />
+                <p className="text-sm">{t("myTripsCard.noRequests")}</p>
+              </div>
             ) : (
-              pendingRequests.map((b) => (
-                <div key={b.id} className="border rounded-2xl p-3 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="size-8">
-                      <AvatarFallback>{getInitials(b.user?.name)}</AvatarFallback>
+              pendingRequests.map((request) => (
+                <div key={request.id} className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-2.5 sm:p-3 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center gap-2.5">
+                    <Avatar className="size-8 sm:size-10 ring-1 ring-white shadow-sm">
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white font-semibold text-xs">
+                        {getInitials(request.user?.name)}
+                      </AvatarFallback>
                     </Avatar>
-                    <div className="flex flex-col text-sm">
-                      <span className="font-semibold">{b.user?.name || "Foydalanuvchi"}</span>
-                      <span>{b.seats} ta o'rin • {b.status}</span>
-                      {b.offered_price ? <span>Taklif: {b.offered_price} so'm</span> : null}
-                      {b.comment ? <span className="text-gray-600">{b.comment}</span> : null}
+                    <div className="flex-1 min-w-0">
+                      {/* Имя и статус */}
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <h3 className="font-semibold text-gray-900 text-sm truncate">
+                          {request.user?.name || "Foydalanuvchi"}
+                        </h3>
+                        <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full">
+                          {request.status}
+                        </span>
+                      </div>
+                      
+                      {/* Детали запроса */}
+                      <div className="text-xs text-gray-600 mb-1.5">
+                        <span className="font-medium">{request.seats} {t("tripsCard.seats")}</span>
+                        {request.offered_price && (
+                          <span className="ml-2 text-green-600 font-semibold">
+                            {Number(request.offered_price).toLocaleString()} сум
+                          </span>
+                        )}
+                      </div>
+                      
+                      {/* Комментарий */}
+                      {request.comment && (
+                        <div className="text-xs text-gray-500 mb-2 italic">
+                          "{request.comment}"
+                        </div>
+                      )}
+                      
+                      {/* Кнопки действий */}
+                      <div className="flex gap-1.5">
+                        <Button
+                          onClick={() => handleConfirm(request.id)}
+                          className="flex items-center justify-center gap-1 bg-green-600 hover:bg-green-700 text-white text-xs px-2.5 py-1.5 rounded-lg font-medium shadow-sm hover:shadow-md transition-all flex-1"
+                        >
+                          <CircleCheck className="w-3.5 h-3.5" />
+                          <span>{t("myTripsCard.accept")}</span>
+                        </Button>
+                        <Button
+                          onClick={() => handleDecline(request.id)}
+                          variant="outline"
+                          className="flex items-center justify-center gap-1 border-red-600 text-red-600 hover:bg-red-50 text-xs px-2.5 py-1.5 rounded-lg font-medium shadow-sm hover:shadow-md transition-all flex-1"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                          <span>{t("myTripsCard.decline")}</span>
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button onClick={() => handleConfirm(b.id)} className="h-8 text-xs bg-green-600 text-white rounded-full px-3">{t("requests.accept")}</Button>
-                    <Button onClick={() => handleDecline(b.id)} className="h-8 text-xs border border-amber-500 text-amber-600 bg-white rounded-full px-3">{t("requests.decline")}</Button>
                   </div>
                 </div>
               ))
@@ -420,29 +499,73 @@ function MyTripsCard({ trip }) {
 
       {/* Bookings Dialog */}
       <Dialog open={bookingsOpen} onOpenChange={setBookingsOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Bronlar</DialogTitle>
+        <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4">
+          <DialogHeader className="pb-2">
+            <DialogTitle className="text-base sm:text-lg">
+              {t("myTripsCard.bookings")} ({confirmedBookings.length})
+            </DialogTitle>
           </DialogHeader>
-          <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto">
+          <div className="flex flex-col gap-2 max-h-[50vh] sm:max-h-[60vh] overflow-y-auto">
             {tripBookingsLoading ? (
-              <div>{t("myTripsCard.loading")}</div>
+              <div className="text-center py-3 text-sm">{t("myTripsCard.loading")}</div>
             ) : tripBookingsError ? (
-              <div className="text-red-600">Xatolik: {tripBookingsError.message}</div>
+              <div className="text-red-600 text-center py-3 text-sm">Xatolik: {tripBookingsError.message}</div>
             ) : confirmedBookings.length === 0 ? (
-              <div>{t("myTripsCard.noBookings")}</div>
+              <div className="text-center py-6 text-gray-500">
+                <Users className="mx-auto mb-2 text-gray-400" size={24} />
+                <p className="text-sm">{t("myTripsCard.noBookings")}</p>
+              </div>
             ) : (
-              confirmedBookings.map((b) => (
-                <div key={b.id} className="border rounded-2xl p-3 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="size-8">
-                      <AvatarFallback>{getInitials(b.user?.name)}</AvatarFallback>
+              confirmedBookings.map((passenger) => (
+                <div key={passenger.id} className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl p-2.5 sm:p-3 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-start gap-2.5">
+                    <Avatar className="size-8 sm:size-10 ring-1 ring-white shadow-sm mt-0.5">
+                      <AvatarFallback className="bg-gradient-to-br from-green-500 to-green-600 text-white font-semibold text-xs">
+                        {getInitials(passenger.name)}
+                      </AvatarFallback>
                     </Avatar>
-                    <div className="flex flex-col text-sm">
-                      <span className="font-semibold">{b.user?.name || "Foydalanuvchi"}</span>
-                      <span>{b.seats} ta o'rin • {b.status}</span>
-                      {b.offered_price ? <span>Taklif: {b.offered_price} so'm</span> : null}
-                      {b.comment ? <span className="text-gray-600">{b.comment}</span> : null}
+                    <div className="flex-1 min-w-0">
+                      {/* Имя и рейтинг */}
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <h3 className="font-semibold text-gray-900 text-sm truncate">
+                          {passenger.name || "Foydalanuvchi"}
+                        </h3>
+                        {passenger.rating && (
+                          <div className="flex items-center gap-0.5 bg-yellow-100 px-1.5 py-0.5 rounded-full">
+                            <Star className="w-2.5 h-2.5 fill-yellow-400 text-yellow-400" />
+                            <span className="text-xs font-medium text-yellow-700">{passenger.rating}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Номер телефона и места */}
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Phone className="w-2.5 h-2.5 text-green-600" />
+                        <span className="text-xs font-medium text-gray-700">{passenger.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 mb-2">
+                        <Users className="w-2.5 h-2.5 text-blue-600" />
+                        <span className="text-xs font-medium text-gray-700">{passenger.seats} {t("tripsCard.seats")}</span>
+                      </div>
+                      
+                      {/* Кнопки действий */}
+                      <div className="flex gap-2 -ml-8">
+                        <Button
+                          onClick={() => handleCall(passenger.phone)}
+                          className="flex items-center justify-center gap-1.5 bg-green-600 hover:bg-green-700 text-white text-xs px-2.5 py-1.5 rounded-lg font-medium shadow-sm hover:shadow-md transition-all flex-1"
+                        >
+                          <Phone className="w-3.5 h-3.5" />
+                          <span>{t("myTripsCard.callPassenger")}</span>
+                        </Button>
+                        <Button
+                          onClick={() => handleChat(passenger.id, passenger.name)}
+                          variant="outline"
+                          className="flex items-center justify-center gap-1.5 border-green-600 text-green-600 hover:bg-green-50 text-xs px-2.5 py-1.5 rounded-lg font-medium shadow-sm hover:shadow-md transition-all flex-1"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span>{t("myTripsCard.writePassenger")}</span>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -452,8 +575,8 @@ function MyTripsCard({ trip }) {
         </DialogContent>
       </Dialog>
 
-      {/* Диалог для оценки пассажиров */}
-      <Dialog open={ratePassengersOpen} onOpenChange={setRatePassengersOpen}>
+      {/* Временно закомментирован диалог для оценки пассажиров */}
+      {/* <Dialog open={ratePassengersOpen} onOpenChange={setRatePassengersOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center">
@@ -463,7 +586,6 @@ function MyTripsCard({ trip }) {
           
           {confirmedBookings[currentPassengerIndex] && (
             <div className="space-y-4">
-              {/* Информация о пассажире */}
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                 <Avatar className="size-10">
                   <AvatarFallback>
@@ -480,7 +602,6 @@ function MyTripsCard({ trip }) {
                 </div>
               </div>
 
-              {/* Звездочки для рейтинга */}
               <div className="flex justify-center gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -500,7 +621,6 @@ function MyTripsCard({ trip }) {
                 ))}
               </div>
 
-              {/* Комментарий */}
               <div className="space-y-2">
                 <Label htmlFor="ratingComment">
                   {t("history.ratingComment")}
@@ -514,7 +634,6 @@ function MyTripsCard({ trip }) {
                 />
               </div>
 
-              {/* Кнопки */}
               <div className="flex gap-2">
                 <Button
                   onClick={handleSkipRating}
@@ -533,7 +652,7 @@ function MyTripsCard({ trip }) {
             </div>
           )}
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </Card>
   );
 }

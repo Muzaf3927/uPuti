@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Calendar,
   Car,
+  ChevronDown,
   Clock,
   MapPin,
   MoveRight,
@@ -39,12 +40,9 @@ function TripsCard({ trip }) {
   const queryClient = useQueryClient();
   const tripPostMutation = usePostData(`/trips/${trip?.id}/booking`);
 
-  // По умолчанию на десктопе развернуто, на мобиле свернуто
+  // По умолчанию карточки закрыты на всех устройствах
   React.useEffect(() => {
-    try {
-      const isDesktop = window.matchMedia && window.matchMedia('(min-width: 640px)').matches;
-      setIsExpanded(isDesktop);
-    } catch (_e) {}
+    setIsExpanded(false);
   }, []);
 
   const openBookingDialog = (e) => {
@@ -150,19 +148,28 @@ function TripsCard({ trip }) {
               <Route className="text-green-600" />
               <span className="truncate max-w-[60vw] sm:max-w-none">{trip.to_city}</span>
             </div>
-            {/* Price near route on desktop */}
-            <span className="hidden sm:inline-block font-extrabold text-gray-900 whitespace-nowrap text-lg">
-              {Number(trip.price).toLocaleString()} сум
-            </span>
+            <div className="flex items-center gap-2">
+              {/* Price near route on desktop */}
+              <span className="hidden sm:inline-block font-extrabold text-gray-900 whitespace-nowrap text-lg">
+                {Number(trip.price).toLocaleString()} сум
+              </span>
+              {/* Expand indicator */}
+              <ChevronDown 
+                className={`text-gray-400 transition-transform duration-200 ${
+                  isExpanded ? 'rotate-180' : ''
+                }`} 
+                size={20}
+              />
+            </div>
           </div>
 
           {/* Компактный блок: только дата, время и цена (на мобиле цена справа ниже) */}
           <div className={`grid grid-cols-2 ${isExpanded ? 'sm:grid-cols-4 gap-2 sm:gap-3' : 'gap-1'} text-sm`}>
             <div className="flex items-center gap-1 text-gray-700">
-              <Calendar size={16} /> {trip.date}
+              <Calendar size={16} className="text-green-600" /> {trip.date}
             </div>
             <div className="flex items-center gap-1 text-gray-700">
-              <Clock size={16} /> {trip.time}
+              <Clock size={16} className="text-green-600" /> {trip.time}
             </div>
             {isExpanded && (
               <>
@@ -170,7 +177,7 @@ function TripsCard({ trip }) {
                   <Users size={16} /> {trip.seats} {t("tripsCard.seats")}
                 </div>
                 <div className="flex items-center gap-1 text-gray-700">
-                  <Car size={16} /> {trip.carModel}
+                  <Car size={16} className="text-green-600" /> {trip.carModel}
                 </div>
               </>
             )}
@@ -179,7 +186,7 @@ function TripsCard({ trip }) {
                 <span className="inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
               ) : (
                 <span className="inline-flex items-center gap-1 sm:hidden text-gray-700">
-                  <Car size={16} /> {trip.carModel || ""}
+                  <Car size={16} className="text-green-600" /> {trip.carModel || ""}
                 </span>
               )}
               <div className="flex sm:hidden items-center gap-2">
