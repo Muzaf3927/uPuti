@@ -41,7 +41,7 @@ export default function RefreshFab({ onRefresh, showAfter = 80, keyboardInset = 
     <button
       onClick={handleClick}
       aria-label="Refresh"
-      className="fixed right-4 z-50 rounded-full bg-black/50 text-white backdrop-blur-md hover:bg-black/60 active:scale-95 transition size-11 flex items-center justify-center shadow-lg pointer-events-auto"
+      className="fixed right-4 z-50 rounded-full bg-green-600/70 text-white backdrop-blur-md hover:bg-green-600/80 active:scale-95 transition size-11 flex items-center justify-center shadow-lg pointer-events-auto ring-1 ring-green-700/20"
       style={{ bottom: 16 + (keyboardInset || 0) }}
     >
       <span className={loading ? "animate-spin" : ""}>

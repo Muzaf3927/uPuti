@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 
 import { useGetData, useBookingsUnreadCount } from "@/api/api";
 import { useI18n } from "@/app/i18n.jsx";
+import RefreshFab from "@/components/RefreshFab.jsx";
 
 
 function Booking() {
@@ -237,6 +238,7 @@ function Booking() {
             </Card>
           </TabsContent>
         </Tabs>
+        <RefreshFab onRefresh={async () => { await Promise.allSettled([refetchMyConfirmed(), refetchConfirmedToMyTrips()]); }} />
       </>
   );
 }

@@ -16,6 +16,7 @@ import {
   useGetData,
 } from "@/api/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import RefreshFab from "@/components/RefreshFab.jsx";
 import { getInitials } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -211,6 +212,7 @@ function Chats() {
             </div>
           </div>
         </CardContent>
+        <RefreshFab onRefresh={async () => { await refetchChats(); }} />
       </Card>
     );
   }
@@ -299,6 +301,7 @@ function Chats() {
           )}
         </div>
       </CardContent>
+      <RefreshFab onRefresh={async () => { await refetchChats(); }} />
     </Card>
   );
 }
