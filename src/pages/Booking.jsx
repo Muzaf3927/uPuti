@@ -238,7 +238,7 @@ function Booking() {
             </Card>
           </TabsContent>
         </Tabs>
-        <RefreshFab onRefresh={async () => { await Promise.allSettled([refetchMyConfirmed(), refetchConfirmedToMyTrips()]); }} />
+        <RefreshFab alwaysVisible onRefresh={async () => { await Promise.allSettled([refetchMyConfirmed(), refetchConfirmedToMyTrips()]); }} />
       </>
   );
 }

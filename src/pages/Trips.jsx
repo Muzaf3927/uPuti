@@ -572,6 +572,7 @@ function Trips() {
       {/* Floating refresh button */}
       <RefreshFab
         keyboardInset={keyboardInset || 0}
+        alwaysVisible
         onRefresh={async () => {
           await Promise.allSettled([refetch(), myTripsRefetch()]);
         }}

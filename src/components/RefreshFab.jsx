@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { RotateCw } from "lucide-react";
 
-export default function RefreshFab({ onRefresh, showAfter = 80, keyboardInset = 0 }) {
+export default function RefreshFab({ onRefresh, showAfter = 80, keyboardInset = 0, alwaysVisible = false }) {
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const lastClickAtRef = useRef(0);
 
   useEffect(() => {
+    if (alwaysVisible) {
+      setVisible(true);
+      return;
+    }
     const onScroll = () => {
       const y = window.scrollY || document.documentElement.scrollTop;
       setVisible(y > showAfter);
@@ -14,7 +18,7 @@ export default function RefreshFab({ onRefresh, showAfter = 80, keyboardInset = 
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [showAfter]);
+  }, [showAfter, alwaysVisible]);
 
   const handleClick = async () => {
     const now = Date.now();

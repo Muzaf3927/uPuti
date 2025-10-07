@@ -212,7 +212,7 @@ function Chats() {
             </div>
           </div>
         </CardContent>
-        <RefreshFab onRefresh={async () => { await refetchChats(); }} />
+        <RefreshFab alwaysVisible onRefresh={async () => { await refetchChats(); }} />
       </Card>
     );
   }
@@ -301,7 +301,7 @@ function Chats() {
           )}
         </div>
       </CardContent>
-      <RefreshFab onRefresh={async () => { await refetchChats(); }} />
+      <RefreshFab alwaysVisible onRefresh={async () => { await refetchChats(); }} />
     </Card>
   );
 }
