@@ -251,7 +251,7 @@ function Trips() {
               <DialogTitle className="text-center text-green-600 font-bold">{t("trips.create")}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto pr-1 max-h-[68vh] touch-pan-y overscroll-contain">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto overflow-x-hidden pr-1 max-h-[68vh] touch-pan-y overscroll-contain">
               <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="from">{t("trips.form.from")} *</Label>
                 <Input 
@@ -377,7 +377,7 @@ function Trips() {
                 <Input type="text" id="note" name="note" placeholder={t("trips.commentPlaceholder")} />
               </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 w-full">
+              <div className="col-span-1 sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 w-full">
                 <DialogClose asChild>
                   <Button type="button" className="rounded-2xl w-full h-10 text-sm">{t("trips.form.cancel")}</Button>
                 </DialogClose>
@@ -416,7 +416,7 @@ function Trips() {
                 {t("trips.searchForm.search")}
               </DialogTitle>
               <form onSubmit={handleSearch} className="flex flex-col gap-3">
-                <div className="grid w-full items-center gap-3">
+                <div className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden max-h-[60vh] touch-pan-y overscroll-contain pr-1">
                   <Label htmlFor="from">{t("trips.searchForm.from")}</Label>
                   <Input
                     type="text"
@@ -451,16 +451,16 @@ function Trips() {
                     className="font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                   />
                   </div>
-                </div>
-                <div className="w-full flex gap-2 ">
-                  <DialogClose className="w-[48%]" asChild>
-                    <Button className="rounded-2xl max-w-full ">
-                      {t("trips.searchForm.cancel")}
+                  <div className="w-full flex gap-2 mt-2">
+                    <DialogClose className="w-[48%]" asChild>
+                      <Button className="rounded-2xl max-w-full ">
+                        {t("trips.searchForm.cancel")}
+                      </Button>
+                    </DialogClose>
+                    <Button className="bg-green-600 rounded-2xl w-[48%]">
+                      {t("trips.searchForm.search")}
                     </Button>
-                  </DialogClose>
-                  <Button className="bg-green-600 rounded-2xl w-[48%]">
-                    {t("trips.searchForm.search")}
-                  </Button>
+                  </div>
                 </div>
               </form>
             </DialogHeader>

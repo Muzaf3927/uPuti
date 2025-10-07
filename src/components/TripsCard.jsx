@@ -256,7 +256,7 @@ function TripsCard({ trip }) {
             <DialogTitle>{t("tripsCard.bookingTitle")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmitBooking} className="flex flex-col gap-3">
-            <div className="grid w-full items-center gap-2">
+            <div className="grid w-full items-center gap-2 overflow-y-auto overflow-x-hidden max-h-[60vh] touch-pan-y overscroll-contain pr-1">
               <Label htmlFor="seats">{t("tripsCard.seatsLabel")}</Label>
               <Input
                 id="seats"
@@ -268,16 +268,16 @@ function TripsCard({ trip }) {
                 onChange={(e) => setSeats(e.target.value)}
                 placeholder={t("tripsCard.seatsPlaceholder")}
               />
-            </div>
-            <div className="w-full flex gap-2">
-              <DialogClose asChild>
-                <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
-                  {t("tripsCard.cancelButton")}
+              <div className="w-full flex gap-2 mt-2">
+                <DialogClose asChild>
+                  <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
+                    {t("tripsCard.cancelButton")}
+                  </Button>
+                </DialogClose>
+                <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
+                  {t("tripsCard.submitBooking")}
                 </Button>
-              </DialogClose>
-              <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
-                {t("tripsCard.submitBooking")}
-              </Button>
+              </div>
             </div>
           </form>
         </DialogContent>
@@ -290,7 +290,7 @@ function TripsCard({ trip }) {
             <DialogTitle>{t("tripsCard.offerTitle")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmitOffer} className="flex flex-col gap-3">
-            <div className="grid w-full items-center gap-2">
+            <div className="grid w-full items-center gap-2 overflow-y-auto overflow-x-hidden max-h-[60vh] touch-pan-y overscroll-contain pr-1">
               <Label htmlFor="offer-seats">{t("tripsCard.seatsLabel")}</Label>
               <Input
                 id="offer-seats"
@@ -302,45 +302,45 @@ function TripsCard({ trip }) {
                 onChange={(e) => setSeats(e.target.value)}
                 placeholder={t("tripsCard.seatsPlaceholder")}
               />
-            </div>
-            <div className="grid w-full items-center gap-2">
-              <Label htmlFor="price">{t("tripsCard.priceLabel")}</Label>
-              <div className="relative">
-                <Input
-                  id="price"
-                  type="text"
-                  inputMode="numeric"
-                  value={offeredPrice}
-                  onChange={(e) => {
-                    const digits = e.target.value.replace(/\D/g, "");
-                    const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-                    setOfferedPrice(formatted);
-                  }}
-                  placeholder="100 000"
-                  className="pr-16"
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">сум</span>
+              <div className="grid w-full items-center gap-2 mt-2">
+                <Label htmlFor="price">{t("tripsCard.priceLabel")}</Label>
+                <div className="relative">
+                  <Input
+                    id="price"
+                    type="text"
+                    inputMode="numeric"
+                    value={offeredPrice}
+                    onChange={(e) => {
+                      const digits = e.target.value.replace(/\D/g, "");
+                      const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                      setOfferedPrice(formatted);
+                    }}
+                    placeholder="100 000"
+                    className="pr-16"
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">сум</span>
+                </div>
               </div>
-            </div>
-            <div className="grid w-full items-center gap-2">
-              <Label htmlFor="comment">{t("tripsCard.commentLabel")}</Label>
-              <Input
-                id="comment"
-                type="text"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder={t("tripsCard.commentPlaceholder")}
-              />
-            </div>
-            <div className="w-full flex gap-2">
-              <DialogClose asChild>
-                <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
-                  {t("tripsCard.cancelButton")}
+              <div className="grid w-full items-center gap-2 mt-2">
+                <Label htmlFor="comment">{t("tripsCard.commentLabel")}</Label>
+                <Input
+                  id="comment"
+                  type="text"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder={t("tripsCard.commentPlaceholder")}
+                />
+              </div>
+              <div className="w-full flex gap-2 mt-2">
+                <DialogClose asChild>
+                  <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
+                    {t("tripsCard.cancelButton")}
+                  </Button>
+                </DialogClose>
+                <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
+                  {t("tripsCard.submitOffer")}
                 </Button>
-              </DialogClose>
-              <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
-                {t("tripsCard.submitOffer")}
-              </Button>
+              </div>
             </div>
           </form>
         </DialogContent>
