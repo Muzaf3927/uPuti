@@ -573,6 +573,7 @@ function Trips() {
       <RefreshFab
         keyboardInset={keyboardInset || 0}
         alwaysVisible
+        offsetBottom={88}
         onRefresh={async () => {
           await Promise.allSettled([refetch(), myTripsRefetch()]);
         }}

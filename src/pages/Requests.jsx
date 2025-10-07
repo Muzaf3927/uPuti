@@ -216,7 +216,7 @@ function Requests() {
         </Card>
       </TabsContent>
     </Tabs>
-    <RefreshFab alwaysVisible onRefresh={async () => { await Promise.allSettled([refetchMine(), refetchToMe()]); }} />
+    <RefreshFab alwaysVisible offsetBottom={88} onRefresh={async () => { await Promise.allSettled([refetchMine(), refetchToMe()]); }} />
   );
 }
 
