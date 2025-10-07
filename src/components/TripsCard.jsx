@@ -73,7 +73,8 @@ function TripsCard({ trip }) {
       toast.error("Iltimos, 1-4 o'rin orasida kiriting");
       return;
     }
-    if (!offeredPrice || Number(offeredPrice) < 0) {
+    const offeredDigits = String(offeredPrice).replace(/\s/g, "");
+    if (!offeredDigits || Number(offeredDigits) < 0) {
       toast.error("Iltimos, taklif narxini kiriting");
       return;
     }
@@ -81,7 +82,7 @@ function TripsCard({ trip }) {
       type: 'offer', 
       data: {
         seats: Number(seats),
-        offered_price: Number(offeredPrice),
+        offered_price: Number(offeredDigits),
         comment: comment || null,
       }
     });

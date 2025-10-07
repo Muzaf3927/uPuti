@@ -245,12 +245,12 @@ function Trips() {
               <h4 className="text-sm md:text-md font-bold">{t("trips.create")}</h4>
             </div>
           </DialogTrigger>
-          <DialogContent className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 max-h-[90vh] overflow-hidden overscroll-contain touch-pan-y">
+          <DialogContent className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 max-h-[90vh] overflow-hidden overscroll-contain touch-pan-y fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">{t("trips.create")}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto pr-1 max-h-[70vh]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto pr-1 max-h-[68vh] touch-pan-y overscroll-contain">
               <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="from">{t("trips.form.from")} *</Label>
                 <Input 

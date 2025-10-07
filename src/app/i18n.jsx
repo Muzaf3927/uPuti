@@ -42,7 +42,7 @@ const dict = {
       ratingComment: "Izoh (ixtiyoriy)",
       rated: "baxolangan",
       yourTrip: "Sizning safaringiz",
-      earned: "Zarobitno",
+      earned: "Foyda",
       ratingSubmitted: "Baxo yuborildi",
       skip: "O'tkazib yuborish",
       next: "Keyingi",
@@ -82,7 +82,7 @@ const dict = {
       deleteAccount: "Akkauntni o'chirish",
       deleting: "O'chirilmoqda...",
       confirmTitle: "Akkauntni o'chirishni tasdiqlash",
-      confirmDescription: "Haqiqatan ham akkauntingizni o'chirmoqchimisiz? Bu amalni bekor qilib bo'lmaydi. Eslatma: ba'zi ma'lumotlar tahlil maqsadida saqlanishi mumkin, lekin siz bu akkaunt bilan tizimga kira olmaysiz.",
+      confirmDescription: "Haqiqatan ham akkauntingizni o'chirmoqchimisiz?",
       confirm: "Ha, o'chirish",
       close: "Yopish",
       errorLoading: "Profilni yuklashda xatolik",
@@ -94,7 +94,7 @@ const dict = {
       create: "Safar yaratish",
       search: "Safar qidirish",
       empty: "Sizda safarlar yo'q.",
-      commentPlaceholder: "(ixtiyoriy) Cherez Samarqand ketaman/ Pochta olaman",
+      commentPlaceholder: "Samarqand orqali ketaman",
       form: {
         from: "Qayerdan",
         to: "Qayerga",
@@ -133,7 +133,7 @@ const dict = {
       },
       confirmation: {
         title: "Tasdiqlash",
-        message: "Sizning so'rovingiz haydovchi tomonidan qabul qilinishi kerak. Qabul qilingandan keyin sizning telefon raqamingiz unga ko'rinadi.",
+        message: "Sizning so'rovingiz haydovchi tomonidan qabul qilinganidan so'ng, siz haydovchi bilan  yoki haydovchi siz bilan bog'lanishi mumkin",
         continue: "Davom etish",
         cancel: "Bekor qilish"
       }
@@ -154,7 +154,7 @@ const dict = {
       signupTitle: "Ro'yhatdan o'tish",
       signupSubtitle: "Profil yaratish",
       nameLabel: "Ism",
-      phonePlaceholder: "(90) 123 45 67",
+      phonePlaceholder: "90 123 45 67",
       signupBtn: "Ro'yhatdan o'tish",
       signupProgress: "Ro'yhatdan o'tilmoqda...",
       haveAccount: "Profilingiz bormi?",
@@ -169,7 +169,7 @@ const dict = {
         title: "Parolni yangilash",
         subtitle: "Telefon raqamingizni kiriting",
         phoneLabel: "Telefon raqami",
-        phonePlaceholder: "(90) 123 45 67",
+        phonePlaceholder: "90 123 45 67",
         button: "Parolni yangilash",
         loading: "Parol yangilanmoqda...",
         haveAccount: "Profilingiz bormi?",
@@ -230,8 +230,8 @@ const dict = {
       myProfile: "Mening profilim",
     },
     support: {
-      title: "Savollar va takliflar",
-      description: "Telegram orqali biz bilan bog'laning",
+      title: "Savollar va takliflar uchun",
+      description: "Telegram orqali yozing",
       button: "Yozish",
       close: "Yopish",
     },
@@ -314,7 +314,7 @@ const dict = {
       deleteAccount: "Удалить аккаунт",
       deleting: "Удаление...",
       confirmTitle: "Подтверждение удаления аккаунта",
-      confirmDescription: "Вы уверены, что хотите удалить свой аккаунт? Это действие нельзя отменить. Внимание: некоторые данные могут быть сохранены для аналитических целей, но вы больше не сможете войти с этим аккаунтом.",
+      confirmDescription: "Вы уверены, что хотите удалить свой аккаунт?",
       confirm: "Да, удалить",
       close: "Закрыть",
       errorLoading: "Ошибка при загрузке профиля",
@@ -326,7 +326,7 @@ const dict = {
       create: "Создать поездку",
       search: "Поиск поездки",
       empty: "Пока у вас нет поездок.",
-      commentPlaceholder: "(не обязательно) Через Самарканд поеду/ Беру почта",
+      commentPlaceholder: "Поеду через Самарканд",
       form: {
         from: "Откуда",
         to: "Куда",
@@ -365,7 +365,7 @@ const dict = {
       },
       confirmation: {
         title: "Подтверждение",
-        message: "Ваш запрос должен быть принят водителем. После принятия ваш номер телефона будет ему виден.",
+        message: "После того как водитель примет вашу заявку, сможете друг с другом созвониться",
         continue: "Продолжить",
         cancel: "Отмена"
       }
@@ -386,7 +386,7 @@ const dict = {
       signupTitle: "Регистрация",
       signupSubtitle: "Создайте аккаунт",
       nameLabel: "Имя",
-      phonePlaceholder: "(90) 123 45 67",
+      phonePlaceholder: "90 123 45 67",
       signupBtn: "Зарегистрироваться",
       signupProgress: "Регистрация...",
       haveAccount: "Уже есть аккаунт?",
@@ -401,7 +401,7 @@ const dict = {
         title: "Сброс пароля",
         subtitle: "Введите номер телефона",
         phoneLabel: "Номер телефона",
-        phonePlaceholder: "(90) 123 45 67",
+        phonePlaceholder: "90 123 45 67",
         button: "Сбросить пароль",
         loading: "Сброс пароля...",
         haveAccount: "Уже есть аккаунт?",
@@ -463,7 +463,7 @@ const dict = {
     },
     support: {
       title: "Вопросы и предложения",
-      description: "Свяжитесь с нами в Telegram",
+      description: "Свяжитесь через Telegram",
       button: "Написать",
       close: "Закрыть",
     },
