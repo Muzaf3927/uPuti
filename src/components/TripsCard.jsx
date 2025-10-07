@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
@@ -24,7 +24,6 @@ import { Link } from "react-router-dom";
 import { useDeleteData, usePostData, postData } from "@/api/api";
 import { useI18n } from "@/app/i18n.jsx";
 import { useKeyboardInsets } from "@/hooks/useKeyboardInsets.jsx";
-import { useScrollOnFocusToTop } from "@/hooks/useScrollOnFocusToTop.jsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -34,10 +33,7 @@ function TripsCard({ trip }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [offerDialogOpen, setOfferDialogOpen] = useState(false);
-  const bookingScrollRef = useRef(null);
-  const offerScrollRef = useRef(null);
-  useScrollOnFocusToTop(bookingScrollRef);
-  useScrollOnFocusToTop(offerScrollRef);
+  
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [pendingRequest, setPendingRequest] = useState(null);
   const [seats, setSeats] = useState("");
@@ -263,7 +259,7 @@ function TripsCard({ trip }) {
             <DialogTitle>{t("tripsCard.bookingTitle")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmitBooking} className="flex flex-col gap-3">
-            <div ref={bookingScrollRef} className="grid w-full items-center gap-2 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 180 : undefined, paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}>
+            <div className="grid w-full items-center gap-2 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 180 : undefined, paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}>
               <Label htmlFor="seats">{t("tripsCard.seatsLabel")}</Label>
               <Input
                 id="seats"
@@ -297,7 +293,7 @@ function TripsCard({ trip }) {
             <DialogTitle>{t("tripsCard.offerTitle")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmitOffer} className="flex flex-col gap-3">
-            <div ref={offerScrollRef} className="grid w-full items-center gap-2 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 220 : undefined, paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}>
+            <div className="grid w-full items-center gap-2 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 220 : undefined, paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}>
               <Label htmlFor="offer-seats">{t("tripsCard.seatsLabel")}</Label>
               <Input
                 id="offer-seats"
