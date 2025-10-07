@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
@@ -36,7 +36,6 @@ function TripsCard({ trip }) {
   const [seats, setSeats] = useState("");
   const [offeredPrice, setOfferedPrice] = useState("");
   const [comment, setComment] = useState("");
-  const [keyboardInset, setKeyboardInset] = useState(0);
 
   const queryClient = useQueryClient();
   const tripPostMutation = usePostData(`/trips/${trip?.id}/booking`);
@@ -46,22 +45,6 @@ function TripsCard({ trip }) {
     setIsExpanded(false);
   }, []);
 
-  // Визуальная клавиатура на мобильных: добавляем нижний inset, чтобы кнопки не прятались
-  useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-    const handleResize = () => {
-      const inset = Math.max(0, window.innerHeight - Math.floor(vv.height));
-      setKeyboardInset(inset);
-    };
-    handleResize();
-    vv.addEventListener("resize", handleResize);
-    vv.addEventListener("scroll", handleResize);
-    return () => {
-      vv.removeEventListener("resize", handleResize);
-      vv.removeEventListener("scroll", handleResize);
-    };
-  }, []);
 
   const openBookingDialog = (e) => {
     e.stopPropagation();
@@ -268,13 +251,12 @@ function TripsCard({ trip }) {
       </Card>
       {/* Booking Dialog */}
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
-        <DialogContent onClick={(e) => e.stopPropagation()} className="w-[95vw] sm:max-w-[520px] p-4 sm:p-6 max-h-[95dvh] overflow-hidden overscroll-contain touch-pan-y fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <DialogContent onClick={(e) => e.stopPropagation()}>
           <DialogHeader>
             <DialogTitle>{t("tripsCard.bookingTitle")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmitBooking} className="flex flex-col gap-3">
-            <div className="grid w-full items-center gap-2 overflow-y-auto"
-                 style={{ maxHeight: "60vh", paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}>
+            <div className="grid w-full items-center gap-2">
               <Label htmlFor="seats">{t("tripsCard.seatsLabel")}</Label>
               <Input
                 id="seats"
@@ -287,7 +269,7 @@ function TripsCard({ trip }) {
                 placeholder={t("tripsCard.seatsPlaceholder")}
               />
             </div>
-            <div className="w-full flex gap-2 sticky bottom-0 bg-background pt-2">
+            <div className="w-full flex gap-2">
               <DialogClose asChild>
                 <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
                   {t("tripsCard.cancelButton")}
@@ -303,13 +285,12 @@ function TripsCard({ trip }) {
 
       {/* Offer Dialog */}
       <Dialog open={offerDialogOpen} onOpenChange={setOfferDialogOpen}>
-        <DialogContent onClick={(e) => e.stopPropagation()} className="w-[95vw] sm:max-w-[560px] p-4 sm:p-6 max-h-[95dvh] overflow-hidden overscroll-contain touch-pan-y fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <DialogContent onClick={(e) => e.stopPropagation()}>
           <DialogHeader>
             <DialogTitle>{t("tripsCard.offerTitle")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmitOffer} className="flex flex-col gap-3">
-            <div className="grid w-full items-center gap-2 overflow-y-auto"
-                 style={{ maxHeight: "60vh", paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}>
+            <div className="grid w-full items-center gap-2">
               <Label htmlFor="offer-seats">{t("tripsCard.seatsLabel")}</Label>
               <Input
                 id="offer-seats"
@@ -321,7 +302,8 @@ function TripsCard({ trip }) {
                 onChange={(e) => setSeats(e.target.value)}
                 placeholder={t("tripsCard.seatsPlaceholder")}
               />
-              <div className="grid w-full items-center gap-2 mt-2">
+            </div>
+            <div className="grid w-full items-center gap-2">
               <Label htmlFor="price">{t("tripsCard.priceLabel")}</Label>
               <div className="relative">
                 <Input
@@ -339,8 +321,8 @@ function TripsCard({ trip }) {
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">сум</span>
               </div>
-              </div>
-              <div className="grid w-full items-center gap-2 mt-2">
+            </div>
+            <div className="grid w-full items-center gap-2">
               <Label htmlFor="comment">{t("tripsCard.commentLabel")}</Label>
               <Input
                 id="comment"
@@ -349,9 +331,8 @@ function TripsCard({ trip }) {
                 onChange={(e) => setComment(e.target.value)}
                 placeholder={t("tripsCard.commentPlaceholder")}
               />
-              </div>
             </div>
-            <div className="w-full flex gap-2 sticky bottom-0 bg-background pt-2">
+            <div className="w-full flex gap-2">
               <DialogClose asChild>
                 <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
                   {t("tripsCard.cancelButton")}

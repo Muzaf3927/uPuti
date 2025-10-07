@@ -42,7 +42,6 @@ function Trips() {
   const location = useLocation();
   const [dialog, setDialog] = useState(false);
   const [searchDialog, setSearchDialog] = useState(false);
-  const [keyboardInset, setKeyboardInset] = useState(0);
   const [selectedTime, setSelectedTime] = useState("12:00");
   const [formErrors, setFormErrors] = useState({});
   const [dialogBron, setDialogBron] = useState(false);
@@ -112,24 +111,6 @@ function Trips() {
 
   const tripPostMutation = usePostData("/trip");
 
-  // Обработка появления мобильной клавиатуры: добавляем нижний отступ для скролла
-  useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-
-    const handleResize = () => {
-      const inset = Math.max(0, window.innerHeight - Math.floor(vv.height));
-      setKeyboardInset(inset);
-    };
-
-    handleResize();
-    vv.addEventListener("resize", handleResize);
-    vv.addEventListener("scroll", handleResize);
-    return () => {
-      vv.removeEventListener("resize", handleResize);
-      vv.removeEventListener("scroll", handleResize);
-    };
-  }, []);
 
   // Функция валидации формы
   const validateForm = (formData) => {
@@ -265,15 +246,12 @@ function Trips() {
               <h4 className="text-sm md:text-md font-bold">{t("trips.create")}</h4>
             </div>
           </DialogTrigger>
-          <DialogContent className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 max-h-[95dvh] overflow-hidden overscroll-contain touch-pan-y fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <DialogContent className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 max-h-[90vh] overflow-hidden overscroll-contain touch-pan-y fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">{t("trips.create")}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-              <div
-                className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto pr-1 touch-pan-y overscroll-contain"
-                style={{ maxHeight: `calc(68vh)`, paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}
-              >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto pr-1 max-h-[68vh] touch-pan-y overscroll-contain">
               <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="from">{t("trips.form.from")} *</Label>
                 <Input 
@@ -399,7 +377,7 @@ function Trips() {
                 <Input type="text" id="note" name="note" placeholder={t("trips.commentPlaceholder")} />
               </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 w-full sticky bottom-0 bg-background pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 w-full">
                 <DialogClose asChild>
                   <Button type="button" className="rounded-2xl w-full h-10 text-sm">{t("trips.form.cancel")}</Button>
                 </DialogClose>
@@ -432,14 +410,13 @@ function Trips() {
               <h4 className="text-sm md:text-md font-bold">{t("trips.searchForm.search")}</h4>
             </div>
           </DialogTrigger>
-          <DialogContent className="w-[95vw] sm:max-w-[640px] p-4 sm:p-6 max-h-[95dvh] overflow-hidden overscroll-contain touch-pan-y fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <DialogContent>
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">
                 {t("trips.searchForm.search")}
               </DialogTitle>
               <form onSubmit={handleSearch} className="flex flex-col gap-3">
-                <div className="grid w-full items-center gap-3 overflow-y-auto"
-                     style={{ maxHeight: "60vh", paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}>
+                <div className="grid w-full items-center gap-3">
                   <Label htmlFor="from">{t("trips.searchForm.from")}</Label>
                   <Input
                     type="text"
@@ -449,7 +426,7 @@ function Trips() {
                     onChange={(e) => setSearchFilters(prev => ({ ...prev, from: e.target.value }))}
                     placeholder={t("trips.searchForm.fromPlaceholder")}
                   />
-                  <div className="grid w-full items-center gap-3 mt-2">
+                  <div className="grid w-full items-center gap-3">
                   <Label htmlFor="to">{t("trips.searchForm.to")}</Label>
                   <Input
                     type="text"
@@ -460,7 +437,7 @@ function Trips() {
                     placeholder={t("trips.searchForm.toPlaceholder")}
                   />
                   </div>
-                  <div className="grid w-full items-center gap-3 mt-2">
+                  <div className="grid w-full items-center gap-3">
                   <Label htmlFor="date">{t("trips.searchForm.date")}</Label>
                   <InputMask
                     mask="__.__.____"
@@ -475,7 +452,7 @@ function Trips() {
                   />
                   </div>
                 </div>
-                <div className="w-full flex gap-2 sticky bottom-0 bg-background pt-2">
+                <div className="w-full flex gap-2 ">
                   <DialogClose className="w-[48%]" asChild>
                     <Button className="rounded-2xl max-w-full ">
                       {t("trips.searchForm.cancel")}
