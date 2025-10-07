@@ -220,7 +220,7 @@ function MainLayout() {
             className="absolute inset-0 bg-black/40"
             onClick={() => setProfileOpen(false)}
           />
-          <div className="absolute right-1 top-1 sm:right-2 sm:top-2 h-[290px] sm:h-[340px] w-[220px] sm:w-[250px] bg-white shadow-xl rounded-2xl flex flex-col overflow-hidden">
+          <div className="absolute right-1 top-1 sm:right-2 sm:top-2 h-auto max-h-[85vh] w-[85vw] max-w-[280px] bg-white shadow-xl rounded-2xl flex flex-col overflow-hidden">
             <div className="p-3 sm:p-4 border-b flex items-center justify-between">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-sm">
@@ -242,8 +242,8 @@ function MainLayout() {
                 ✕
               </button>
             </div>
-            <div className="p-3 sm:p-4 flex-1 overflow-y-auto">
-              <div className="border rounded-2xl p-3 sm:p-4 bg-white/70 min-w-[280px]">
+            <div className="p-3 sm:p-4 overflow-y-auto">
+              <div className="border rounded-2xl p-3 sm:p-4 bg-white/70 w-full">
                 <div className="space-y-2 text-xs sm:text-sm">
                   <div className="flex items-center gap-2">
                     <span className="text-gray-500">
@@ -271,7 +271,7 @@ function MainLayout() {
                   )}
                 </div>
               </div>
-              <div className="border rounded-2xl p-3 sm:p-4 bg-white/70 min-w-[280px]">
+              <div className="border rounded-2xl p-3 sm:p-4 bg-white/70 w-full">
                 <Link
                   to="/profile"
                   onClick={() => setProfileOpen(false)}
