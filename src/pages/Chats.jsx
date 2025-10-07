@@ -49,6 +49,13 @@ function Chats() {
   const { data: chatsRes, refetch: refetchChats } = useGetUserChats();
   const chats = chatsRes?.chats || [];
 
+  // Listen global refresh
+  useEffect(() => {
+    const handler = () => { refetchChats(); };
+    window.addEventListener("app:refresh", handler);
+    return () => window.removeEventListener("app:refresh", handler);
+  }, [refetchChats]);
+
   // Автоматическое обновление данных при переходе на страницу
   useEffect(() => {
     if (location.pathname === "/chats") {

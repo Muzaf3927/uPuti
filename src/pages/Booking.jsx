@@ -28,6 +28,13 @@ function Booking() {
   // Получаем количество непрочитанных сообщений
   const { data: unreadCounts } = useBookingsUnreadCount();
 
+  // Listen global refresh
+  useEffect(() => {
+    const handler = () => { Promise.allSettled([refetchMyConfirmed(), refetchConfirmedToMyTrips()]); };
+    window.addEventListener("app:refresh", handler);
+    return () => window.removeEventListener("app:refresh", handler);
+  }, [refetchMyConfirmed, refetchConfirmedToMyTrips]);
+
   // Автоматическое обновление данных при переходе на страницу
   useEffect(() => {
     if (location.pathname === "/booking") {

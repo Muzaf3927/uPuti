@@ -39,6 +39,13 @@ function Requests() {
   // Получаем количество непрочитанных сообщений
   const { data: unreadCounts } = useBookingsUnreadCount();
 
+  // Listen global refresh
+  useEffect(() => {
+    const handler = () => { Promise.allSettled([refetchMine(), refetchToMe()]); };
+    window.addEventListener("app:refresh", handler);
+    return () => window.removeEventListener("app:refresh", handler);
+  }, [refetchMine, refetchToMe]);
+
   // Автоматическое обновление данных при переходе на страницу
   useEffect(() => {
     if (location.pathname === "/requests") {

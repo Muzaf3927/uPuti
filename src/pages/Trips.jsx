@@ -42,6 +42,14 @@ import MyTripsCard from "@/components/MyTripsCard";
 function Trips() {
   const { t } = useI18n();
   const { keyboardInset, viewportHeight } = useKeyboardInsets();
+  // Listen to global refresh events from layout
+  useEffect(() => {
+    const handler = () => {
+      Promise.allSettled([refetch(), myTripsRefetch()]);
+    };
+    window.addEventListener("app:refresh", handler);
+    return () => window.removeEventListener("app:refresh", handler);
+  }, [refetch, myTripsRefetch]);
   const location = useLocation();
   const [dialog, setDialog] = useState(false);
   const [searchDialog, setSearchDialog] = useState(false);

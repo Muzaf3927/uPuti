@@ -18,6 +18,8 @@ import { Link, Outlet } from "react-router-dom";
 import { logout } from "@/app/userSlice/userSlice";
 import Onboarding from "@/components/Onboarding";
 import { getInitials } from "@/lib/utils";
+import RefreshFab from "@/components/RefreshFab.jsx";
+import { useKeyboardInsets } from "@/hooks/useKeyboardInsets.jsx";
 
 // shadcn
 import {
@@ -52,6 +54,7 @@ function MainLayout() {
   const [profileOpen, setProfileOpen] = React.useState(false);
   const [showOnboarding, setShowOnboarding] = React.useState(false);
   const [supportOpen, setSupportOpen] = React.useState(false);
+  const { keyboardInset } = useKeyboardInsets();
 
   // Проверяем, нужно ли показать онбординг
   React.useEffect(() => {
@@ -357,6 +360,20 @@ function MainLayout() {
           </div>
         </div>
       )}
+
+      {/* Global floating refresh button visible on all pages */}
+      <RefreshFab
+        alwaysVisible
+        offsetBottom={88}
+        keyboardInset={keyboardInset || 0}
+        onRefresh={async () => {
+          const currentScrollY = window.scrollY || document.documentElement.scrollTop;
+          window.dispatchEvent(new CustomEvent("app:refresh"));
+          window.requestAnimationFrame(() => {
+            window.scrollTo({ top: currentScrollY, behavior: "instant" });
+          });
+        }}
+      />
     </div>
   );
 }
