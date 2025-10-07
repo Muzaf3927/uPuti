@@ -219,7 +219,7 @@ function Chats() {
             </div>
           </div>
         </CardContent>
-        <RefreshFab alwaysVisible offsetBottom={88} onRefresh={async () => { await refetchChats(); }} />
+        {/* RefreshFab рендерится глобально из MainLayout через портал */}
       </Card>
     );
   }
@@ -308,7 +308,7 @@ function Chats() {
           )}
         </div>
       </CardContent>
-      <RefreshFab alwaysVisible offsetBottom={88} onRefresh={async () => { await refetchChats(); }} />
+      {/* RefreshFab рендерится глобально из MainLayout через портал */}
     </Card>
   );
 }

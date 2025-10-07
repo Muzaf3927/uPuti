@@ -38,21 +38,19 @@ import TripsCardSkeleton from "@/components/TripsCardSkeleton";
 import RefreshFab from "@/components/RefreshFab.jsx";
 import { toast } from "sonner";
 import MyTripsCard from "@/components/MyTripsCard";
+import { useRef } from "react";
+import { useScrollOnFocusToTop } from "@/hooks/useScrollOnFocusToTop.jsx";
 
 function Trips() {
   const { t } = useI18n();
   const { keyboardInset, viewportHeight } = useKeyboardInsets();
-  // Listen to global refresh events from layout
-  useEffect(() => {
-    const handler = () => {
-      Promise.allSettled([refetch(), myTripsRefetch()]);
-    };
-    window.addEventListener("app:refresh", handler);
-    return () => window.removeEventListener("app:refresh", handler);
-  }, [refetch, myTripsRefetch]);
   const location = useLocation();
   const [dialog, setDialog] = useState(false);
   const [searchDialog, setSearchDialog] = useState(false);
+  const createFormScrollRef = useRef(null);
+  const searchFormScrollRef = useRef(null);
+  useScrollOnFocusToTop(createFormScrollRef);
+  useScrollOnFocusToTop(searchFormScrollRef);
   const [selectedTime, setSelectedTime] = useState("12:00");
   const [formErrors, setFormErrors] = useState({});
   const [dialogBron, setDialogBron] = useState(false);
@@ -103,6 +101,15 @@ function Trips() {
     error: myTripsError,
     refetch: myTripsRefetch,
   } = useGetData(`/my-trips?page=${myPage}&per_page=${MY_PER_PAGE}`);
+
+  // Listen to global refresh events from layout (after refetch refs are defined)
+  useEffect(() => {
+    const handler = () => {
+      Promise.allSettled([refetch(), myTripsRefetch()]);
+    };
+    window.addEventListener("app:refresh", handler);
+    return () => window.removeEventListener("app:refresh", handler);
+  }, [refetch, myTripsRefetch]);
 
   // Автоматическое обновление данных при переходе на страницу
   useEffect(() => {
@@ -262,7 +269,7 @@ function Trips() {
               <DialogTitle className="text-center text-green-600 font-bold">{t("trips.create")}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto overflow-x-hidden pr-1 touch-pan-y overscroll-contain" style={{ maxHeight: viewportHeight ? viewportHeight - 150 : undefined, paddingBottom: keyboardInset ? keyboardInset + 56 : undefined }}>
+              <div ref={createFormScrollRef} className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto overflow-x-hidden pr-1 touch-pan-y overscroll-contain" style={{ maxHeight: viewportHeight ? viewportHeight - 150 : undefined, paddingBottom: keyboardInset ? keyboardInset + 56 : undefined }}>
               <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="from">{t("trips.form.from")} *</Label>
                 <Input 
@@ -303,6 +310,7 @@ function Trips() {
               <div className="col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="time">{t("trips.form.time")} *</Label>
                 <TimePicker
+                  id="time"
                   value={selectedTime}
                   onChange={setSelectedTime}
                   className={`w-full ${formErrors.time || formErrors.dateTime ? "border-red-500" : ""}`}
@@ -428,7 +436,7 @@ function Trips() {
                 {t("trips.searchForm.search")}
               </DialogTitle>
               <form onSubmit={handleSearch} className="flex flex-col gap-3">
-                <div className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 160 : undefined, paddingBottom: keyboardInset ? keyboardInset + 56 : undefined }}>
+                <div ref={searchFormScrollRef} className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 160 : undefined, paddingBottom: keyboardInset ? keyboardInset + 56 : undefined }}>
                   <Label htmlFor="from">{t("trips.searchForm.from")}</Label>
                   <Input
                     type="text"
@@ -578,14 +586,7 @@ function Trips() {
         </CardContent>
       </Card>
       {/* Floating refresh button */}
-      <RefreshFab
-        keyboardInset={keyboardInset || 0}
-        alwaysVisible
-        offsetBottom={88}
-        onRefresh={async () => {
-          await Promise.allSettled([refetch(), myTripsRefetch()]);
-        }}
-      />
+      {/* RefreshFab рендерится глобально из MainLayout через портал */}
     </div>
   );
 }

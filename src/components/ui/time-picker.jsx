@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { Button } from "./button";
 
-const TimePicker = ({ value = "12:00", onChange, className = "" }) => {
+const TimePicker = ({ id, value = "12:00", onChange, className = "" }) => {
   const [hours, setHours] = useState(12);
   const [minutes, setMinutes] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +46,7 @@ const TimePicker = ({ value = "12:00", onChange, className = "" }) => {
   return (
     <div className={`relative ${className}`}>
       <Button
+        id={id}
         type="button"
         variant="outline"
         className="w-full justify-between h-9 px-3"

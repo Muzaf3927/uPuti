@@ -19,7 +19,6 @@ import { useI18n } from "@/app/i18n.jsx";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
-import RefreshFab from "@/components/RefreshFab.jsx";
 
 function Requests() {
   const { t } = useI18n();
@@ -223,7 +222,6 @@ function Requests() {
         </Card>
       </TabsContent>
     </Tabs>
-    <RefreshFab alwaysVisible offsetBottom={88} onRefresh={async () => { await Promise.allSettled([refetchMine(), refetchToMe()]); }} />
   );
 }
 
