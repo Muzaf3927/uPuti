@@ -35,6 +35,7 @@ import { useGetData, usePostData } from "@/api/api";
 import { useKeyboardInsets } from "@/hooks/useKeyboardInsets.jsx";
 import { useI18n } from "@/app/i18n.jsx";
 import TripsCardSkeleton from "@/components/TripsCardSkeleton";
+import RefreshFab from "@/components/RefreshFab.jsx";
 import { toast } from "sonner";
 import MyTripsCard from "@/components/MyTripsCard";
 
@@ -568,6 +569,13 @@ function Trips() {
           </Tabs>
         </CardContent>
       </Card>
+      {/* Floating refresh button */}
+      <RefreshFab
+        keyboardInset={keyboardInset || 0}
+        onRefresh={async () => {
+          await Promise.allSettled([refetch(), myTripsRefetch()]);
+        }}
+      />
     </div>
   );
 }
