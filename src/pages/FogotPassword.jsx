@@ -33,6 +33,7 @@ import {
 
 // others
 import { Link, Navigate } from "react-router-dom";
+import { Headphones } from "lucide-react";
 import { InputMask } from "@react-input/mask";
 import { usePostData } from "@/api/api";
 import { toast } from "sonner";
@@ -46,6 +47,7 @@ import { useI18n } from "@/app/i18n.jsx";
 
 function FogotPassword() {
   const { t, lang, setLang } = useI18n();
+  const [supportOpen, setSupportOpen] = useState(false);
   const [form, setForm] = useState({
     phone: "",
     password: "",
@@ -204,7 +206,8 @@ function FogotPassword() {
           </CardHeader>
         </Card>
       </div>
-      <Card className="w-full max-w-md -mt-2 px-4">
+      <div className="relative w-full max-w-md -mt-2">
+      <Card className="w-full px-4">
         <CardHeader className="relative p-0.5 sm:p-1">
           <CardTitle className="text-green-700 mx-auto text-lg sm:text-xl font-bold">
             {t("auth.forgotPassword.title")}
@@ -396,6 +399,50 @@ function FogotPassword() {
           </Dialog>
         </CardContent>
       </Card>
+      {/* floating support button (fixed chat-style) */}
+      <button
+        type="button"
+        onClick={() => setSupportOpen(true)}
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 bg-white/70 backdrop-blur-md border border-green-200 text-green-700 hover:bg-white shadow-lg rounded-full w-12 h-12 flex items-center justify-center"
+        aria-label={t("profilePanel.support")}
+      >
+        <Headphones className="w-6 h-6" />
+      </button>
+      </div>
+
+      {supportOpen && (
+        <div className="fixed inset-0 z-50">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setSupportOpen(false)} />
+          <div className="absolute inset-0 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-lg w-full max-w-[280px] p-4 text-center">
+              <h3 className="text-sm font-semibold text-gray-900 mb-1">{t("support.title")}</h3>
+              <p className="text-xs text-gray-600 mb-3">{t("support.description")}</p>
+              <a href="https://t.me/Khamroev_3" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors text-xs font-medium">
+                <svg viewBox="0 0 24 24" className="w-3 h-3" aria-hidden="true"><path fill="currentColor" d="M9.04 15.49 8.88 19c.27 0 .39-.12.54-.27l1.93-2.33 3.99 2.91c.73.4 1.26.19 1.45-.68l2.63-12.36c.27-1.25-.45-1.74-1.25-1.43L3.34 9.5c-1.2.47-1.19 1.14-.21 1.45l4.63 1.44 10.77-6.8c.51-.31.98-.14.59.2z"/></svg>
+                {t("support.button")}
+              </a>
+              <button onClick={() => setSupportOpen(false)} className="mt-4 text-xs text-red-500 hover:text-red-700">{t("support.close")}</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Support for non-authenticated users */}
+      <div className="w-full max-w-md mt-2 text-center">
+        <div className="bg-white/80 border rounded-xl p-3">
+          <p className="text-xs text-gray-600 mb-2">{t("support.description")}</p>
+          <a
+            href="https://t.me/Khamroev_3"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors text-xs font-medium"
+          >
+            <svg viewBox="0 0 24 24" className="w-3 h-3" aria-hidden="true">
+              <path fill="currentColor" d="M9.04 15.49 8.88 19c.27 0 .39-.12.54-.27l1.93-2.33 3.99 2.91c.73.4 1.26.19 1.45-.68l2.63-12.36c.27-1.25-.45-1.74-1.25-1.43L3.34 9.5c-1.2.47-1.19 1.14-.21 1.45l4.63 1.44 10.77-6.8c.51-.31.98-.14.59.2z" />
+            </svg>
+            {t("support.button")}
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
