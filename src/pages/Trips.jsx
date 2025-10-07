@@ -248,12 +248,12 @@ function Trips() {
               <h4 className="text-sm md:text-md font-bold">{t("trips.create")}</h4>
             </div>
           </DialogTrigger>
-          <DialogContent className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 overflow-hidden overscroll-contain touch-pan-y fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ maxHeight: viewportHeight ? Math.min(760, viewportHeight - 16) : undefined }}>
+          <DialogContent className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 overflow-hidden overscroll-contain touch-pan-y fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ maxHeight: viewportHeight ? Math.min(800, viewportHeight - 8) : undefined }}>
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">{t("trips.create")}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto overflow-x-hidden pr-1 touch-pan-y overscroll-contain" style={{ maxHeight: viewportHeight ? viewportHeight - 180 : undefined, paddingBottom: keyboardInset ? keyboardInset + 88 : undefined }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto overflow-x-hidden pr-1 touch-pan-y overscroll-contain" style={{ maxHeight: viewportHeight ? viewportHeight - 170 : undefined, paddingBottom: keyboardInset ? keyboardInset + 64 : undefined }}>
               <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="from">{t("trips.form.from")} *</Label>
                 <Input 
@@ -379,14 +379,14 @@ function Trips() {
                 <Input type="text" id="note" name="note" placeholder={t("trips.commentPlaceholder")} />
               </div>
                 {/* Sticky action bar to keep buttons visible above keyboard */}
-                <div className="col-span-1 sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 w-full sticky bottom-0 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 py-2">
+                <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-2 mt-1 w-full sticky bottom-0 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 py-1">
                   <DialogClose asChild>
-                    <Button type="button" className="rounded-2xl w-full h-10 text-sm">{t("trips.form.cancel")}</Button>
+                    <Button type="button" className="rounded-2xl w-full h-9 text-xs sm:text-sm">{t("trips.form.cancel")}</Button>
                   </DialogClose>
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="bg-green-600 rounded-2xl w-full h-10 text-sm"
+                    className="bg-green-600 rounded-2xl w-full h-9 text-xs sm:text-sm"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center justify-center gap-2">
