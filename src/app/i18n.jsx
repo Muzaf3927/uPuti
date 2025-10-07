@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo, useState, useEffect } from "react";
 import { safeLocalStorage } from "@/lib/localStorage";
 
-const I18nContext = createContext({ lang: "uz", t: (k) => k, setLang: () => {} });
+const I18nContext = createContext({ lang: "ru", t: (k) => k, setLang: () => {} });
 
 const dict = {
   uz: {
@@ -471,13 +471,17 @@ const dict = {
 };
 
 export function I18nProvider({ children }) {
-  const [lang, setLang] = useState("uz");
+  const [lang, setLang] = useState("ru");
   const [isReady, setIsReady] = useState(false);
   
   useEffect(() => {
     const saved = safeLocalStorage.getItem("lang");
     if (saved === "ru" || saved === "uz") {
       setLang(saved);
+    } else {
+      // По умолчанию первый визит — русский
+      setLang("ru");
+      safeLocalStorage.setItem("lang", "ru");
     }
     setIsReady(true);
   }, []);
