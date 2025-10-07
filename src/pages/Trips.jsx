@@ -47,6 +47,7 @@ function Trips() {
   const [dialogBron, setDialogBron] = useState(false);
   const [dialogPrice, setDialogPrice] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [costInput, setCostInput] = useState("");
   const [searchFilters, setSearchFilters] = useState({
     from: "",
     to: "",
@@ -182,7 +183,7 @@ function Trips() {
     const to_city = formData.get("to");
     const date = formData.get("date");
     const time = selectedTime; // Используем выбранное время из TimePicker
-    const price = formData.get("cost");
+    const price = (costInput || "").replace(/\s/g, "");
     const note = formData.get("note");
     const carModel = formData.get("carModel");
     const carColor = formData.get("carColor");
@@ -244,7 +245,7 @@ function Trips() {
               <h4 className="text-sm md:text-md font-bold">{t("trips.create")}</h4>
             </div>
           </DialogTrigger>
-          <DialogContent className="max-w-[95vw] sm:max-w-[760px] p-4 sm:p-6 max-h-[95vh]">
+          <DialogContent className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 max-h-[90vh] overflow-hidden overscroll-contain touch-pan-y">
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">{t("trips.create")}</DialogTitle>
             </DialogHeader>
@@ -299,14 +300,24 @@ function Trips() {
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="cost">{t("trips.form.cost")} *</Label>
-                <Input 
-                  type="number" 
-                  id="cost" 
-                  name="cost" 
-                  placeholder={t("trips.form.costPlaceholder")} 
-                  required
-                  className={formErrors.cost ? "border-red-500" : ""}
-                />
+                <div className="relative">
+                  <Input 
+                    type="text" 
+                    id="cost" 
+                    name="cost" 
+                    inputMode="numeric"
+                    placeholder={t("trips.form.costPlaceholder")} 
+                    required
+                    value={costInput}
+                    onChange={(e) => {
+                      const digits = e.target.value.replace(/\D/g, "");
+                      const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                      setCostInput(formatted);
+                    }}
+                    className={`${formErrors.cost ? "border-red-500" : ""} pr-16`}
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">сум</span>
+                </div>
                 {formErrors.cost && <span className="text-red-500 text-xs">{formErrors.cost}</span>}
               </div>
               <div className="col-span-1 grid items-center gap-1.5">

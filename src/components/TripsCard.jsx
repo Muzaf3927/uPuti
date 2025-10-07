@@ -303,13 +303,22 @@ function TripsCard({ trip }) {
             </div>
             <div className="grid w-full items-center gap-2">
               <Label htmlFor="price">{t("tripsCard.priceLabel")}</Label>
-              <Input
-                id="price"
-                type="number"
-                min={0}
-                value={offeredPrice}
-                onChange={(e) => setOfferedPrice(e.target.value)}
-              />
+              <div className="relative">
+                <Input
+                  id="price"
+                  type="text"
+                  inputMode="numeric"
+                  value={offeredPrice}
+                  onChange={(e) => {
+                    const digits = e.target.value.replace(/\D/g, "");
+                    const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                    setOfferedPrice(formatted);
+                  }}
+                  placeholder="100 000"
+                  className="pr-16"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">сум</span>
+              </div>
             </div>
             <div className="grid w-full items-center gap-2">
               <Label htmlFor="comment">{t("tripsCard.commentLabel")}</Label>

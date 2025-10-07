@@ -384,7 +384,13 @@ function MyTripsCard({ trip }) {
               </div>
               <div className="grid w/full items-center gap-2">
                 <Label htmlFor="price">Narx</Label>
-                <Input id="price" name="price" value={form.price} onChange={handleChange} />
+                <Input id="price" name="price" value={form.price}
+                  onChange={(e) => {
+                    const digits = String(e.target.value).replace(/\D/g, "");
+                    const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                    handleChange({ target: { name: 'price', value: formatted } });
+                  }}
+                  placeholder="100 000" className="pr-16" />
               </div>
             </div>
             <div className="grid w/full items-center gap-2">
