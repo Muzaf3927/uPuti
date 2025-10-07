@@ -413,13 +413,13 @@ function Trips() {
               <h4 className="text-sm md:text-md font-bold">{t("trips.searchForm.search")}</h4>
             </div>
           </DialogTrigger>
-          <DialogContent style={{ maxHeight: viewportHeight ? Math.min(640, viewportHeight - 16) : undefined }}>
+          <DialogContent style={{ maxHeight: viewportHeight ? Math.min(760, viewportHeight - 8) : undefined }}>
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">
                 {t("trips.searchForm.search")}
               </DialogTitle>
               <form onSubmit={handleSearch} className="flex flex-col gap-3">
-                <div className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 180 : undefined, paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}>
+                <div className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 160 : undefined, paddingBottom: keyboardInset ? keyboardInset + 56 : undefined }}>
                   <Label htmlFor="from">{t("trips.searchForm.from")}</Label>
                   <Input
                     type="text"
@@ -454,13 +454,13 @@ function Trips() {
                     className="font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                   />
                   </div>
-                  <div className="w-full flex gap-2 mt-2">
-                    <DialogClose className="w-[48%]" asChild>
-                      <Button className="rounded-2xl max-w-full ">
+                  <div className="w-full sticky bottom-0 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 flex gap-2 mt-2 py-1">
+                    <DialogClose className="w-1/2" asChild>
+                      <Button className="rounded-2xl h-9 text-xs sm:text-sm">
                         {t("trips.searchForm.cancel")}
                       </Button>
                     </DialogClose>
-                    <Button className="bg-green-600 rounded-2xl w-[48%]">
+                    <Button className="bg-green-600 rounded-2xl w-1/2 h-9 text-xs sm:text-sm">
                       {t("trips.searchForm.search")}
                     </Button>
                   </div>
