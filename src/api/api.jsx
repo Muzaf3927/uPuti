@@ -120,6 +120,40 @@ export const useDeleteData = (url) => {
   });
 };
 
+// User account management API helpers
+export const userApi = {
+  deleteAccount: () => deleteData("/user/delete-account"),
+  updateProfile: (data) => postData("/user", data),
+};
+
+export const useDeleteAccount = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => userApi.deleteAccount(),
+    onSuccess: () => {
+      // Clear all cached data and tokens
+      queryClient.clear();
+      safeLocalStorage.removeItem("token");
+      safeLocalStorage.removeItem("reFreshToken");
+      safeLocalStorage.removeItem("user");
+      // Redirect to login page
+      window.location.href = "/login";
+    },
+  });
+};
+
+export const useUpdateProfile = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => userApi.updateProfile(data),
+    onSuccess: () => {
+      // Invalidate user data queries to refresh the profile
+      queryClient.invalidateQueries({ queryKey: ["data", "/users/me"] });
+      queryClient.invalidateQueries({ queryKey: ["data", "/user"] });
+    },
+  });
+};
+
 // Chat API helpers
 export const chatsApi = {
   getUserChats: () => getData("/chats"),

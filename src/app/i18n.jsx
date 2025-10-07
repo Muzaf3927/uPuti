@@ -72,6 +72,22 @@ const dict = {
       rating: "Reyting:",
       hello: "Salom",
     },
+    profilePage: {
+      nameLabel: "Ism",
+      namePlaceholder: "Ismingizni kiriting",
+      save: "Saqlash",
+      saving: "Saqlanmoqda...",
+      cancel: "Bekor qilish",
+      verified: "Tasdiqlangan",
+      deleteAccount: "Akkauntni o'chirish",
+      deleting: "O'chirilmoqda...",
+      confirmTitle: "Akkauntni o'chirishni tasdiqlash",
+      confirmDescription: "Haqiqatan ham akkauntingizni o'chirmoqchimisiz? Bu amalni bekor qilib bo'lmaydi. Eslatma: ba'zi ma'lumotlar tahlil maqsadida saqlanishi mumkin, lekin siz bu akkaunt bilan tizimga kira olmaysiz.",
+      confirm: "Ha, o'chirish",
+      close: "Yopish",
+      errorLoading: "Profilni yuklashda xatolik",
+      none: "—"
+    },
     trips: {
       all: "Barcha safarlar",
       mine: "Mening safarlarim",
@@ -211,6 +227,7 @@ const dict = {
       rating: "Reyting",
       balance: "Balans",
       logout: "Tizimdan chiqish",
+      myProfile: "Mening profilim",
     },
     support: {
       title: "Savollar va takliflar",
@@ -286,6 +303,22 @@ const dict = {
       balance: "Баланс:",
       rating: "Рейтинг:",
       hello: "Привет",
+    },
+    profilePage: {
+      nameLabel: "Имя",
+      namePlaceholder: "Введите имя",
+      save: "Сохранить",
+      saving: "Сохранение...",
+      cancel: "Отмена",
+      verified: "Подтвержден",
+      deleteAccount: "Удалить аккаунт",
+      deleting: "Удаление...",
+      confirmTitle: "Подтверждение удаления аккаунта",
+      confirmDescription: "Вы уверены, что хотите удалить свой аккаунт? Это действие нельзя отменить. Внимание: некоторые данные могут быть сохранены для аналитических целей, но вы больше не сможете войти с этим аккаунтом.",
+      confirm: "Да, удалить",
+      close: "Закрыть",
+      errorLoading: "Ошибка при загрузке профиля",
+      none: "—"
     },
     trips: {
       all: "Все поездки",
@@ -426,6 +459,7 @@ const dict = {
       rating: "Рейтинг",
       balance: "Баланс",
       logout: "Выйти",
+      myProfile: "Мой профиль",
     },
     support: {
       title: "Вопросы и предложения",

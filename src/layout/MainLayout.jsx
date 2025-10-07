@@ -272,6 +272,16 @@ function MainLayout() {
                 </div>
               </div>
               <div className="border rounded-2xl p-3 sm:p-4 bg-white/70 min-w-[280px]">
+                <Link
+                  to="/profile"
+                  onClick={() => setProfileOpen(false)}
+                  className="w-full flex items-center gap-2 hover:bg-gray-50 rounded-lg p-2 transition-colors"
+                >
+                  <User className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-semibold text-gray-700">
+                    {t("profilePanel.myProfile")}
+                  </span>
+                </Link>
                 <button
                   onClick={() => setSupportOpen(true)}
                   className="w-full flex items-center gap-2 hover:bg-gray-50 rounded-lg p-2 transition-colors"
@@ -323,21 +333,26 @@ function MainLayout() {
                   {t("support.description")}
                 </p>
               </div>
-              <a
-                href="https://t.me/Khamroev_3"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors text-xs font-medium"
-              >
-                <MessageCircle className="w-3 h-3" />
-                {t("support.button")}
-              </a>
-              <button
-                onClick={() => setSupportOpen(false)}
-                className="mt-8 text-xs text-red-500 hover:text-red-700"
-              >
-                {t("support.close")}
-              </button>
+              <div className="flex flex-col items-center gap-2">
+                <a
+                  href="https://t.me/Khamroev_3"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors text-xs font-medium"
+                >
+                  {/* Telegram Icon */}
+                  <svg viewBox="0 0 24 24" className="w-3 h-3" aria-hidden="true">
+                    <path fill="currentColor" d="M9.04 15.49 8.88 19c.27 0 .39-.12.54-.27l1.93-2.33 3.99 2.91c.73.4 1.26.19 1.45-.68l2.63-12.36c.27-1.25-.45-1.74-1.25-1.43L3.34 9.5c-1.2.47-1.19 1.14-.21 1.45l4.63 1.44 10.77-6.8c.51-.31.98-.14.59.2z" />
+                  </svg>
+                  {t("support.button")}
+                </a>
+                <button
+                  onClick={() => setSupportOpen(false)}
+                  className="text-xs text-red-500 hover:text-red-700"
+                >
+                  {t("support.close")}
+                </button>
+              </div>
             </div>
           </div>
         </div>
