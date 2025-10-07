@@ -288,12 +288,12 @@ function TripsCard({ trip }) {
 
       {/* Offer Dialog */}
       <Dialog open={offerDialogOpen} onOpenChange={setOfferDialogOpen}>
-        <DialogContent onClick={(e) => e.stopPropagation()} style={{ maxHeight: viewportHeight ? Math.min(560, viewportHeight - 16) : undefined }}>
+        <DialogContent onClick={(e) => e.stopPropagation()} style={{ maxHeight: viewportHeight ? Math.min(640, viewportHeight - 12) : undefined }}>
           <DialogHeader>
             <DialogTitle>{t("tripsCard.offerTitle")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmitOffer} className="flex flex-col gap-3">
-            <div className="grid w-full items-center gap-2 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 220 : undefined, paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}>
+            <div className="grid w-full items-center gap-2 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 180 : undefined, paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}>
               <Label htmlFor="offer-seats">{t("tripsCard.seatsLabel")}</Label>
               <Input
                 id="offer-seats"
