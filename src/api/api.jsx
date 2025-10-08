@@ -123,6 +123,7 @@ export const useDeleteData = (url) => {
 // User account management API helpers
 export const userApi = {
   deleteAccount: () => deleteData("/user/delete-account"),
+  deleteAccountByCredentials: (credentials) => postData("/delete-account/by-credentials", credentials),
   updateProfile: (data) => postData("/user", data),
 };
 
@@ -130,6 +131,22 @@ export const useDeleteAccount = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () => userApi.deleteAccount(),
+    onSuccess: () => {
+      // Clear all cached data and tokens
+      queryClient.clear();
+      safeLocalStorage.removeItem("token");
+      safeLocalStorage.removeItem("reFreshToken");
+      safeLocalStorage.removeItem("user");
+      // Redirect to login page
+      window.location.href = "/login";
+    },
+  });
+};
+
+export const useDeleteAccountByCredentials = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (credentials) => userApi.deleteAccountByCredentials(credentials),
     onSuccess: () => {
       // Clear all cached data and tokens
       queryClient.clear();

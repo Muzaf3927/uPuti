@@ -11,6 +11,7 @@ import {
   History,
   FogotPassword,
   Profile,
+  DeleteAccount,
 } from "./pages";
 import MainLayout from "./layout/MainLayout";
 import {
@@ -47,6 +48,11 @@ function App() {
     {
       path: "/register",
       element: user ? <Navigate to="/" /> : <Register />,
+      errorElement: <ErrorElement />,
+    },
+    {
+      path: "/delete",
+      element: <DeleteAccount />,
       errorElement: <ErrorElement />,
     },
     {

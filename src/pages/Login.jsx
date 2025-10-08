@@ -263,6 +263,15 @@ function Login() {
                 </Link>
               </p>
             </div>
+            
+            <div className="flex justify-end">
+              <Link
+                to="/delete"
+                className="text-red-600 hover:text-red-800 underline text-[10px] leading-tight"
+              >
+                {t("auth.deleteAccount.link")}
+              </Link>
+            </div>
           </form>
         </CardContent>
       </Card>
