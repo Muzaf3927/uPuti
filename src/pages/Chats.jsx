@@ -24,6 +24,7 @@ import { MessageCircle, Check, CheckCheck, X, ArrowLeft, Send } from "lucide-rea
 import { useQueryClient } from "@tanstack/react-query";
 import { useI18n } from "@/app/i18n.jsx";
 import { useSelector } from "react-redux";
+import { useKeyboardInsets } from "@/hooks/useKeyboardInsets.jsx";
 
 function Chats() {
   const { t } = useI18n();
@@ -84,6 +85,9 @@ function Chats() {
   );
   const messages = messagesRes?.messages || [];
   const sendMutation = useSendChatMessage(selectedChat?.trip_id);
+
+  // iOS keyboard/safe-area handling
+  const { keyboardInset, viewportHeight } = useKeyboardInsets();
 
   const handleSend = async () => {
     if (!message.trim() || !selectedChat?.chat_partner_id || !selectedChat?.trip_id) return;
@@ -149,7 +153,13 @@ function Chats() {
           </div>
 
           {/* Область сообщений */}
-          <div className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5 bg-gradient-to-b from-white/50 to-blue-50/50">
+          <div
+            className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5 bg-gradient-to-b from-white/50 to-blue-50/50"
+            style={{
+              maxHeight: viewportHeight ? viewportHeight - 120 : undefined,
+              paddingBottom: keyboardInset ? keyboardInset + 8 : undefined,
+            }}
+          >
             
             {messages.map((msg) => {
               const isMyMessage = Number(msg.sender_id) === Number(currentUserId);
@@ -196,7 +206,10 @@ function Chats() {
           </div>
 
           {/* Поле ввода */}
-          <div className="border-t bg-white/85 backdrop-blur-sm px-3 py-2">
+          <div
+            className="border-t bg-white/85 backdrop-blur-sm px-3 py-2 sticky bottom-0"
+            style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}
+          >
             <div className="flex items-center gap-2">
               <Input
                 type="text"
