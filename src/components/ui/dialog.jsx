@@ -49,24 +49,50 @@ function DialogContent({
   showCloseButton = true,
   ...props
 }) {
-  // Lock background scroll while dialog is open (fixes iOS viewport jumps)
+  // Lock background scroll while dialog is open and preserve scroll position (iOS safe)
   React.useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
+    const scrollY = window.scrollY || window.pageYOffset;
     const prevHtmlOverflow = html.style.overflow;
     const prevBodyOverflow = body.style.overflow;
+    const prevBodyPosition = body.style.position;
+    const prevBodyTop = body.style.top;
+    const prevBodyWidth = body.style.width;
     html.style.overflow = "hidden";
     body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
     return () => {
       html.style.overflow = prevHtmlOverflow;
       body.style.overflow = prevBodyOverflow;
+      body.style.position = prevBodyPosition;
+      body.style.top = prevBodyTop;
+      body.style.width = prevBodyWidth;
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
+
+  // Use visualViewport height to size the portal container on iOS to avoid jumps
+  const [portalHeight, setPortalHeight] = React.useState(null);
+  React.useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const handler = () => setPortalHeight(Math.floor(vv.height));
+    handler();
+    vv.addEventListener("resize", handler);
+    vv.addEventListener("scroll", handler);
+    return () => {
+      vv.removeEventListener("resize", handler);
+      vv.removeEventListener("scroll", handler);
     };
   }, []);
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
       {/* Use full-screen flex container to avoid iOS visualViewport/translate glitches */}
-      <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
+      <div className="fixed inset-0 z-50 flex items-start justify-center p-4" style={{ height: portalHeight ? `${portalHeight}px` : undefined }}>
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
