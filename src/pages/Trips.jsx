@@ -433,7 +433,7 @@ function Trips() {
                 {t("trips.searchForm.search")}
               </DialogTitle>
               <form onSubmit={handleSearch} className="flex flex-col gap-3">
-                <div className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 160 : undefined, paddingBottom: keyboardInset ? keyboardInset + 56 : undefined }}>
+                <div className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 160 : undefined }}>
                   <Label htmlFor="from">{t("trips.searchForm.from")}</Label>
                   <Input
                     type="text"
@@ -468,16 +468,17 @@ function Trips() {
                     className="font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                   />
                   </div>
-                  <div className="w-full sticky bottom-0 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 flex gap-2 mt-2 py-1">
-                    <DialogClose className="w-1/2" asChild>
-                      <Button className="rounded-2xl h-9 text-xs sm:text-sm">
-                        {t("trips.searchForm.cancel")}
-                      </Button>
-                    </DialogClose>
-                    <Button className="bg-green-600 rounded-2xl w-1/2 h-9 text-xs sm:text-sm">
-                      {t("trips.searchForm.search")}
+                </div>
+                {/* Footer outside of scroll area to avoid iOS sticky issues */}
+                <div className="w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 flex gap-2 mt-2 py-1" style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}>
+                  <DialogClose className="w-1/2" asChild>
+                    <Button className="rounded-2xl h-9 text-xs sm:text-sm">
+                      {t("trips.searchForm.cancel")}
                     </Button>
-                  </div>
+                  </DialogClose>
+                  <Button className="bg-green-600 rounded-2xl w-1/2 h-9 text-xs sm:text-sm" type="submit">
+                    {t("trips.searchForm.search")}
+                  </Button>
                 </div>
               </form>
             </DialogHeader>

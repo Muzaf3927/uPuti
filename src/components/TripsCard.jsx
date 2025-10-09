@@ -259,7 +259,13 @@ function TripsCard({ trip }) {
             <DialogTitle>{t("tripsCard.bookingTitle")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmitBooking} className="flex flex-col gap-3">
-            <div className="grid w-full items-center gap-2 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 180 : undefined, paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}>
+            <div
+              className={`grid w-full items-center gap-2 ${keyboardInset > 0 ? "overflow-y-auto pr-1" : "overflow-y-visible"} overflow-x-hidden touch-pan-y overscroll-contain`}
+              style={{
+                maxHeight: keyboardInset > 0 && viewportHeight ? viewportHeight - 180 : undefined,
+                paddingBottom: keyboardInset ? keyboardInset + 16 : undefined,
+              }}
+            >
               <Label htmlFor="seats">{t("tripsCard.seatsLabel")}</Label>
               <Input
                 id="seats"
@@ -293,7 +299,13 @@ function TripsCard({ trip }) {
             <DialogTitle>{t("tripsCard.offerTitle")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmitOffer} className="flex flex-col gap-3">
-            <div className="grid w-full items-center gap-2 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 180 : undefined, paddingBottom: keyboardInset ? keyboardInset + 16 : undefined }}>
+            <div
+              className={`grid w-full items-center gap-2 ${keyboardInset > 0 ? "overflow-y-auto pr-1" : "overflow-y-visible"} overflow-x-hidden touch-pan-y overscroll-contain`}
+              style={{
+                maxHeight: keyboardInset > 0 && viewportHeight ? viewportHeight - 180 : undefined,
+                paddingBottom: keyboardInset ? keyboardInset + 16 : undefined,
+              }}
+            >
               <Label htmlFor="offer-seats">{t("tripsCard.seatsLabel")}</Label>
               <Input
                 id="offer-seats"
