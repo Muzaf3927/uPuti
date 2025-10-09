@@ -1,55 +1,78 @@
-function DialogContent({
-                         className,
-                         children,
-                         showCloseButton = true,
-                         ...props
-                       }) {
-  React.useEffect(() => {
-    // Автоматический скролл к инпуту, если клавиатура его закрывает (iOS fix)
-    const inputs = document.querySelectorAll('input, select, textarea');
-    const handler = (el) => {
-      setTimeout(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 300);
-    };
+import * as React from "react"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
+import { XIcon } from "lucide-react"
 
-    inputs.forEach((el) => el.addEventListener('focus', () => handler(el)));
-    return () =>
-        inputs.forEach((el) => el.removeEventListener('focus', () => handler(el)));
-  }, []);
+import { cn } from "@/lib/utils"
 
+function Dialog({
+  ...props
+}) {
+  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+}
+
+function DialogTrigger({
+  ...props
+}) {
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
+}
+
+function DialogPortal({
+  ...props
+}) {
+  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
+}
+
+function DialogClose({
+  ...props
+}) {
+  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
+}
+
+function DialogOverlay({
+  className,
+  ...props
+}) {
   return (
-      <DialogPortal data-slot="dialog-portal">
-        <DialogOverlay />
+    <DialogPrimitive.Overlay
+      data-slot="dialog-overlay"
+      className={cn(
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
+        className
+      )}
+      {...props} />
+  );
+}
 
-        {/* ✅ scrollable absolute container (fix for iOS keyboard) */}
-        <div className="absolute inset-0 z-50 flex items-start justify-center overflow-y-auto p-4">
-          <DialogPrimitive.Content
-              data-slot="dialog-content"
-              className={cn(
-                  "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out " +
-                  "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 " +
-                  "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 " +
-                  "grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border p-6 shadow-lg " +
-                  "duration-200 sm:max-w-lg mt-4 sm:mt-8 mb-[env(safe-area-inset-bottom)]",
-                  className
-              )}
-              {...props}
-          >
-            {children}
-
-            {showCloseButton && (
-                <DialogPrimitive.Close
-                    data-slot="dialog-close"
-                    className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
-                >
-                  <XIcon />
-                  <span className="sr-only">Close</span>
-                </DialogPrimitive.Close>
-            )}
-          </DialogPrimitive.Content>
-        </div>
-      </DialogPortal>
+function DialogContent({
+  className,
+  children,
+  showCloseButton = true,
+  ...props
+}) {
+  return (
+    <DialogPortal data-slot="dialog-portal">
+      <DialogOverlay />
+      {/* Use full-screen flex container to avoid iOS visualViewport/translate glitches */}
+      <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
+      <DialogPrimitive.Content
+        data-slot="dialog-content"
+        className={cn(
+          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg mt-4 sm:mt-8",
+          className
+        )}
+        {...props}>
+        {children}
+        {showCloseButton && (
+          <DialogPrimitive.Close
+            data-slot="dialog-close"
+            className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
+            <XIcon />
+            <span className="sr-only">Close</span>
+          </DialogPrimitive.Close>
+        )}
+      </DialogPrimitive.Content>
+      </div>
+    </DialogPortal>
   );
 }
 
