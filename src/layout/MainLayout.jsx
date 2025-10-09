@@ -94,7 +94,7 @@ function MainLayout() {
     }
   };
   return (
-    <div className="flex flex-col h-full ">
+    <div className="flex flex-col min-h-screen ">
       <header className="h-16 sm:h-20 sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b">
         <div className="flex justify-between items-center py-2 sm:py-3 custom-container overflow-hidden">
           <div className="flex gap-2 sm:gap-3 items-center">

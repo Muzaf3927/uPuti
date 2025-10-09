@@ -49,10 +49,16 @@ function DialogContent({
   showCloseButton = true,
   // Prevent accidental close when the iOS keyboard is dismissed or user taps around
   preventOutsideClose = true,
+  // Scroll focused input into view inside dialog; disabled by default to avoid jumps on iOS
+  autoFocusScroll = false,
+  // If true, жестко блокирует прокрутку фона (html/body). По умолчанию выкл.,
+  // так как это может мешать скроллу страницы после закрытия диалога.
+  lockBackgroundScroll = false,
   ...props
 }) {
-  // Lock background scroll while dialog is open and preserve scroll position (iOS safe)
+  // Optionally lock background scroll while dialog is open
   React.useEffect(() => {
+    if (!lockBackgroundScroll) return;
     const html = document.documentElement;
     const body = document.body;
     const scrollY = window.scrollY || window.pageYOffset;
@@ -74,7 +80,7 @@ function DialogContent({
       body.style.width = prevBodyWidth;
       window.scrollTo(0, scrollY);
     };
-  }, []);
+  }, [lockBackgroundScroll]);
 
   // Use visualViewport height to size the portal container on iOS to avoid jumps
   const [portalHeight, setPortalHeight] = React.useState(null);
@@ -91,24 +97,38 @@ function DialogContent({
     };
   }, []);
 
-  // Ensure focused input is scrolled into view within dialog (not the page)
+  // Optionally ensure focused input is scrolled into view within dialog (not the page)
   const contentRef = React.useRef(null);
   React.useEffect(() => {
+    if (!autoFocusScroll) return;
     const node = contentRef.current;
     if (!node) return;
+    const getScrollableAncestor = (el) => {
+      let cur = el;
+      while (cur && cur !== document.body) {
+        const style = window.getComputedStyle(cur);
+        const hasScroll = /(auto|scroll)/.test(style.overflowY || "") || /(auto|scroll)/.test(style.overflow || "");
+        if (hasScroll && cur.scrollHeight > cur.clientHeight) return cur;
+        cur = cur.parentElement;
+      }
+      return null;
+    };
     const onFocusIn = (e) => {
       const target = e.target;
       if (!(target instanceof HTMLElement)) return;
-      // Defer to allow keyboard show animation to update viewport
       setTimeout(() => {
         try {
-          target.scrollIntoView({ block: "center", inline: "nearest" });
+          const scroller = getScrollableAncestor(target) || node;
+          const rect = target.getBoundingClientRect();
+          const sRect = scroller.getBoundingClientRect();
+          const offsetTop = scroller.scrollTop + (rect.top - sRect.top) - Math.max(0, (sRect.height - rect.height) / 2);
+          scroller.scrollTo({ top: Math.max(0, offsetTop), behavior: "smooth" });
         } catch {}
       }, 60);
     };
     node.addEventListener("focusin", onFocusIn);
     return () => node.removeEventListener("focusin", onFocusIn);
-  }, []);
+  }, [autoFocusScroll]);
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
