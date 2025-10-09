@@ -49,6 +49,19 @@ function DialogContent({
   showCloseButton = true,
   ...props
 }) {
+  // Lock background scroll while dialog is open (fixes iOS viewport jumps)
+  React.useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+    };
+  }, []);
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
