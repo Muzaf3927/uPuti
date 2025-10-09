@@ -88,12 +88,32 @@ function DialogContent({
       vv.removeEventListener("scroll", handler);
     };
   }, []);
+
+  // Ensure focused input is scrolled into view within dialog (not the page)
+  const contentRef = React.useRef(null);
+  React.useEffect(() => {
+    const node = contentRef.current;
+    if (!node) return;
+    const onFocusIn = (e) => {
+      const target = e.target;
+      if (!(target instanceof HTMLElement)) return;
+      // Defer to allow keyboard show animation to update viewport
+      setTimeout(() => {
+        try {
+          target.scrollIntoView({ block: "center", inline: "nearest" });
+        } catch {}
+      }, 60);
+    };
+    node.addEventListener("focusin", onFocusIn);
+    return () => node.removeEventListener("focusin", onFocusIn);
+  }, []);
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
       {/* Use full-screen flex container to avoid iOS visualViewport/translate glitches */}
       <div className="fixed inset-0 z-50 flex items-start justify-center p-4" style={{ height: portalHeight ? `${portalHeight}px` : undefined }}>
       <DialogPrimitive.Content
+        ref={contentRef}
         data-slot="dialog-content"
         className={cn(
           "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg mt-4 sm:mt-8",
