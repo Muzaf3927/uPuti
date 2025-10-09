@@ -260,7 +260,7 @@ function Trips() {
               <h4 className="text-sm md:text-md font-bold">{t("trips.create")}</h4>
             </div>
           </DialogTrigger>
-          <DialogContent className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 overflow-hidden overscroll-contain touch-pan-y fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ maxHeight: viewportHeight ? Math.min(860, viewportHeight - 4) : undefined }}>
+          <DialogContent className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 overflow-hidden overscroll-contain touch-pan-y" style={{ maxHeight: viewportHeight ? Math.min(860, viewportHeight - 4) : undefined }}>
             <DialogHeader>
               <DialogTitle className="text-center text-green-600 font-bold">{t("trips.create")}</DialogTitle>
             </DialogHeader>
