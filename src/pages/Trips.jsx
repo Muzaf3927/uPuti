@@ -265,7 +265,7 @@ function Trips() {
               <DialogTitle className="text-center text-green-600 font-bold">{t("trips.create")}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto overflow-x-hidden pr-1 touch-pan-y overscroll-contain" style={{ maxHeight: viewportHeight ? viewportHeight - 150 : undefined, paddingBottom: keyboardInset ? keyboardInset + 56 : undefined }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto overflow-x-hidden pr-1 touch-pan-y overscroll-contain" style={{ maxHeight: viewportHeight ? viewportHeight - 150 : undefined }}>
               <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="from">{t("trips.form.from")} *</Label>
                 <Input 
@@ -391,27 +391,28 @@ function Trips() {
                 <Label htmlFor="note">{t("trips.form.note")}</Label>
                 <Input type="text" id="note" name="note" placeholder={t("trips.commentPlaceholder")} />
               </div>
-                {/* Sticky action bar to keep buttons visible above keyboard */}
-                <div className="col-span-1 sm:col-span-2 flex gap-2 mt-1 w-full sticky bottom-0 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 py-1">
-                  <DialogClose asChild>
-                    <Button type="button" className="rounded-2xl w-1/2 h-9 text-xs sm:text-sm">{t("trips.form.cancel")}</Button>
-                  </DialogClose>
-                  <Button 
-                    type="submit" 
-                    disabled={isSubmitting}
-                    className="bg-green-600 rounded-2xl w-1/2 h-9 text-xs sm:text-sm"
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <Loader2 className="animate-spin" size={16} />
-                        {t("trips.form.submitting")}
-                      </span>
-                    ) : (
-                      t("trips.form.submit")
-                    )}
-                  </Button>
-                </div>
               </div>
+              {/* Footer outside of scroll area to avoid iOS sticky-bottom issues */}
+              <div className="flex gap-2 mt-2 w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 py-1" style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}>
+                <DialogClose asChild>
+                  <Button type="button" className="rounded-2xl w-1/2 h-9 text-xs sm:text-sm">{t("trips.form.cancel")}</Button>
+                </DialogClose>
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="bg-green-600 rounded-2xl w-1/2 h-9 text-xs sm:text-sm"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="animate-spin" size={16} />
+                      {t("trips.form.submitting")}
+                    </span>
+                  ) : (
+                    t("trips.form.submit")
+                  )}
+                </Button>
+              </div>
+              
             </form>
           </DialogContent>
         </Dialog>
