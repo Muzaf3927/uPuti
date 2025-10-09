@@ -46,6 +46,10 @@ function DeleteAccount() {
 
       await deleteAccountMutation.mutateAsync(requestData);
       toast.success(t("auth.deleteAccount.successMessage"));
+      try {
+        sessionStorage.setItem("accountDeleted", "1");
+      } catch (_) {}
+      navigate("/login", { state: { accountDeleted: true } });
     } catch (err) {
       toast.error(t("auth.deleteAccount.errorMessage"));
     }

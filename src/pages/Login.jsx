@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 // shadcn ui
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { login } from "@/app/userSlice/userSlice";
 
 // others
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { InputMask } from "@react-input/mask";
 import { usePostData } from "@/api/api";
 import { toast } from "sonner";
@@ -26,6 +26,10 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
+  const [showDeletedModal, setShowDeletedModal] = useState(false);
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const loginMutation = usePostData("/login");
   const dispatch = useDispatch();
@@ -100,6 +104,24 @@ function Login() {
       // Error state is available via loginMutation.error
     }
   };
+
+  // Show success modal if redirected after account deletion
+  useEffect(() => {
+    const fromState = !!location.state?.accountDeleted;
+    let fromSession = false;
+    try {
+      fromSession = sessionStorage.getItem("accountDeleted") === "1";
+    } catch (_) {}
+
+    if (fromState || fromSession) {
+      setShowDeletedModal(true);
+      try {
+        sessionStorage.removeItem("accountDeleted");
+      } catch (_) {}
+      navigate(".", { replace: true, state: {} });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="pt-2 pb-6 px-1 flex gap-3 flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -304,6 +326,29 @@ function Login() {
                 {t("support.button")}
               </a>
               <button onClick={() => setSupportOpen(false)} className="mt-4 text-xs text-red-500 hover:text-red-700">{t("support.close")}</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showDeletedModal && (
+        <div className="fixed inset-0 z-[1000]">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowDeletedModal(false)} />
+          <div className="absolute inset-0 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-lg w-full max-w-[320px] p-4 text-center">
+              <div className="mb-2">
+                <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  {lang === "ru" ? "Аккаунт удалён" : "Hisob o'chirildi"}
+                </h3>
+                <p className="text-xs text-gray-600">
+                  {t("auth.deleteAccount.successMessage")}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowDeletedModal(false)}
+                className="mt-3 inline-flex items-center justify-center bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors text-xs font-medium w-full"
+              >
+                {lang === "ru" ? "Понятно" : "Tushunarli"}
+              </button>
             </div>
           </div>
         </div>
