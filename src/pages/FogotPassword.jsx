@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 
 // others
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Headphones } from "lucide-react";
 import { InputMask } from "@react-input/mask";
 import { usePostData } from "@/api/api";
@@ -62,6 +62,7 @@ function FogotPassword() {
   const [verifyLoading, setVerifyLoading] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const fogotPasswordMutationOne = usePostData("/reset-password/step-one");
   const fogotPasswordMutationTwo = usePostData("/reset-password/step-two");
@@ -150,7 +151,7 @@ function FogotPassword() {
 
       toast.success(t("auth.forgotPassword.successMessage"));
       setTimeout(() => {
-        window.location.href = "/login";
+        navigate("/login");
       }, 3000);
     } catch (err) {
       setError("Failed to connect to API.");
