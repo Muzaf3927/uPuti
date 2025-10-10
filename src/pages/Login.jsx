@@ -72,7 +72,30 @@ function Login() {
       dispatch(login(res));
       safeLocalStorage.setItem("showOnboarding", "true");
     } catch (err) {
-      //
+      console.error("Login error:", err);
+      
+      // Показываем ошибку пользователю
+      let errorMessage = "";
+      
+      if (err.response?.status === 401) {
+        errorMessage = lang === "ru" 
+          ? "Неверный номер телефона или пароль" 
+          : "Telefon raqami yoki parol noto'g'ri";
+      } else if (err.response?.status === 422) {
+        errorMessage = lang === "ru"
+          ? "Проверьте правильность введенных данных"
+          : "Kiritilgan ma'lumotlarni tekshiring";
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      } else {
+        errorMessage = lang === "ru"
+          ? "Ошибка входа. Попробуйте ещё раз"
+          : "Kirishda xatolik. Qaytadan urinib ko'ring";
+      }
+      
+      toast.error(errorMessage);
 
       // If backend is broken, try mock login for development
       if (
@@ -98,10 +121,9 @@ function Login() {
           dispatch(login(mockResponse));
           safeLocalStorage.setItem("showOnboarding", "true");
         } catch (mockError) {
-          //
+          console.error("Mock login error:", mockError);
         }
       }
-      // Error state is available via loginMutation.error
     }
   };
 
@@ -208,7 +230,7 @@ function Login() {
                   <User size={16} className="sm:w-5 sm:h-5" />
                 </span>
                 <InputMask
-                  mask="_________"
+                  mask="__ ___ __ __"
                   replacement={{ _: /\d/ }}
                   id="phone"
                   name="phone"
@@ -217,6 +239,12 @@ function Login() {
                   placeholder={t("auth.phonePlaceholder")}
                   required
                   autoComplete="tel"
+                  onCopy={(e) => {
+                    const v = e.currentTarget.value || "";
+                    const digits = v.replace(/\D/g, "");
+                    e.clipboardData.setData("text/plain", digits);
+                    e.preventDefault();
+                  }}
                   className="pl-20 sm:pl-24 font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-8 sm:h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm sm:text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-6 sm:file:h-7 file:border-0 file:bg-transparent file:text-xs sm:file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                 />
                 <p className="absolute left-8 sm:left-10 top-1.5 font-normal select-none text-sm">

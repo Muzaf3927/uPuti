@@ -131,31 +131,31 @@ function Trips() {
     const errors = {};
     
     if (!formData.get("from")?.trim()) {
-      errors.from = "Qayerdan maydoni to'ldirilishi shart";
+      errors.from = t("trips.form.validation.fromRequired");
     }
     if (!formData.get("to")?.trim()) {
-      errors.to = "Qayerga maydoni to'ldirilishi shart";
+      errors.to = t("trips.form.validation.toRequired");
     }
     if (!formData.get("date")?.trim()) {
-      errors.date = "Sana tanlanishi shart";
+      errors.date = t("trips.form.validation.dateRequired");
     }
     if (!selectedTime?.trim()) {
-      errors.time = "Vaqt tanlanishi shart";
+      errors.time = t("trips.form.validation.timeRequired");
     }
     if (!formData.get("cost")?.trim()) {
-      errors.cost = "Xizmat haqqi kiritilishi shart";
+      errors.cost = t("trips.form.validation.costRequired");
     }
     if (!formData.get("carSeats")?.trim()) {
-      errors.carSeats = "O'rindiqlar soni kiritilishi shart";
+      errors.carSeats = t("trips.form.validation.carSeatsRequired");
     }
     if (!formData.get("carModel")?.trim()) {
-      errors.carModel = "Mashina rusumi kiritilishi shart";
+      errors.carModel = t("trips.form.validation.carModelRequired");
     }
     if (!formData.get("carColor")?.trim()) {
-      errors.carColor = "Mashina rangi kiritilishi shart";
+      errors.carColor = t("trips.form.validation.carColorRequired");
     }
     if (!formData.get("carNumber")?.trim()) {
-      errors.carNumber = "Mashina raqami kiritilishi shart";
+      errors.carNumber = t("trips.form.validation.carNumberRequired");
     }
     
     // Проверка даты и времени
@@ -167,7 +167,7 @@ function Trips() {
       const selectedDateTime = new Date(`${selectedDate}T${selectedTimeValue}:00`);
       
       if (selectedDateTime <= now) {
-        errors.dateTime = "Sana va vaqt kelajakda bo'lishi kerak";
+        errors.dateTime = t("trips.form.validation.futureDateTime");
       }
     }
     

@@ -36,7 +36,7 @@ function TripsCard({ trip }) {
   
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [pendingRequest, setPendingRequest] = useState(null);
-  const [seats, setSeats] = useState("");
+  const [seats, setSeats] = useState("1");
   const [offeredPrice, setOfferedPrice] = useState("");
   const [comment, setComment] = useState("");
 
@@ -51,12 +51,12 @@ function TripsCard({ trip }) {
 
   const openBookingDialog = (e) => {
     e.stopPropagation();
-    setSeats("");
+    setSeats("1");
     setBookingDialogOpen(true);
   };
   const openOfferDialog = (e) => {
     e.stopPropagation();
-    setSeats("");
+    setSeats("1");
     setOfferedPrice("");
     setComment("");
     setOfferDialogOpen(true);
@@ -64,7 +64,8 @@ function TripsCard({ trip }) {
   const handleSubmitBooking = async (e) => {
     e.preventDefault();
     if (!seats || Number(seats) < 1 || Number(seats) > 4) {
-      toast.error("Iltimos, 1-4 o'rin orasida kiriting");
+      const errorMessage = t("tripsCard.validation.seatsRange");
+      toast.error(errorMessage);
       return;
     }
     setPendingRequest({ type: 'booking', data: { seats: Number(seats) } });
@@ -74,12 +75,14 @@ function TripsCard({ trip }) {
   const handleSubmitOffer = async (e) => {
     e.preventDefault();
     if (!seats || Number(seats) < 1 || Number(seats) > 4) {
-      toast.error("Iltimos, 1-4 o'rin orasida kiriting");
+      const errorMessage = t("tripsCard.validation.seatsRange");
+      toast.error(errorMessage);
       return;
     }
     const offeredDigits = String(offeredPrice).replace(/\s/g, "");
     if (!offeredDigits || Number(offeredDigits) < 0) {
-      toast.error("Iltimos, taklif narxini kiriting");
+      const errorMessage = t("tripsCard.validation.priceRequired");
+      toast.error(errorMessage);
       return;
     }
     setPendingRequest({ 
@@ -99,7 +102,9 @@ function TripsCard({ trip }) {
     
     try {
       await tripPostMutation.mutateAsync(pendingRequest.data);
-      const successMessage = pendingRequest.type === 'booking' ? "Bron qilindi." : "Taklif yuborildi.";
+      const successMessage = pendingRequest.type === 'booking' 
+        ? t("tripsCard.success.bookingCreated") 
+        : t("tripsCard.success.offerSent");
       toast.success(successMessage);
       setConfirmationDialogOpen(false);
       setPendingRequest(null);
@@ -107,8 +112,25 @@ function TripsCard({ trip }) {
       queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
       queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
     } catch (err) {
-      console.error(err);
-      const errorMessage = pendingRequest.type === 'booking' ? "Bron qilishda xatolik yuz berdi." : "Taklif yuborishda xatolik yuz berdi.";
+      console.error("Booking/Offer error:", err);
+      
+      let errorMessage = "";
+      if (err.response?.status === 401) {
+        errorMessage = t("tripsCard.errors.unauthorized");
+      } else if (err.response?.status === 403) {
+        errorMessage = t("tripsCard.errors.forbidden");
+      } else if (err.response?.status === 422) {
+        errorMessage = t("tripsCard.errors.validation");
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      } else {
+        errorMessage = pendingRequest.type === 'booking' 
+          ? t("tripsCard.errors.bookingFailed") 
+          : t("tripsCard.errors.offerFailed");
+      }
+      
       toast.error(errorMessage);
     }
   };
@@ -123,13 +145,27 @@ function TripsCard({ trip }) {
     try {
       if (!trip?.my_booking?.id) return;
       await postData(`/bookings/${trip.my_booking.id}/cancel`);
-      toast.success("So'rov bekor qilindi.");
+      toast.success(t("tripsCard.success.bookingCancelled"));
       queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
       queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
       queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
     } catch (err) {
-      console.error(err);
-      toast.error("Bekor qilishda xatolik yuz berdi.");
+      console.error("Cancel booking error:", err);
+      
+      let errorMessage = "";
+      if (err.response?.status === 401) {
+        errorMessage = t("tripsCard.errors.unauthorized");
+      } else if (err.response?.status === 403) {
+        errorMessage = t("tripsCard.errors.forbidden");
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      } else {
+        errorMessage = t("tripsCard.errors.cancelFailed");
+      }
+      
+      toast.error(errorMessage);
     }
   };
   const handleClickPrice = (e) => {

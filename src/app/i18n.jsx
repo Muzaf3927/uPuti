@@ -27,6 +27,7 @@ const dict = {
       writePassenger: "Yo'lovchiga yozish",
       write: "Yozish",
       call: "Qo'ng'iroq qilish",
+      error: "Xatolik",
     },
     history: {
       driverTab: "Men xaydovchi",
@@ -63,7 +64,24 @@ const dict = {
       commentLabel: "Izoh",
       submitBooking: "Yuborish",
       submitOffer: "Yuborish",
-      cancelButton: "Bekor qilish"
+      cancelButton: "Bekor qilish",
+      validation: {
+        seatsRange: "Iltimos, 1-4 o'rin orasida kiriting",
+        priceRequired: "Iltimos, taklif narxini kiriting"
+      },
+      success: {
+        bookingCreated: "Bron qilindi",
+        offerSent: "Taklif yuborildi",
+        bookingCancelled: "So'rov bekor qilindi"
+      },
+      errors: {
+        unauthorized: "Tizimga kirish kerak",
+        forbidden: "Bu amalni bajarish uchun ruxsat yo'q",
+        validation: "Ma'lumotlarni to'g'ri kiriting",
+        bookingFailed: "Bron qilishda xatolik yuz berdi",
+        offerFailed: "Taklif yuborishda xatolik yuz berdi",
+        cancelFailed: "Bekor qilishda xatolik yuz berdi"
+      }
     },
     profile: {
       back: "Orqaga qaytish",
@@ -118,7 +136,19 @@ const dict = {
         carSeatsPlaceholder: "4",
         validationError: "Iltimos, barcha majburiy maydonlarni to'ldiring",
         successMessage: "Safar yaratildi.",
-        errorMessage: "Safar yaratishda xatolik yuz berdi."
+        errorMessage: "Safar yaratishda xatolik yuz berdi.",
+        validation: {
+          fromRequired: "Qayerdan maydoni to'ldirilishi shart",
+          toRequired: "Qayerga maydoni to'ldirilishi shart",
+          dateRequired: "Sana tanlanishi shart",
+          timeRequired: "Vaqt tanlanishi shart",
+          costRequired: "Xizmat haqqi kiritilishi shart",
+          carSeatsRequired: "O'rindiqlar soni kiritilishi shart",
+          carModelRequired: "Mashina rusumi kiritilishi shart",
+          carColorRequired: "Mashina rangi kiritilishi shart",
+          carNumberRequired: "Mashina raqami kiritilishi shart",
+          futureDateTime: "Sana va vaqt kelajakda bo'lishi kerak"
+        }
       },
       searchForm: {
         from: "Qayerdan",
@@ -278,6 +308,7 @@ const dict = {
       writePassenger: "Написать пассажиру",
       write: "Написать",
       call: "Позвонить",
+      error: "Ошибка",
     },
     history: {
       driverTab: "Как водитель",
@@ -314,7 +345,24 @@ const dict = {
       commentLabel: "Комментарий",
       submitBooking: "Отправить",
       submitOffer: "Отправить",
-      cancelButton: "Отмена"
+      cancelButton: "Отмена",
+      validation: {
+        seatsRange: "Пожалуйста, введите от 1 до 4 мест",
+        priceRequired: "Пожалуйста, введите предложенную цену"
+      },
+      success: {
+        bookingCreated: "Бронь создана",
+        offerSent: "Предложение отправлено",
+        bookingCancelled: "Заявка отменена"
+      },
+      errors: {
+        unauthorized: "Необходимо войти в систему",
+        forbidden: "Нет прав для выполнения этого действия",
+        validation: "Проверьте правильность введенных данных",
+        bookingFailed: "Ошибка при бронировании",
+        offerFailed: "Ошибка при отправке предложения",
+        cancelFailed: "Ошибка при отмене"
+      }
     },
     profile: {
       back: "Назад",
@@ -369,7 +417,19 @@ const dict = {
         carSeatsPlaceholder: "4",
         validationError: "Пожалуйста, заполните все обязательные поля",
         successMessage: "Поездка создана.",
-        errorMessage: "Ошибка при создании поездки."
+        errorMessage: "Ошибка при создании поездки.",
+        validation: {
+          fromRequired: "Поле 'Откуда' обязательно для заполнения",
+          toRequired: "Поле 'Куда' обязательно для заполнения",
+          dateRequired: "Дата должна быть выбрана",
+          timeRequired: "Время должно быть выбрано",
+          costRequired: "Стоимость должна быть указана",
+          carSeatsRequired: "Количество мест должно быть указано",
+          carModelRequired: "Модель машины должна быть указана",
+          carColorRequired: "Цвет машины должен быть указан",
+          carNumberRequired: "Номер машины должен быть указан",
+          futureDateTime: "Дата и время должны быть в будущем"
+        }
       },
       searchForm: {
         from: "Откуда",

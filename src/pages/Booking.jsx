@@ -87,11 +87,11 @@ function Booking() {
             <Card className="rounded-3xl shadow-sm">
               <CardContent className="flex flex-col gap-4 py-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
                 {myConfirmedBookingsLoading ? (
-                    <div>Yuklanmoqda...</div>
+                    <div>{t("booking.loading")}</div>
                 ) : myConfirmedBookingsError ? (
-                    <div className="text-red-600">Xatolik: {myConfirmedBookingsError.message}</div>
+                    <div className="text-red-600">{t("booking.error")}: {myConfirmedBookingsError.message}</div>
                 ) : myConfirmedBookings.length === 0 ? (
-                    <div>Hali tasdiqlangan bronlaringiz yo'q.</div>
+                    <div>{t("booking.none")}</div>
                 ) : (
                     myConfirmedBookings.map((b) => (
                         <div key={b.id} className="bg-white/90 border border-green-200 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow">
@@ -163,11 +163,11 @@ function Booking() {
             <Card className="rounded-3xl shadow-sm">
               <CardContent className="flex flex-col gap-4 py-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
                 {confirmedBookingsToMyTripsLoading ? (
-                    <div>Yuklanmoqda...</div>
+                    <div>{t("booking.loading")}</div>
                 ) : confirmedBookingsToMyTripsError ? (
-                    <div className="text-red-600">Xatolik: {confirmedBookingsToMyTripsError.message}</div>
+                    <div className="text-red-600">{t("booking.error")}: {confirmedBookingsToMyTripsError.message}</div>
                 ) : Object.keys(bookingsByTrip).length === 0 ? (
-                    <div>Hali sizning safarlaringizga tasdiqlangan bronlar yo'q.</div>
+                    <div>{t("booking.myTripsNone")}</div>
                 ) : (
                     Object.values(bookingsByTrip).map(({ trip, bookings }) => (
                         <div key={trip.id} className="flex flex-col gap-2">
