@@ -526,6 +526,7 @@ function Trips() {
                   : Array.isArray(data?.data)
                       ? data.data
                           .filter((trip) => trip.status !== "completed")
+                          .filter((trip) => Boolean(trip?.driver))
                           .map((trip) => (
                             <TripsCard trip={trip} key={trip.id} />
                           ))
@@ -565,6 +566,7 @@ function Trips() {
                       {myTrips &&
                         myTripsList
                           .filter((item) => item.status !== "completed")
+                          .filter((item) => Boolean(item?.driver))
                           .map((item) => (
                             <MyTripsCard trip={item} key={item.id} />
                           ))}
