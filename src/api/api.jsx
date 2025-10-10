@@ -24,32 +24,36 @@ api.interceptors.request.use(
 );
 
 const refreshAccessToken = async () => {
-  try {
-    const refreshToken = safeLocalStorage.getItem("reFreshToken");
-    if (!refreshToken) throw new Error("No refresh token available");
+  const refreshToken = safeLocalStorage.getItem("reFreshToken");
+  if (!refreshToken) throw new Error("No refresh token available");
 
-    const { data } = await axios.post(
-      `${
-        VITE_API_BASE || "https://blabla-main.laravel.cloud/api"
-      }/refresh-token`,
-      {
-        refresh_token: refreshToken,
-      }
-    );
+  const { data } = await axios.post(
+    `${VITE_API_BASE || "https://blabla-main.laravel.cloud/api"}/refresh-token`,
+    { refresh_token: refreshToken }
+  );
 
-    safeLocalStorage.setItem("token", data.access_token);
-    api.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${data.access_token}`;
-  } catch (error) {
-    safeLocalStorage.removeItem("token");
-    safeLocalStorage.removeItem("reFreshToken");
-    window.location.href = "/login";
-  }
+  safeLocalStorage.setItem("token", data.access_token);
+  api.defaults.headers.common["Authorization"] = `Bearer ${data.access_token}`;
 };
 
 // Set up automatic refresh every 2 hours and 1 minute
 // setInterval(refreshAccessToken, (2 * 60 + 1) * 60 * 1000); // 2 hours and 1 minute
+
+const isAuthPath = (url = "") => {
+  try {
+    // url can be relative like "/login" or absolute
+    return [
+      "/login",
+      "/register",
+      "/verify",
+      "/reset-password/step-one",
+      "/reset-password/step-two",
+      "/delete-account/by-credentials",
+    ].some((p) => url.includes(p));
+  } catch {
+    return false;
+  }
+};
 
 api.interceptors.response.use(
   (response) => response,
@@ -66,11 +70,38 @@ api.interceptors.response.use(
       );
     }
 
-    const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      await refreshAccessToken();
-      return api(originalRequest);
+    const originalRequest = error.config || {};
+    const status = error.response?.status;
+
+    if (status === 401) {
+      // Do not attempt refresh on auth endpoints
+      if (isAuthPath(originalRequest.url)) {
+        return Promise.reject(error);
+      }
+
+      // Require refresh token to try refresh
+      const hasRefresh = !!safeLocalStorage.getItem("reFreshToken");
+      if (!hasRefresh) {
+        return Promise.reject(error);
+      }
+
+      if (!originalRequest._retry) {
+        originalRequest._retry = true;
+        try {
+          await refreshAccessToken();
+          return api(originalRequest);
+        } catch (refreshErr) {
+          // Clear tokens and optionally redirect if not on login page
+          safeLocalStorage.removeItem("token");
+          safeLocalStorage.removeItem("reFreshToken");
+          try {
+            if (typeof window !== "undefined" && window.location?.pathname !== "/login") {
+              window.location.href = "/login";
+            }
+          } catch {}
+          return Promise.reject(refreshErr);
+        }
+      }
     }
     return Promise.reject(error);
   }

@@ -27,6 +27,7 @@ function Login() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
   const [showDeletedModal, setShowDeletedModal] = useState(false);
+  const [formError, setFormError] = useState("");
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -96,6 +97,7 @@ function Login() {
       }
       
       toast.error(errorMessage);
+      setFormError(errorMessage);
 
       // If backend is broken, try mock login for development
       if (
@@ -284,9 +286,9 @@ function Login() {
               </div>
             </div>
 
-            {loginMutation.error && (
+            {(formError || loginMutation.error) && (
               <div className="text-red-500 text-xs sm:text-sm">
-                {loginMutation.error.message ||
+                {formError || loginMutation.error?.message ||
                   (lang === "ru"
                     ? "Ошибка входа. Попробуйте ещё раз."
                     : "Kirishda xatolik. Qaytadan urinib ko'ring.")}
