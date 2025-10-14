@@ -311,21 +311,12 @@ function Login() {
               <p className="text-center">
                 {t("auth.needAccount")} {" "}
                 <Link
-                  className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-green-100 text-green-800 font-semibold underline decoration-2 hover:bg-green-200 hover:text-green-900 transition-colors"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-green-100 text-green-800 font-semibold underline decoration-2 hover:bg-green-200 hover:text-green-900 transition-colors shadow-sm ring-1 ring-green-200 text-sm sm:text-base"
                   to="/register"
                 >
                   {t("auth.register")}
                 </Link>
               </p>
-            </div>
-            
-            <div className="flex justify-start">
-              <Link
-                to="/delete"
-                className="text-red-600 hover:text-red-800 underline text-[10px] sm:text-xs leading-tight"
-              >
-                {t("auth.deleteAccount.link")}
-              </Link>
             </div>
           </form>
         </CardContent>
