@@ -121,7 +121,7 @@ function Trips() {
   //   refetch();
   // }, [filteredUrl]);
 
-  const myTripsList = (myTrips && (myTrips.trips || myTrips.data)) || [];
+  const myTripsList = (myTrips && myTrips.data) || [];
 
   const tripPostMutation = usePostData("/trip");
 
@@ -566,7 +566,6 @@ function Trips() {
                       {myTrips &&
                         myTripsList
                           .filter((item) => item.status !== "completed")
-                          .filter((item) => Boolean(item?.driver))
                           .map((item) => (
                             <MyTripsCard trip={item} key={item.id} />
                           ))}
