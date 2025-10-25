@@ -86,8 +86,8 @@ function MyTripsCard({ trip }) {
       });
       toast.success("Safar yangilandi.");
       setEditOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
-      queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
+      // Обновляем все возможные запросы поездок (включая с фильтрами)
+      queryClient.invalidateQueries({ queryKey: ["data"] });
     } catch (err) {
       toast.error("Yangilashda xatolik.");
     }
@@ -109,8 +109,8 @@ function MyTripsCard({ trip }) {
       });
       if (!res.ok) throw new Error("Delete failed");
       toast.success("Safar o'chirildi.");
-      queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
-      queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
+      // Обновляем все возможные запросы поездок (включая с фильтрами)
+      queryClient.invalidateQueries({ queryKey: ["data"] });
     } catch (err) {
       toast.error("O'chirishda xatolik.");
     }
@@ -121,8 +121,8 @@ function MyTripsCard({ trip }) {
       console.log("Завершение поездки:", trip.id);
       await postData(`/trips/${trip.id}/complete`, {});
       toast.success(t("myTripsCard.completeToast"));
-      queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
-      queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
+      // Обновляем все возможные запросы поездок (включая с фильтрами)
+      queryClient.invalidateQueries({ queryKey: ["data"] });
       
       // Временно закомментирована функциональность оценки пассажиров
       // if (confirmedBookings.length > 0) {
@@ -256,7 +256,7 @@ function MyTripsCard({ trip }) {
         </div>
         {/* В компактном виде показываем модель авто справа от даты/времени на мобильном */}
         {!isExpanded && (
-          <div className="flex sm:hidden items-center justify-between text-gray-700">
+          <div className="flex items-center justify-between text-gray-700">
             <span className="inline-flex items-center gap-1 text-gray-700"><Car size={16} className="text-green-600" /> {trip.carModel || ""}</span>
             <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm">{Number(trip.price).toLocaleString()} сум</span>
           </div>
@@ -317,6 +317,10 @@ function MyTripsCard({ trip }) {
         {/* Desktop ≥ 640px: previous inline layout */}
         <div className="w-full hidden sm:flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
+            {/* Цена для больших экранов */}
+            <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm mr-4">
+              {Number(trip.price).toLocaleString()} сум
+            </span>
             <Button onClick={() => setRequestsOpen(true)} className="h-10 px-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 text-sm sm:text-base relative">
               <Mail className="size-4" />
               <span className="text-sm">{t("myTripsCard.requests")}</span>

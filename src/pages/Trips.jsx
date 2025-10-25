@@ -35,9 +35,9 @@ import { useGetData, usePostData } from "@/api/api";
 import { useKeyboardInsets } from "@/hooks/useKeyboardInsets.jsx";
 import { useI18n } from "@/app/i18n.jsx";
 import TripsCardSkeleton from "@/components/TripsCardSkeleton";
-import RefreshFab from "@/components/RefreshFab.jsx";
 import { toast } from "sonner";
 import MyTripsCard from "@/components/MyTripsCard";
+import { useSmartRefresh } from "@/hooks/useSmartRefresh.jsx";
  
 
 function Trips() {
@@ -98,14 +98,15 @@ function Trips() {
     refetch: myTripsRefetch,
   } = useGetData(`/my-trips?page=${myPage}&per_page=${MY_PER_PAGE}`);
 
-  // Listen to global refresh events from layout (after refetch refs are defined)
-  useEffect(() => {
-    const handler = () => {
+  // Умное автоматическое обновление
+  const { forceRefresh, resetActivityFlags } = useSmartRefresh(
+    () => {
+      // Обновляем все запросы, включая с фильтрами
       Promise.allSettled([refetch(), myTripsRefetch()]);
-    };
-    window.addEventListener("app:refresh", handler);
-    return () => window.removeEventListener("app:refresh", handler);
-  }, [refetch, myTripsRefetch]);
+    },
+    5000, // обновляем каждые 5 секунд
+    [refetch, myTripsRefetch]
+  );
 
   // Автоматическое обновление данных при переходе на страницу
   useEffect(() => {
@@ -223,8 +224,9 @@ function Trips() {
       if (res.message === "Trip created!") {
         toast.success(t("trips.form.successMessage"));
         setDialog(false);
-        refetch();
-        myTripsRefetch();
+        // Принудительно обновляем данные после создания поездки
+        resetActivityFlags();
+        forceRefresh();
       }
     } catch (err) {
       console.error(err);

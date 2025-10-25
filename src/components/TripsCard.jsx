@@ -108,8 +108,8 @@ function TripsCard({ trip }) {
       toast.success(successMessage);
       setConfirmationDialogOpen(false);
       setPendingRequest(null);
-      queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
-      queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
+      // Обновляем все возможные запросы поездок (включая с фильтрами)
+      queryClient.invalidateQueries({ queryKey: ["data"] });
       queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
     } catch (err) {
       console.error("Booking/Offer error:", err);
@@ -146,8 +146,8 @@ function TripsCard({ trip }) {
       if (!trip?.my_booking?.id) return;
       await postData(`/bookings/${trip.my_booking.id}/cancel`);
       toast.success(t("tripsCard.success.bookingCancelled"));
-      queryClient.invalidateQueries({ queryKey: ["data", "/trips"] });
-      queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
+      // Обновляем все возможные запросы поездок (включая с фильтрами)
+      queryClient.invalidateQueries({ queryKey: ["data"] });
       queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
     } catch (err) {
       console.error("Cancel booking error:", err);

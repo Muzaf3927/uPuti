@@ -16,7 +16,6 @@ import {
   useGetData,
 } from "@/api/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import RefreshFab from "@/components/RefreshFab.jsx";
 import { getInitials } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -25,6 +24,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useI18n } from "@/app/i18n.jsx";
 import { useSelector } from "react-redux";
 import { useKeyboardInsets } from "@/hooks/useKeyboardInsets.jsx";
+import { useSmartRefresh } from "@/hooks/useSmartRefresh.jsx";
 
 function Chats() {
   const { t } = useI18n();
@@ -50,12 +50,14 @@ function Chats() {
   const { data: chatsRes, refetch: refetchChats } = useGetUserChats();
   const chats = chatsRes?.chats || [];
 
-  // Listen global refresh
-  useEffect(() => {
-    const handler = () => { refetchChats(); };
-    window.addEventListener("app:refresh", handler);
-    return () => window.removeEventListener("app:refresh", handler);
-  }, [refetchChats]);
+  // Умное автоматическое обновление чатов
+  const { forceRefresh, resetActivityFlags } = useSmartRefresh(
+    () => {
+      refetchChats();
+    },
+    5000, // обновляем каждые 5 секунд
+    [refetchChats]
+  );
 
   // Автоматическое обновление данных при переходе на страницу
   useEffect(() => {
@@ -98,6 +100,9 @@ function Chats() {
       });
       setMessage("");
       inputRef.current?.focus();
+      // Принудительно обновляем данные после отправки сообщения
+      resetActivityFlags();
+      forceRefresh();
     } catch (_err) {}
   };
 

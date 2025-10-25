@@ -19,6 +19,7 @@ import { useI18n } from "@/app/i18n.jsx";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
+import { useSmartRefresh } from "@/hooks/useSmartRefresh.jsx";
 
 function Requests() {
   const { t } = useI18n();
@@ -38,12 +39,14 @@ function Requests() {
   // Получаем количество непрочитанных сообщений
   const { data: unreadCounts } = useBookingsUnreadCount();
 
-  // Listen global refresh
-  useEffect(() => {
-    const handler = () => { Promise.allSettled([refetchMine(), refetchToMe()]); };
-    window.addEventListener("app:refresh", handler);
-    return () => window.removeEventListener("app:refresh", handler);
-  }, [refetchMine, refetchToMe]);
+  // Умное автоматическое обновление
+  const { forceRefresh, resetActivityFlags } = useSmartRefresh(
+    () => {
+      Promise.allSettled([refetchMine(), refetchToMe()]);
+    },
+    5000, // обновляем каждые 5 секунд
+    [refetchMine, refetchToMe]
+  );
 
   // Автоматическое обновление данных при переходе на страницу
   useEffect(() => {
@@ -57,10 +60,12 @@ function Requests() {
     try {
       await postData(`/bookings/${bookingId}`, { status: "confirmed" });
       toast.success("Tasdiqlandi.");
-      refetchMine();
-      refetchToMe();
+      // Принудительно обновляем данные после подтверждения
+      resetActivityFlags();
+      forceRefresh();
       queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
-      queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
+      // Обновляем все возможные запросы поездок (включая с фильтрами)
+      queryClient.invalidateQueries({ queryKey: ["data"] });
     } catch (e) {
       console.error(e);
       toast.error("Tasdiqlashda xatolik.");
@@ -71,10 +76,12 @@ function Requests() {
     try {
       await postData(`/bookings/${bookingId}`, { status: "declined" });
       toast.success("Bekor qilindi.");
-      refetchMine();
-      refetchToMe();
+      // Принудительно обновляем данные после отклонения
+      resetActivityFlags();
+      forceRefresh();
       queryClient.invalidateQueries({ queryKey: ["bookings", "unread-count"] });
-      queryClient.invalidateQueries({ queryKey: ["data", "/my-trips"] });
+      // Обновляем все возможные запросы поездок (включая с фильтрами)
+      queryClient.invalidateQueries({ queryKey: ["data"] });
     } catch (e) {
       console.error(e);
       toast.error("Bekor qilishda xatolik.");
