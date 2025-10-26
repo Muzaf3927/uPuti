@@ -27,8 +27,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import TimePicker from "@/components/ui/time-picker";
 
-// input mask
-import { InputMask } from "@react-input/mask";
 import { Textarea } from "@/components/ui/textarea";
 
 import { useGetData, usePostData } from "@/api/api";
@@ -74,7 +72,7 @@ function Trips() {
   const MY_PER_PAGE = 5;
 
   const baseQuery = activeFilters.from
-    ? `?from_city=${activeFilters.from}&to_city=${activeFilters.to}`
+    ? `?from_city=${activeFilters.from}&to_city=${activeFilters.to}${activeFilters.date ? `&date=${activeFilters.date}` : ""}`
     : "?";
   const allTripsUrl = `/trips${baseQuery}${baseQuery.includes("?") && baseQuery !== "?" ? "&" : ""}page=${allPage}&per_page=${ALL_PER_PAGE}`;
   const { data, isLoading, error, refetch } = useGetData(allTripsUrl);
@@ -464,17 +462,15 @@ function Trips() {
                   />
                   </div>
                   <div className="grid w-full items-center gap-3">
-                  <Label htmlFor="date">{t("trips.searchForm.date")}</Label>
-                  <InputMask
-                    mask="__.__.____"
-                    replacement={{ _: /\d/ }}
-                    // type="number"
-                    id="date"
+                  <Label htmlFor="search-date">{t("trips.searchForm.date")}</Label>
+                  <Input
+                    type="date"
+                    id="search-date"
                     name="date"
                     value={searchFilters.date}
                     onChange={(e) => setSearchFilters(prev => ({ ...prev, date: e.target.value }))}
+                    min={new Date().toISOString().split('T')[0]}
                     placeholder={t("trips.searchForm.datePlaceholder")}
-                    className="font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                   />
                   </div>
                 </div>
