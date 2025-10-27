@@ -361,7 +361,7 @@ function MainLayout() {
               </div>
               <div className="flex flex-col items-center gap-2">
                 <a
-                  href="https://t.me/Khamroev_3"
+                  href="https://t.me/Khamroyev_3"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors text-xs font-medium"

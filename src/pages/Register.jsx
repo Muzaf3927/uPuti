@@ -455,7 +455,7 @@ function Register() {
             <div className="bg-white rounded-xl shadow-lg w-full max-w-[280px] p-4 text-center">
               <h3 className="text-sm font-semibold text-gray-900 mb-1">{t("support.title")}</h3>
               <p className="text-xs text-gray-600 mb-3">{t("support.description")}</p>
-              <a href="https://t.me/Khamroev_3" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors text-xs font-medium">
+              <a href="https://t.me/Khamroyev_3" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors text-xs font-medium">
                 <svg viewBox="0 0 24 24" className="w-3 h-3" aria-hidden="true"><path fill="currentColor" d="M9.04 15.49 8.88 19c.27 0 .39-.12.54-.27l1.93-2.33 3.99 2.91c.73.4 1.26.19 1.45-.68l2.63-12.36c.27-1.25-.45-1.74-1.25-1.43L3.34 9.5c-1.2.47-1.19 1.14-.21 1.45l4.63 1.44 10.77-6.8c.51-.31.98-.14.59.2z"/></svg>
                 {t("support.button")}
               </a>
@@ -469,7 +469,7 @@ function Register() {
         <div className="bg-white/80 border rounded-xl p-3">
           <p className="text-xs text-gray-600 mb-2">{t("support.description")}</p>
           <a
-            href="https://t.me/Khamroev_3"
+            href="https://t.me/Khamroyev_3"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors text-xs font-medium"
