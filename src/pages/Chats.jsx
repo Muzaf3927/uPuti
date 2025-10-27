@@ -131,27 +131,27 @@ function Chats() {
   // Если выбран чат, показываем интерфейс чата
   if (selectedChat) {
     return (
-      <Card className="h-[100dvh] sm:h-full border py-0 relative rounded-3xl overflow-hidden shadow-sm">
+      <Card className="h-[50vh] sm:h-full border py-0 relative rounded-3xl overflow-hidden shadow-sm">
         <CardContent className="flex flex-col h-full bg-gradient-to-br from-blue-50 to-indigo-50">
           {/* Заголовок чата */}
-          <div className="flex items-center gap-3 px-4 py-2 border-b bg-white/90 backdrop-blur-sm sticky top-0 z-10">
+          <div className="flex items-center gap-2 px-3 py-2 border-b bg-white/90 backdrop-blur-sm sticky top-0 z-10">
             <Button
               onClick={handleBackToList}
-              className="h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center"
+              className="h-7 w-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center"
               size="sm"
             >
-              <ArrowLeft className="w-4 h-4 text-gray-600" />
+              <ArrowLeft className="w-3 h-3 text-gray-600" />
             </Button>
-            <Avatar className="size-9 ring-2 ring-white shadow">
-              <AvatarFallback>
+            <Avatar className="size-7 ring-1 ring-white shadow">
+              <AvatarFallback className="text-xs">
                 {getInitials(selectedChat.partner?.name)}
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col min-w-0 flex-1">
-              <span className="font-semibold text-gray-900 truncate text-sm">
+              <span className="font-semibold text-gray-900 truncate text-xs">
                 {selectedChat.partner?.name || "Пользователь"}
               </span>
-              <span className="text-xs text-gray-500 truncate">
+              <span className="text-[10px] text-gray-500 truncate">
                 {selectedChat.trip?.from_city} → {selectedChat.trip?.to_city}
               </span>
             </div>
@@ -161,7 +161,7 @@ function Chats() {
           <div
             className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5 bg-gradient-to-b from-white/50 to-blue-50/50"
             style={{
-              maxHeight: viewportHeight ? viewportHeight - 120 : undefined,
+              maxHeight: viewportHeight ? Math.min(viewportHeight * 0.4, 300) : '300px',
               paddingBottom: keyboardInset ? keyboardInset + 8 : undefined,
             }}
           >
@@ -174,19 +174,19 @@ function Chats() {
                   key={msg.id}
                   className={`flex w-full ${isMyMessage ? "justify-end" : "justify-start"}`}
                 >
-                  <div className={`flex flex-col max-w-[80%] ${isMyMessage ? "items-end" : "items-start"}`}>
+                  <div className={`flex flex-col max-w-[75%] ${isMyMessage ? "items-end" : "items-start"}`}>
                     <div
-                      className={`px-2 py-1.5 rounded-2xl shadow-sm relative text-xs ${
+                      className={`px-2 py-1 rounded-xl shadow-sm relative text-xs ${
                         isMyMessage
                           ? "bg-blue-500 text-white rounded-br-md"
                           : "bg-white text-gray-900 border border-gray-200 rounded-bl-md"
                       }`}
                     >
-                      <p className="text-xs leading-relaxed pr-10">{msg.message}</p>
-                      <div className={`absolute bottom-1 ${
-                        isMyMessage ? "right-2" : "right-2"
-                      } flex items-center gap-1`}>
-                        <span className="text-[10px] opacity-70">
+                      <p className="text-xs leading-tight pr-8">{msg.message}</p>
+                      <div className={`absolute bottom-0.5 ${
+                        isMyMessage ? "right-1.5" : "right-1.5"
+                      } flex items-center gap-0.5`}>
+                        <span className="text-[9px] opacity-70">
                           {new Date(msg.created_at).toLocaleTimeString('ru-RU', {
                             hour: '2-digit',
                             minute: '2-digit'
@@ -195,9 +195,9 @@ function Chats() {
                         {isMyMessage && (
                           <span>
                             {msg.is_read ? (
-                              <CheckCheck className="w-3 h-3 text-blue-200" />
+                              <CheckCheck className="w-2.5 h-2.5 text-blue-200" />
                             ) : (
-                              <Check className="w-3 h-3 text-blue-200" />
+                              <Check className="w-2.5 h-2.5 text-blue-200" />
                             )}
                           </span>
                         )}
@@ -212,27 +212,27 @@ function Chats() {
 
           {/* Поле ввода */}
           <div
-            className="border-t bg-white/85 backdrop-blur-sm px-3 py-2 sticky bottom-0"
+            className="border-t bg-white/85 backdrop-blur-sm px-2 py-1.5 sticky bottom-0"
             style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <Input
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Напишите сообщение..."
-                className="flex-1 rounded-full border-gray-200 focus:border-blue-400 focus:ring-blue-400 text-sm h-9"
+                placeholder="Сообщение..."
+                className="flex-1 rounded-full border-gray-200 focus:border-blue-400 focus:ring-blue-400 text-xs h-8"
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 ref={inputRef}
                 autoFocus
               />
               <Button
                 onClick={handleSend}
-                className="h-9 w-9 rounded-full bg-blue-500 hover:bg-blue-600 flex items-center justify-center"
+                className="h-8 w-8 rounded-full bg-blue-500 hover:bg-blue-600 flex items-center justify-center"
                 size="sm"
                 disabled={!message.trim()}
               >
-                <Send className="w-4 h-4 text-white" />
+                <Send className="w-3 h-3 text-white" />
               </Button>
             </div>
           </div>
