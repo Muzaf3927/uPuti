@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import TripsCard from "@/components/TripsCard";
 
 // icons
-import { Car, MapPin, Route, Search, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Car, MapPin, Route, Search, ChevronLeft, ChevronRight, Loader2, X } from "lucide-react";
 
 // router
 import { useLocation } from "react-router-dom";
@@ -264,9 +264,19 @@ function Trips() {
             className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 overflow-hidden overscroll-contain touch-pan-y"
             style={{ maxHeight: viewportHeight ? Math.min(860, viewportHeight - 4) : undefined }}
             preventOutsideClose
+            showCloseButton={false}
           >
-            <DialogHeader>
-              <DialogTitle className="text-center text-green-600 font-bold">{t("trips.create")}</DialogTitle>
+            <DialogHeader className="relative">
+              <DialogTitle className="text-center text-green-600 font-bold pr-8">{t("trips.create")}</DialogTitle>
+              <DialogClose asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-gray-100 rounded-full"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </DialogClose>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto overflow-x-hidden pr-1 touch-pan-y overscroll-contain"
@@ -434,59 +444,71 @@ function Trips() {
               <h4 className="text-sm md:text-md font-bold">{t("trips.searchForm.search")}</h4>
             </div>
           </DialogTrigger>
-          <DialogContent style={{ maxHeight: viewportHeight ? Math.min(760, viewportHeight - 8) : undefined }}>
-            <DialogHeader>
-              <DialogTitle className="text-center text-green-600 font-bold">
+          <DialogContent 
+            style={{ maxHeight: viewportHeight ? Math.min(760, viewportHeight - 8) : undefined }}
+            showCloseButton={false}
+          >
+            <DialogHeader className="relative">
+              <DialogTitle className="text-center text-green-600 font-bold pr-8">
                 {t("trips.searchForm.search")}
               </DialogTitle>
-              <form onSubmit={handleSearch} className="flex flex-col gap-3">
-                <div className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 160 : undefined }}>
-                  <Label htmlFor="from">{t("trips.searchForm.from")}</Label>
-                  <Input
-                    type="text"
-                    id="from"
-                    name="from"
-                    value={searchFilters.from}
-                    onChange={(e) => setSearchFilters(prev => ({ ...prev, from: e.target.value }))}
-                    placeholder={t("trips.searchForm.fromPlaceholder")}
-                  />
-                  <div className="grid w-full items-center gap-3">
-                  <Label htmlFor="to">{t("trips.searchForm.to")}</Label>
-                  <Input
-                    type="text"
-                    id="to"
-                    name="to"
-                    value={searchFilters.to}
-                    onChange={(e) => setSearchFilters(prev => ({ ...prev, to: e.target.value }))}
-                    placeholder={t("trips.searchForm.toPlaceholder")}
-                  />
-                  </div>
-                  <div className="grid w-full items-center gap-3">
-                  <Label htmlFor="search-date">{t("trips.searchForm.date")}</Label>
-                  <Input
-                    type="date"
-                    id="search-date"
-                    name="date"
-                    value={searchFilters.date}
-                    onChange={(e) => setSearchFilters(prev => ({ ...prev, date: e.target.value }))}
-                    min={new Date().toISOString().split('T')[0]}
-                    placeholder={t("trips.searchForm.datePlaceholder")}
-                  />
-                  </div>
-                </div>
-                {/* Footer outside of scroll area to avoid iOS sticky issues */}
-                <div className="w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 flex gap-2 mt-2 py-1" style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}>
-                  <DialogClose className="w-1/2" asChild>
-                    <Button className="rounded-2xl h-9 text-xs sm:text-sm">
-                      {t("trips.searchForm.cancel")}
-                    </Button>
-                  </DialogClose>
-                  <Button className="bg-green-600 rounded-2xl w-1/2 h-9 text-xs sm:text-sm" type="submit">
-                    {t("trips.searchForm.search")}
-                  </Button>
-                </div>
-              </form>
+              <DialogClose asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-gray-100 rounded-full"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </DialogClose>
             </DialogHeader>
+            <form onSubmit={handleSearch} className="flex flex-col gap-3">
+              <div className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 160 : undefined }}>
+                <Label htmlFor="from">{t("trips.searchForm.from")}</Label>
+                <Input
+                  type="text"
+                  id="from"
+                  name="from"
+                  value={searchFilters.from}
+                  onChange={(e) => setSearchFilters(prev => ({ ...prev, from: e.target.value }))}
+                  placeholder={t("trips.searchForm.fromPlaceholder")}
+                />
+                <div className="grid w-full items-center gap-3">
+                <Label htmlFor="to">{t("trips.searchForm.to")}</Label>
+                <Input
+                  type="text"
+                  id="to"
+                  name="to"
+                  value={searchFilters.to}
+                  onChange={(e) => setSearchFilters(prev => ({ ...prev, to: e.target.value }))}
+                  placeholder={t("trips.searchForm.toPlaceholder")}
+                />
+                </div>
+                <div className="grid w-full items-center gap-3">
+                <Label htmlFor="search-date">{t("trips.searchForm.date")}</Label>
+                <Input
+                  type="date"
+                  id="search-date"
+                  name="date"
+                  value={searchFilters.date}
+                  onChange={(e) => setSearchFilters(prev => ({ ...prev, date: e.target.value }))}
+                  min={new Date().toISOString().split('T')[0]}
+                  placeholder={t("trips.searchForm.datePlaceholder")}
+                />
+                </div>
+              </div>
+              {/* Footer outside of scroll area to avoid iOS sticky issues */}
+              <div className="w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 flex gap-2 mt-2 py-1" style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}>
+                <DialogClose className="w-1/2" asChild>
+                  <Button className="rounded-2xl h-9 text-xs sm:text-sm">
+                    {t("trips.searchForm.cancel")}
+                  </Button>
+                </DialogClose>
+                <Button className="bg-green-600 rounded-2xl w-1/2 h-9 text-xs sm:text-sm" type="submit">
+                  {t("trips.searchForm.search")}
+                </Button>
+              </div>
+            </form>
           </DialogContent>
         </Dialog>
       </div>
