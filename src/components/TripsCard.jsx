@@ -290,39 +290,48 @@ function TripsCard({ trip }) {
       </Card>
       {/* Booking Dialog */}
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
-        <DialogContent onClick={(e) => e.stopPropagation()} style={{ maxHeight: viewportHeight ? Math.min(520, viewportHeight - 16) : undefined }}>
+        <DialogContent 
+          onClick={(e) => e.stopPropagation()} 
+          className="top-[10vh] translate-y-0 max-w-sm mx-auto"
+          style={{ maxHeight: viewportHeight ? Math.min(300, viewportHeight * 0.4) : undefined }}
+        >
           <DialogHeader>
-            <DialogTitle>{t("tripsCard.bookingTitle")}</DialogTitle>
+            <DialogTitle className="text-center">{t("tripsCard.bookingTitle")}</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSubmitBooking} className="flex flex-col gap-3">
-            <div
-              className={`grid w-full items-center gap-2 ${keyboardInset > 0 ? "overflow-y-auto pr-1" : "overflow-y-visible"} overflow-x-hidden touch-pan-y overscroll-contain`}
-              style={{
-                maxHeight: keyboardInset > 0 && viewportHeight ? viewportHeight - 180 : undefined,
-                paddingBottom: keyboardInset ? keyboardInset + 16 : undefined,
-              }}
-            >
-              <Label htmlFor="seats">{t("tripsCard.seatsLabel")}</Label>
-              <Input
-                id="seats"
-                type="number"
-                min={1}
-                max={4}
-                required
-                value={seats}
-                onChange={(e) => setSeats(e.target.value)}
-                placeholder={t("tripsCard.seatsPlaceholder")}
-              />
-              <div className="w-full flex gap-2 mt-2">
-                <DialogClose asChild>
-                  <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
-                    {t("tripsCard.cancelButton")}
-                  </Button>
-                </DialogClose>
-                <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
-                  {t("tripsCard.submitBooking")}
+          <form onSubmit={handleSubmitBooking} className="flex flex-col gap-4">
+            <div className="flex flex-col items-center gap-3">
+              <Label className="text-sm font-medium">{t("tripsCard.seatsLabel")}</Label>
+              <div className="flex items-center gap-3">
+                <Button
+                  type="button"
+                  onClick={() => setSeats(Math.max(1, Number(seats) - 1))}
+                  className="h-8 w-8 rounded-full bg-gray-200 hover:bg-gray-300 border border-gray-300 flex items-center justify-center"
+                  disabled={Number(seats) <= 1}
+                >
+                  <span className="text-sm font-bold text-gray-700">-</span>
+                </Button>
+                <div className="min-w-[40px] text-center">
+                  <span className="text-sm font-medium text-gray-900">{seats}</span>
+                </div>
+                <Button
+                  type="button"
+                  onClick={() => setSeats(Math.min(4, Number(seats) + 1))}
+                  className="h-8 w-8 rounded-full bg-gray-200 hover:bg-gray-300 border border-gray-300 flex items-center justify-center"
+                  disabled={Number(seats) >= 4}
+                >
+                  <span className="text-sm font-bold text-gray-700">+</span>
                 </Button>
               </div>
+            </div>
+            <div className="w-full flex gap-2">
+              <DialogClose asChild>
+                <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
+                  {t("tripsCard.cancelButton")}
+                </Button>
+              </DialogClose>
+              <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
+                {t("tripsCard.submitBooking")}
+              </Button>
             </div>
           </form>
         </DialogContent>
@@ -330,68 +339,80 @@ function TripsCard({ trip }) {
 
       {/* Offer Dialog */}
       <Dialog open={offerDialogOpen} onOpenChange={setOfferDialogOpen}>
-        <DialogContent onClick={(e) => e.stopPropagation()} style={{ maxHeight: viewportHeight ? Math.min(640, viewportHeight - 12) : undefined }}>
+        <DialogContent 
+          onClick={(e) => e.stopPropagation()} 
+          className="top-[10vh] translate-y-0 max-w-sm mx-auto"
+          style={{ maxHeight: viewportHeight ? Math.min(400, viewportHeight * 0.5) : undefined }}
+        >
           <DialogHeader>
-            <DialogTitle>{t("tripsCard.offerTitle")}</DialogTitle>
+            <DialogTitle className="text-center">{t("tripsCard.offerTitle")}</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSubmitOffer} className="flex flex-col gap-3">
-            <div
-              className={`grid w-full items-center gap-2 ${keyboardInset > 0 ? "overflow-y-auto pr-1" : "overflow-y-visible"} overflow-x-hidden touch-pan-y overscroll-contain`}
-              style={{
-                maxHeight: keyboardInset > 0 && viewportHeight ? viewportHeight - 180 : undefined,
-                paddingBottom: keyboardInset ? keyboardInset + 16 : undefined,
-              }}
-            >
-              <Label htmlFor="offer-seats">{t("tripsCard.seatsLabel")}</Label>
-              <Input
-                id="offer-seats"
-                type="number"
-                min={1}
-                max={4}
-                required
-                value={seats}
-                onChange={(e) => setSeats(e.target.value)}
-                placeholder={t("tripsCard.seatsPlaceholder")}
-              />
-              <div className="grid w-full items-center gap-2 mt-2">
-                <Label htmlFor="price">{t("tripsCard.priceLabel")}</Label>
-                <div className="relative">
-                  <Input
-                    id="price"
-                    type="text"
-                    inputMode="numeric"
-                    value={offeredPrice}
-                    onChange={(e) => {
-                      const digits = e.target.value.replace(/\D/g, "");
-                      const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-                      setOfferedPrice(formatted);
-                    }}
-                    placeholder="100 000"
-                    className="pr-16"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">сум</span>
+          <form onSubmit={handleSubmitOffer} className="flex flex-col gap-4">
+            <div className="flex flex-col items-center gap-3">
+              <Label className="text-sm font-medium">{t("tripsCard.seatsLabel")}</Label>
+              <div className="flex items-center gap-3">
+                <Button
+                  type="button"
+                  onClick={() => setSeats(Math.max(1, Number(seats) - 1))}
+                  className="h-8 w-8 rounded-full bg-gray-200 hover:bg-gray-300 border border-gray-300 flex items-center justify-center"
+                  disabled={Number(seats) <= 1}
+                >
+                  <span className="text-sm font-bold text-gray-700">-</span>
+                </Button>
+                <div className="min-w-[40px] text-center">
+                  <span className="text-sm font-medium text-gray-900">{seats}</span>
                 </div>
-              </div>
-              <div className="grid w-full items-center gap-2 mt-2">
-                <Label htmlFor="comment">{t("tripsCard.commentLabel")}</Label>
-                <Input
-                  id="comment"
-                  type="text"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder={t("tripsCard.commentPlaceholder")}
-                />
-              </div>
-              <div className="w-full flex gap-2 mt-2">
-                <DialogClose asChild>
-                  <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
-                    {t("tripsCard.cancelButton")}
-                  </Button>
-                </DialogClose>
-                <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
-                  {t("tripsCard.submitOffer")}
+                <Button
+                  type="button"
+                  onClick={() => setSeats(Math.min(4, Number(seats) + 1))}
+                  className="h-8 w-8 rounded-full bg-gray-200 hover:bg-gray-300 border border-gray-300 flex items-center justify-center"
+                  disabled={Number(seats) >= 4}
+                >
+                  <span className="text-sm font-bold text-gray-700">+</span>
                 </Button>
               </div>
+            </div>
+            
+            <div className="grid w-full items-center gap-2">
+              <Label htmlFor="price" className="text-sm font-medium">{t("tripsCard.priceLabel")}</Label>
+              <div className="relative">
+                <Input
+                  id="price"
+                  type="text"
+                  inputMode="numeric"
+                  value={offeredPrice}
+                  onChange={(e) => {
+                    const digits = e.target.value.replace(/\D/g, "");
+                    const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                    setOfferedPrice(formatted);
+                  }}
+                  placeholder="100 000"
+                  className="pr-16 text-center"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">сум</span>
+              </div>
+            </div>
+            
+            <div className="grid w-full items-center gap-2">
+              <Label htmlFor="comment" className="text-sm font-medium">{t("tripsCard.commentLabel")}</Label>
+              <Input
+                id="comment"
+                type="text"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder={t("tripsCard.commentPlaceholder")}
+              />
+            </div>
+            
+            <div className="w-full flex gap-2">
+              <DialogClose asChild>
+                <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
+                  {t("tripsCard.cancelButton")}
+                </Button>
+              </DialogClose>
+              <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
+                {t("tripsCard.submitOffer")}
+              </Button>
             </div>
           </form>
         </DialogContent>
