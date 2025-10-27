@@ -292,10 +292,15 @@ function TripsCard({ trip }) {
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
         <DialogContent 
           onClick={(e) => e.stopPropagation()} 
-          className="top-[20vh] translate-y-0 max-w-sm mx-auto"
+          className="top-[20vh] translate-y-0 max-w-sm mx-auto fixed"
           style={{ 
             maxHeight: viewportHeight ? Math.min(300, viewportHeight * 0.5) : undefined,
-            marginBottom: keyboardInset ? keyboardInset + 20 : undefined
+            marginBottom: keyboardInset ? keyboardInset + 20 : undefined,
+            position: 'fixed',
+            top: '20vh',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 9999
           }}
         >
           <DialogHeader>
@@ -344,10 +349,15 @@ function TripsCard({ trip }) {
       <Dialog open={offerDialogOpen} onOpenChange={setOfferDialogOpen}>
         <DialogContent 
           onClick={(e) => e.stopPropagation()} 
-          className="top-[20vh] translate-y-0 max-w-sm mx-auto"
+          className="top-[20vh] translate-y-0 max-w-sm mx-auto fixed"
           style={{ 
             maxHeight: viewportHeight ? Math.min(400, viewportHeight * 0.6) : undefined,
-            marginBottom: keyboardInset ? keyboardInset + 20 : undefined
+            marginBottom: keyboardInset ? keyboardInset + 20 : undefined,
+            position: 'fixed',
+            top: '20vh',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 9999
           }}
         >
           <DialogHeader>
