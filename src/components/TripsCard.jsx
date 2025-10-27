@@ -290,10 +290,10 @@ function TripsCard({ trip }) {
       </Card>
       {/* Booking Dialog */}
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
-        <DialogContent 
-          onClick={(e) => e.stopPropagation()} 
+        <DialogContent
+          onClick={(e) => e.stopPropagation()}
           className="max-w-sm mx-auto"
-          style={{ 
+          style={{
             position: 'fixed !important',
             top: '20vh !important',
             left: '50% !important',
@@ -302,7 +302,12 @@ function TripsCard({ trip }) {
             marginBottom: keyboardInset ? keyboardInset + 20 : undefined,
             zIndex: '9999 !important',
             width: '90vw',
-            maxWidth: '400px'
+            maxWidth: '400px',
+            margin: '0 !important',
+            marginTop: '20vh !important',
+            marginLeft: '50% !important',
+            marginRight: 'auto !important',
+            marginBottom: 'auto !important'
           }}
         >
           <DialogHeader>
@@ -349,10 +354,10 @@ function TripsCard({ trip }) {
 
       {/* Offer Dialog */}
       <Dialog open={offerDialogOpen} onOpenChange={setOfferDialogOpen}>
-        <DialogContent 
-          onClick={(e) => e.stopPropagation()} 
+        <DialogContent
+          onClick={(e) => e.stopPropagation()}
           className="max-w-sm mx-auto"
-          style={{ 
+          style={{
             position: 'fixed !important',
             top: '20vh !important',
             left: '50% !important',
@@ -361,7 +366,12 @@ function TripsCard({ trip }) {
             marginBottom: keyboardInset ? keyboardInset + 20 : undefined,
             zIndex: '9999 !important',
             width: '90vw',
-            maxWidth: '400px'
+            maxWidth: '400px',
+            margin: '0 !important',
+            marginTop: '20vh !important',
+            marginLeft: '50% !important',
+            marginRight: 'auto !important',
+            marginBottom: 'auto !important'
           }}
         >
           <DialogHeader>
