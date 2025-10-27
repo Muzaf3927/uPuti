@@ -54,7 +54,7 @@ function MyTripsCard({ trip }) {
     date: trip.date || "",
     time: trip.time || "",
     seats: trip.seats_total || "",
-    price: trip.price || "",
+    price: trip.price ? Number(trip.price).toLocaleString() : "",
     note: trip.note || "",
     carModel: trip.carModel || "",
     carColor: trip.carColor || "",
@@ -72,13 +72,16 @@ function MyTripsCard({ trip }) {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
+      // Очищаем цену от пробелов перед отправкой
+      const cleanPrice = form.price ? String(form.price).replace(/\s/g, "") : "";
+      
       await updateMutation.mutateAsync({
         from_city: form.from_city,
         to_city: form.to_city,
         date: form.date,
         time: form.time,
         seats: Number(form.seats),
-        price: Number(form.price),
+        price: cleanPrice ? Number(cleanPrice) : null,
         note: form.note || null,
         carModel: form.carModel,
         carColor: form.carColor,
