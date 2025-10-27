@@ -131,7 +131,14 @@ function Chats() {
   // Если выбран чат, показываем интерфейс чата
   if (selectedChat) {
     return (
-      <Card className="h-[50vh] sm:h-full border py-0 relative rounded-3xl overflow-hidden shadow-sm">
+      <>
+        {/* Затемненный фон */}
+        <div 
+          className="fixed inset-0 bg-black/30 z-40"
+          onClick={handleBackToList}
+        />
+        {/* Чат */}
+        <Card className="h-[50vh] border py-0 relative rounded-3xl overflow-hidden shadow-sm fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-md z-50">
         <CardContent className="flex flex-col h-full bg-gradient-to-br from-blue-50 to-indigo-50">
           {/* Заголовок чата */}
           <div className="flex items-center gap-2 px-3 py-2 border-b bg-white/90 backdrop-blur-sm sticky top-0 z-10">
@@ -161,8 +168,7 @@ function Chats() {
           <div
             className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5 bg-gradient-to-b from-white/50 to-blue-50/50"
             style={{
-              maxHeight: viewportHeight ? Math.min(viewportHeight * 0.4, 300) : '300px',
-              paddingBottom: keyboardInset ? keyboardInset + 8 : undefined,
+              maxHeight: 'calc(50vh - 120px)', // Фиксированная высота минус заголовок и поле ввода
             }}
           >
             
@@ -211,10 +217,7 @@ function Chats() {
           </div>
 
           {/* Поле ввода */}
-          <div
-            className="border-t bg-white/85 backdrop-blur-sm px-2 py-1.5 sticky bottom-0"
-            style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}
-          >
+          <div className="border-t bg-white/85 backdrop-blur-sm px-2 py-1.5 sticky bottom-0">
             <div className="flex items-center gap-1.5">
               <Input
                 type="text"
@@ -238,7 +241,8 @@ function Chats() {
           </div>
         </CardContent>
         {/* RefreshFab рендерится глобально из MainLayout через портал */}
-      </Card>
+        </Card>
+      </>
     );
   }
 
