@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useI18n } from "@/app/i18n.jsx";
 import { useDispatch } from "react-redux";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { logout } from "@/app/userSlice/userSlice";
 import Onboarding from "@/components/Onboarding";
 import { getInitials } from "@/lib/utils";
@@ -49,6 +49,7 @@ function getNthWord(str, n) {
 
 function MainLayout() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { lang, setLang, t } = useI18n();
   const [profileOpen, setProfileOpen] = React.useState(false);
   const [showOnboarding, setShowOnboarding] = React.useState(false);
@@ -90,6 +91,39 @@ function MainLayout() {
       sessionManager.clearSession();
 
       toast.success("Muvaffaqiyatli tizimdan chiqdingiz!");
+    }
+  };
+
+  // Обработка клика по уведомлению
+  const handleNotificationClick = (notification) => {
+    try {
+      const data = JSON.parse(notification.data);
+      
+      // Отмечаем уведомление как прочитанное
+      markRead.mutate(notification.id);
+      
+      // Перенаправляем в зависимости от типа уведомления
+      switch (notification.type) {
+        case 'chat':
+          // Перенаправляем в чат
+          navigate(`/chats?tripId=${data.trip_id}&receiverId=${notification.sender_id}`);
+          break;
+        case 'new_booking':
+          // Перенаправляем на страницу запросов
+          navigate('/requests');
+          break;
+        case 'booking_confirmed':
+          // Перенаправляем на раздел брони
+          navigate('/booking');
+          break;
+        default:
+          // Для других типов уведомлений ничего не делаем
+          break;
+      }
+    } catch (error) {
+      console.error('Error parsing notification data:', error);
+      // Если не удалось распарсить данные, просто отмечаем как прочитанное
+      markRead.mutate(notification.id);
     }
   };
   return (
@@ -159,7 +193,8 @@ function MainLayout() {
                     ?.map((n) => (
                       <DropdownMenuItem
                         key={n.id}
-                        className="whitespace-normal py-1 sm:py-2"
+                        className="whitespace-normal py-1 sm:py-2 cursor-pointer"
+                        onClick={() => handleNotificationClick(n)}
                       >
                         <div className="flex items-start justify-between gap-1 sm:gap-2 w-full">
                           <div className="flex-1">
@@ -178,17 +213,6 @@ function MainLayout() {
                               </div>
                             )}
                           </div>
-                          {!n.is_read && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                markRead.mutate(n.id);
-                              }}
-                              className="text-xs text-blue-600 hover:underline"
-                            >
-                              Прочитать
-                            </button>
-                          )}
                         </div>
                       </DropdownMenuItem>
                     ))}
