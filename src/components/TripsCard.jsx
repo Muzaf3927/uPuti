@@ -292,8 +292,11 @@ function TripsCard({ trip }) {
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
         <DialogContent 
           onClick={(e) => e.stopPropagation()} 
-          className="top-[10vh] translate-y-0 max-w-sm mx-auto"
-          style={{ maxHeight: viewportHeight ? Math.min(300, viewportHeight * 0.4) : undefined }}
+          className="top-[20vh] translate-y-0 max-w-sm mx-auto"
+          style={{ 
+            maxHeight: viewportHeight ? Math.min(300, viewportHeight * 0.5) : undefined,
+            marginBottom: keyboardInset ? keyboardInset + 20 : undefined
+          }}
         >
           <DialogHeader>
             <DialogTitle className="text-center">{t("tripsCard.bookingTitle")}</DialogTitle>
@@ -341,13 +344,16 @@ function TripsCard({ trip }) {
       <Dialog open={offerDialogOpen} onOpenChange={setOfferDialogOpen}>
         <DialogContent 
           onClick={(e) => e.stopPropagation()} 
-          className="top-[10vh] translate-y-0 max-w-sm mx-auto"
-          style={{ maxHeight: viewportHeight ? Math.min(400, viewportHeight * 0.5) : undefined }}
+          className="top-[20vh] translate-y-0 max-w-sm mx-auto"
+          style={{ 
+            maxHeight: viewportHeight ? Math.min(400, viewportHeight * 0.6) : undefined,
+            marginBottom: keyboardInset ? keyboardInset + 20 : undefined
+          }}
         >
           <DialogHeader>
             <DialogTitle className="text-center">{t("tripsCard.offerTitle")}</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSubmitOffer} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmitOffer} className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto">
             <div className="flex flex-col items-center gap-3">
               <Label className="text-sm font-medium">{t("tripsCard.seatsLabel")}</Label>
               <div className="flex items-center gap-3">
@@ -404,7 +410,7 @@ function TripsCard({ trip }) {
               />
             </div>
             
-            <div className="w-full flex gap-2">
+            <div className="w-full flex gap-2 mt-2">
               <DialogClose asChild>
                 <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
                   {t("tripsCard.cancelButton")}
