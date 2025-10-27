@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -292,63 +292,61 @@ function TripsCard({ trip }) {
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
         <DialogContent
           onClick={(e) => e.stopPropagation()}
-          className="max-w-sm mx-auto"
+          className="bg-transparent border-0 shadow-none p-0"
           style={{
-            position: 'fixed !important',
-            top: '20vh !important',
-            left: '50% !important',
-            transform: 'translateX(-50%) !important',
-            maxHeight: viewportHeight ? Math.min(300, viewportHeight * 0.5) : undefined,
-            marginBottom: keyboardInset ? keyboardInset + 20 : undefined,
-            zIndex: '9999 !important',
+            position: 'fixed',
+            top: '20vh',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 9999,
             width: '90vw',
-            maxWidth: '400px',
-            margin: '0 !important',
-            marginTop: '20vh !important',
-            marginLeft: '50% !important',
-            marginRight: 'auto !important',
-            marginBottom: 'auto !important'
+            maxWidth: '400px'
           }}
         >
-          <DialogHeader>
-            <DialogTitle className="text-center">{t("tripsCard.bookingTitle")}</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleSubmitBooking} className="flex flex-col gap-4">
-            <div className="flex flex-col items-center gap-3">
-              <Label className="text-sm font-medium">{t("tripsCard.seatsLabel")}</Label>
-              <div className="flex items-center gap-3">
-                <Button
-                  type="button"
-                  onClick={() => setSeats(Math.max(1, Number(seats) - 1))}
-                  className="h-8 w-8 rounded-full bg-gray-200 hover:bg-gray-300 border border-gray-300 flex items-center justify-center"
-                  disabled={Number(seats) <= 1}
-                >
-                  <span className="text-sm font-bold text-gray-700">-</span>
-                </Button>
-                <div className="min-w-[40px] text-center">
-                  <span className="text-sm font-medium text-gray-900">{seats}</span>
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <DialogHeader>
+              <DialogTitle className="text-center text-lg font-semibold mb-4">{t("tripsCard.bookingTitle")}</DialogTitle>
+              <DialogDescription className="text-center text-sm text-gray-600 mb-4">
+                {t("tripsCard.bookingDescription")}
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSubmitBooking} className="flex flex-col gap-4">
+              <div className="flex flex-col items-center gap-3">
+                <Label className="text-sm font-medium">{t("tripsCard.seatsLabel")}</Label>
+                <div className="flex items-center gap-3">
+                  <Button
+                    type="button"
+                    onClick={() => setSeats(Math.max(1, Number(seats) - 1))}
+                    className="h-8 w-8 rounded-full bg-gray-200 hover:bg-gray-300 border border-gray-300 flex items-center justify-center"
+                    disabled={Number(seats) <= 1}
+                  >
+                    <span className="text-sm font-bold text-gray-700">-</span>
+                  </Button>
+                  <div className="min-w-[40px] text-center">
+                    <span className="text-sm font-medium text-gray-900">{seats}</span>
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={() => setSeats(Math.min(4, Number(seats) + 1))}
+                    className="h-8 w-8 rounded-full bg-gray-200 hover:bg-gray-300 border border-gray-300 flex items-center justify-center"
+                    disabled={Number(seats) >= 4}
+                  >
+                    <span className="text-sm font-bold text-gray-700">+</span>
+                  </Button>
                 </div>
-                <Button
-                  type="button"
-                  onClick={() => setSeats(Math.min(4, Number(seats) + 1))}
-                  className="h-8 w-8 rounded-full bg-gray-200 hover:bg-gray-300 border border-gray-300 flex items-center justify-center"
-                  disabled={Number(seats) >= 4}
-                >
-                  <span className="text-sm font-bold text-gray-700">+</span>
+              </div>
+              <div className="w-full flex gap-2">
+                <DialogClose asChild>
+                  <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
+                    {t("tripsCard.cancelButton")}
+                  </Button>
+                </DialogClose>
+                <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
+                  {t("tripsCard.submitBooking")}
                 </Button>
               </div>
-            </div>
-            <div className="w-full flex gap-2">
-              <DialogClose asChild>
-                <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
-                  {t("tripsCard.cancelButton")}
-                </Button>
-              </DialogClose>
-              <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
-                {t("tripsCard.submitBooking")}
-              </Button>
-            </div>
-          </form>
+            </form>
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -356,28 +354,25 @@ function TripsCard({ trip }) {
       <Dialog open={offerDialogOpen} onOpenChange={setOfferDialogOpen}>
         <DialogContent
           onClick={(e) => e.stopPropagation()}
-          className="max-w-sm mx-auto"
+          className="bg-transparent border-0 shadow-none p-0"
           style={{
-            position: 'fixed !important',
-            top: '20vh !important',
-            left: '50% !important',
-            transform: 'translateX(-50%) !important',
-            maxHeight: viewportHeight ? Math.min(400, viewportHeight * 0.6) : undefined,
-            marginBottom: keyboardInset ? keyboardInset + 20 : undefined,
-            zIndex: '9999 !important',
+            position: 'fixed',
+            top: '20vh',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 9999,
             width: '90vw',
-            maxWidth: '400px',
-            margin: '0 !important',
-            marginTop: '20vh !important',
-            marginLeft: '50% !important',
-            marginRight: 'auto !important',
-            marginBottom: 'auto !important'
+            maxWidth: '400px'
           }}
         >
-          <DialogHeader>
-            <DialogTitle className="text-center">{t("tripsCard.offerTitle")}</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleSubmitOffer} className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-lg p-6 max-h-[60vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-center text-lg font-semibold mb-4">{t("tripsCard.offerTitle")}</DialogTitle>
+              <DialogDescription className="text-center text-sm text-gray-600 mb-4">
+                {t("tripsCard.offerDescription")}
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSubmitOffer} className="flex flex-col gap-4">
             <div className="flex flex-col items-center gap-3">
               <Label className="text-sm font-medium">{t("tripsCard.seatsLabel")}</Label>
               <div className="flex items-center gap-3">
@@ -445,6 +440,7 @@ function TripsCard({ trip }) {
               </Button>
             </div>
           </form>
+          </div>
         </DialogContent>
       </Dialog>
 
