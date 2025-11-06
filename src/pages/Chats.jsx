@@ -165,7 +165,7 @@ function Chats() {
           onClick={handleBackToList}
         />
         {/* Чат */}
-        <Card className="h-[60dvh] sm:h-[50vh] border py-0 relative rounded-3xl overflow-hidden shadow-lg fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-md z-50">
+        <Card className="h-[75dvh] sm:h-[50vh] border py-0 relative rounded-3xl overflow-hidden shadow-lg fixed left-1/2 -translate-x-1/2 w-[95vw] max-w-md z-50" style={{ bottom: keyboardInset ? Math.max(8, keyboardInset + 6) : 12 }}>
         <CardContent className="flex flex-col h-full bg-card/90 backdrop-blur-sm" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.10), rgba(79,70,229,0.08))" }}>
           {/* Заголовок чата */}
           <div className="flex items-center justify-between px-3 py-2 border-b bg-card/95 backdrop-blur-sm sticky top-0 z-10">
@@ -199,7 +199,7 @@ function Chats() {
           <div
             className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5 ring-1 ring-blue-200/60"
             style={{
-              maxHeight: viewportHeight ? Math.max(120, viewportHeight - (keyboardInset || 0) - 120) : 'calc(60dvh - 120px)',
+              maxHeight: viewportHeight ? Math.max(140, viewportHeight - (keyboardInset || 0) - 160) : 'calc(75dvh - 140px)',
               backgroundImage: 'linear-gradient(135deg, rgba(59,130,246,0.10), rgba(79,70,229,0.06))',
             }}
           >
@@ -250,7 +250,7 @@ function Chats() {
           </div>
 
           {/* Поле ввода */}
-          <div className="border-t bg-card/95 backdrop-blur-sm px-2 py-1.5 sticky bottom-0" style={{ paddingBottom: keyboardInset ? Math.max(4, keyboardInset - 12) : undefined }}>
+          <div className="border-t bg-card/95 backdrop-blur-sm px-2 py-1.5 sticky bottom-0" style={{ paddingBottom: keyboardInset ? Math.max(0, keyboardInset - 8) : 0 }}>
             <div className="flex items-center gap-1.5">
               <Input
                 type="text"

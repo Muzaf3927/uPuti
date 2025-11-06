@@ -370,12 +370,12 @@ function MyTripsCard({ trip }) {
 
       {/* Edit Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4 overflow-hidden rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm overscroll-contain touch-pan-y" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))", maxHeight: viewportHeight ? Math.min(760, viewportHeight - 8) : '80vh' }}>
+        <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4 overflow-hidden rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm overscroll-contain touch-pan-y" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))", maxHeight: viewportHeight ? Math.min(760, viewportHeight - 8) : '80vh' }} autoFocusScroll>
           <DialogHeader>
             <DialogTitle>{t("myTripsCard.edit")}</DialogTitle>
             <DialogDescription className="sr-only">Trip edit dialog</DialogDescription>
           </DialogHeader>
-          <div className="overflow-y-auto overflow-x-hidden pr-1 overscroll-contain touch-pan-y" style={{ maxHeight: viewportHeight ? viewportHeight - 160 : '60vh' }}>
+          <div className="overflow-y-auto overflow-x-hidden pr-1 overscroll-contain touch-pan-y" style={{ maxHeight: viewportHeight ? Math.max(240, viewportHeight - (keyboardInset || 0) - 160) : '60vh' }}>
           <form id="editTripForm" onSubmit={handleUpdate} className="flex flex-col gap-3">
             <div className="grid w-full items-center gap-2">
               <Label htmlFor="from_city">{t("trips.form.from")}</Label>
