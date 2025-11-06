@@ -314,7 +314,7 @@ function TripsCard({ trip }) {
             <DialogHeader>
               <DialogTitle className="text-center text-lg font-semibold mb-4">{t("tripsCard.bookingTitle")}</DialogTitle>
               <DialogDescription className="text-center text-sm text-gray-600 mb-4">
-                Выберите количество мест для бронирования
+                {t("tripsCard.bookingDescription")}
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmitBooking} className="flex flex-col gap-4">
@@ -377,7 +377,7 @@ function TripsCard({ trip }) {
             <DialogHeader>
               <DialogTitle className="text-center text-lg font-semibold mb-4">{t("tripsCard.offerTitle")}</DialogTitle>
               <DialogDescription className="text-center text-sm text-gray-600 mb-4">
-                Предложите свою цену и количество мест
+                {t("tripsCard.offerDescription")}
               </DialogDescription>
             </DialogHeader>
             <div className="max-h-[50vh] overflow-y-auto overflow-x-hidden pr-1 overscroll-contain touch-pan-y">
