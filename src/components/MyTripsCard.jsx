@@ -382,14 +382,14 @@ function MyTripsCard({ trip }) {
               <Label htmlFor="to_city">Qayerga</Label>
               <Input id="to_city" name="to_city" value={form.to_city} onChange={handleChange} className="bg-white" />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="grid w/full items-center gap-2">
                 <Label htmlFor="date">Sana</Label>
-                <Input id="date" name="date" type="date" value={form.date} onChange={handleChange} className="bg-white" min={new Date().toISOString().split('T')[0]} />
+                <Input id="date" name="date" type="date" value={form.date} onChange={handleChange} className="bg-white pr-2" min={new Date().toISOString().split('T')[0]} />
               </div>
               <div className="grid w/full items-center gap-2">
                 <Label htmlFor="time">Vaqt</Label>
-                <TimePicker id="time" value={form.time} onChange={(v) => setForm((prev) => ({ ...prev, time: v }))} className="w-full bg-white" />
+                <TimePicker id="time" value={form.time} onChange={(v) => setForm((prev) => ({ ...prev, time: v }))} className="w-full bg-white pr-2" />
               </div>
             </div>
             <div className="flex gap-2">
