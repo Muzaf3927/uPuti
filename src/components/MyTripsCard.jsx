@@ -36,10 +36,12 @@ import { usePostData, useDeleteData, postData } from "@/api/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useKeyboardInsets } from "@/hooks/useKeyboardInsets.jsx";
 
 function MyTripsCard({ trip }) {
   const { t } = useI18n();
   const navigate = useNavigate();
+  const { keyboardInset, viewportHeight } = useKeyboardInsets();
   const [isExpanded, setIsExpanded] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [requestsOpen, setRequestsOpen] = useState(false);
@@ -239,7 +241,7 @@ function MyTripsCard({ trip }) {
       }}
     >
       <CardContent className={`flex flex-col ${isExpanded ? 'p-4 sm:p-5 gap-3 pb-0' : 'px-2 py-1 gap-1'}`}>
-        <div className="flex items-center justify между gap-2 text-primary font-bold text-sm sm:text-lg">
+        <div className="flex items-center justify-between gap-2 text-primary font-bold text-sm sm:text-lg">
           <div className="flex items-center gap-2 min-w-0">
             <MapPin className="text-primary" />
             <span className="truncate max-w-[70vw] sm:max-w-none">{trip.from_city}</span>
@@ -368,36 +370,37 @@ function MyTripsCard({ trip }) {
 
       {/* Edit Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4 overflow-hidden rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))" }}>
+        <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4 overflow-hidden rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm overscroll-contain touch-pan-y" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))", maxHeight: viewportHeight ? Math.min(760, viewportHeight - 8) : '80vh' }}>
           <DialogHeader>
             <DialogTitle>Safarni tahrirlash</DialogTitle>
             <DialogDescription className="sr-only">Trip edit dialog</DialogDescription>
           </DialogHeader>
+          <div className="overflow-y-auto pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 120 : '70vh', paddingBottom: keyboardInset ? keyboardInset : undefined }}>
           <form onSubmit={handleUpdate} className="flex flex-col gap-3">
             <div className="grid w-full items-center gap-2">
               <Label htmlFor="from_city">Qayerdan</Label>
-              <Input id="from_city" name="from_city" value={form.from_city} onChange={handleChange} className="bg-white" />
+              <Input id="from_city" name="from_city" value={form.from_city} onChange={handleChange} className="bg-white h-9" />
             </div>
-            <div className="grid w/full items-center gap-2">
+            <div className="grid w-full items-center gap-2">
               <Label htmlFor="to_city">Qayerga</Label>
-              <Input id="to_city" name="to_city" value={form.to_city} onChange={handleChange} className="bg-white" />
+              <Input id="to_city" name="to_city" value={form.to_city} onChange={handleChange} className="bg-white h-9" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="grid w/full items-center gap-2">
+              <div className="grid w-full items-center gap-2">
                 <Label htmlFor="date">Sana</Label>
-                <Input id="date" name="date" type="date" value={form.date} onChange={handleChange} className="bg-white pr-2" min={new Date().toISOString().split('T')[0]} />
+                <Input id="date" name="date" type="date" value={form.date} onChange={handleChange} className="bg-white h-9" min={new Date().toISOString().split('T')[0]} />
               </div>
-              <div className="grid w/full items-center gap-2">
+              <div className="grid w-full items-center gap-2">
                 <Label htmlFor="time">Vaqt</Label>
-                <TimePicker id="time" value={form.time} onChange={(v) => setForm((prev) => ({ ...prev, time: v }))} className="w-full bg-white pr-2" />
+                <TimePicker id="time" value={form.time} onChange={(v) => setForm((prev) => ({ ...prev, time: v }))} className="w-full bg-white" />
               </div>
             </div>
-            <div className="flex gap-2">
-              <div className="grid w/full items-center gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid w-full items-center gap-2">
                 <Label htmlFor="seats">O'rindiqlar</Label>
-                <Input id="seats" name="seats" value={form.seats} onChange={handleChange} className="bg-white" />
+                <Input id="seats" name="seats" value={form.seats} onChange={handleChange} className="bg-white h-9" />
               </div>
-              <div className="grid w/full items-center gap-2">
+              <div className="grid w-full items-center gap-2">
                 <Label htmlFor="price">Narx</Label>
                 <Input id="price" name="price" value={form.price}
                   onChange={(e) => {
@@ -405,26 +408,26 @@ function MyTripsCard({ trip }) {
                     const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
                     handleChange({ target: { name: 'price', value: formatted } });
                   }}
-                  placeholder="100 000" className="pr-16 bg-white" />
+                  placeholder="100 000" className="pr-16 bg-white h-9" />
               </div>
             </div>
-            <div className="grid w/full items-center gap-2">
+            <div className="grid w-full items-center gap-2">
               <Label htmlFor="note">Izoh</Label>
-              <Input id="note" name="note" value={form.note} onChange={handleChange} className="bg-white" />
+              <Input id="note" name="note" value={form.note} onChange={handleChange} className="bg-white h-9" />
             </div>
-            <div className="flex gap-2">
-              <div className="grid w/full items-center gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid w-full items-center gap-2">
                 <Label htmlFor="carModel">Mashina</Label>
-                <Input id="carModel" name="carModel" value={form.carModel} onChange={handleChange} className="bg-white" />
+                <Input id="carModel" name="carModel" value={form.carModel} onChange={handleChange} className="bg-white h-9" />
               </div>
-              <div className="grid w/full items-center gap-2">
+              <div className="grid w-full items-center gap-2">
                 <Label htmlFor="carColor">Rangi</Label>
-                <Input id="carColor" name="carColor" value={form.carColor} onChange={handleChange} className="bg-white" />
+                <Input id="carColor" name="carColor" value={form.carColor} onChange={handleChange} className="bg-white h-9" />
               </div>
             </div>
-            <div className="grid w/full items-center gap-2">
+            <div className="grid w-full items-center gap-2">
               <Label htmlFor="numberCar">Raqam</Label>
-              <Input id="numberCar" name="numberCar" className="uppercase bg-white" value={form.numberCar} onChange={handleChange} />
+              <Input id="numberCar" name="numberCar" className="uppercase bg-white h-9" value={form.numberCar} onChange={handleChange} />
             </div>
             <div className="w-full flex gap-2">
               <DialogClose asChild>
@@ -433,6 +436,7 @@ function MyTripsCard({ trip }) {
               <Button type="submit" className="w-1/2 bg-primary text-primary-foreground rounded-2xl">Saqlash</Button>
             </div>
           </form>
+          </div>
         </DialogContent>
       </Dialog>
 

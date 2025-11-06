@@ -234,7 +234,7 @@ function MainLayout() {
       <div className="custom-container mb-3 sm:mb-5 sticky top-16 sm:top-20 z-40">
         <Navbar />
       </div>
-      <main className="grow custom-container mb-6 sm:mb-10">
+      <main className="grow custom-container mb-6 sm:mb-10 overflow-auto">
         <Outlet />
       </main>
       {/* Right Panel Profile */}
