@@ -5,6 +5,7 @@ html,
 body,
 #root {
   height: 100%;
+  min-height: 100dvh; /* Better on mobile WebView */
 }
 
 /* Aurora Theme Overrides */
@@ -75,6 +76,7 @@ body,
     /* Stronger global linear gradient (no spots) */
     background-image: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(79,70,229,0.06));
     background-attachment: fixed;
+    overscroll-behavior-y: contain; /* prevent rubber-banding in webview */
   }
 }
 

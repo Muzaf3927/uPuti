@@ -375,7 +375,7 @@ function MyTripsCard({ trip }) {
             <DialogTitle>Safarni tahrirlash</DialogTitle>
             <DialogDescription className="sr-only">Trip edit dialog</DialogDescription>
           </DialogHeader>
-          <div className="overflow-y-auto pr-1" style={{ maxHeight: viewportHeight ? viewportHeight - 120 : '70vh', paddingBottom: keyboardInset ? keyboardInset : undefined }}>
+          <div className="overflow-y-auto overflow-x-hidden pr-1 overscroll-contain touch-pan-y" style={{ maxHeight: viewportHeight ? viewportHeight - 120 : '70vh', paddingBottom: keyboardInset ? keyboardInset : undefined }}>
           <form onSubmit={handleUpdate} className="flex flex-col gap-3">
             <div className="grid w-full items-center gap-2">
               <Label htmlFor="from_city">Qayerdan</Label>

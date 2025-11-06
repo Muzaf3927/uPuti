@@ -317,7 +317,7 @@ function Trips() {
                   name="date" 
                   required
                   min={new Date().toISOString().split('T')[0]}
-                  className={`${formErrors.date || formErrors.dateTime ? "border-red-500" : ""} bg-white`}
+                  className={`${formErrors.date || formErrors.dateTime ? "border-red-500" : ""} bg-white h-9 w-full min-w-0`}
                 />
                 {formErrors.date && <span className="text-red-500 text-xs">{formErrors.date}</span>}
                 {formErrors.dateTime && <span className="text-red-500 text-xs">{formErrors.dateTime}</span>}
@@ -500,7 +500,7 @@ function Trips() {
                   onChange={(e) => setSearchFilters(prev => ({ ...prev, date: e.target.value }))}
                   min={new Date().toISOString().split('T')[0]}
                   placeholder={t("trips.searchForm.datePlaceholder")}
-                  className="bg-white"
+                  className="bg-white h-9 w-full min-w-0"
                 />
                 </div>
               </div>

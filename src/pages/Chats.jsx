@@ -224,7 +224,7 @@ function Chats() {
           </div>
 
           {/* Поле ввода */}
-          <div className="border-t bg-card/95 backdrop-blur-sm px-2 py-1.5 sticky bottom-0">
+          <div className="border-t bg-card/95 backdrop-blur-sm px-2 py-1.5 sticky bottom-0" style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}>
             <div className="flex items-center gap-1.5">
               <Input
                 type="text"
