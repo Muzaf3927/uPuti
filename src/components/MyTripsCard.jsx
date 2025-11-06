@@ -372,36 +372,36 @@ function MyTripsCard({ trip }) {
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4 overflow-hidden rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm overscroll-contain touch-pan-y" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))", maxHeight: viewportHeight ? Math.min(760, viewportHeight - 8) : '80vh' }}>
           <DialogHeader>
-            <DialogTitle>Safarni tahrirlash</DialogTitle>
+            <DialogTitle>{t("myTripsCard.edit")}</DialogTitle>
             <DialogDescription className="sr-only">Trip edit dialog</DialogDescription>
           </DialogHeader>
           <div className="overflow-y-auto overflow-x-hidden pr-1 overscroll-contain touch-pan-y" style={{ maxHeight: viewportHeight ? viewportHeight - 160 : '60vh' }}>
           <form id="editTripForm" onSubmit={handleUpdate} className="flex flex-col gap-3">
             <div className="grid w-full items-center gap-2">
-              <Label htmlFor="from_city">Qayerdan</Label>
+              <Label htmlFor="from_city">{t("trips.form.from")}</Label>
               <Input id="from_city" name="from_city" value={form.from_city} onChange={handleChange} className="bg-white h-9" />
             </div>
             <div className="grid w-full items-center gap-2">
-              <Label htmlFor="to_city">Qayerga</Label>
+              <Label htmlFor="to_city">{t("trips.form.to")}</Label>
               <Input id="to_city" name="to_city" value={form.to_city} onChange={handleChange} className="bg-white h-9" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="grid w-full items-center gap-2">
-                <Label htmlFor="date">Sana</Label>
+                <Label htmlFor="date">{t("trips.form.date")}</Label>
                 <Input id="date" name="date" type="date" value={form.date} onChange={handleChange} className="bg-white h-9" min={new Date().toISOString().split('T')[0]} />
               </div>
               <div className="grid w-full items-center gap-2">
-                <Label htmlFor="time">Vaqt</Label>
+                <Label htmlFor="time">{t("trips.form.time")}</Label>
                 <TimePicker id="time" value={form.time} onChange={(v) => setForm((prev) => ({ ...prev, time: v }))} className="w-full bg-white" />
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="grid w-full items-center gap-2">
-                <Label htmlFor="seats">O'rindiqlar</Label>
+                <Label htmlFor="seats">{t("trips.form.carSeats")}</Label>
                 <Input id="seats" name="seats" value={form.seats} onChange={handleChange} className="bg-white h-9" />
               </div>
               <div className="grid w-full items-center gap-2">
-                <Label htmlFor="price">Narx</Label>
+                <Label htmlFor="price">{t("trips.form.cost")}</Label>
                 <Input id="price" name="price" value={form.price}
                   onChange={(e) => {
                     const digits = String(e.target.value).replace(/\D/g, "");
@@ -412,30 +412,30 @@ function MyTripsCard({ trip }) {
               </div>
             </div>
             <div className="grid w-full items-center gap-2">
-              <Label htmlFor="note">Izoh</Label>
+              <Label htmlFor="note">{t("trips.form.note")}</Label>
               <Input id="note" name="note" value={form.note} onChange={handleChange} className="bg-white h-9" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="grid w-full items-center gap-2">
-                <Label htmlFor="carModel">Mashina</Label>
+                <Label htmlFor="carModel">{t("trips.form.carModel")}</Label>
                 <Input id="carModel" name="carModel" value={form.carModel} onChange={handleChange} className="bg-white h-9" />
               </div>
               <div className="grid w-full items-center gap-2">
-                <Label htmlFor="carColor">Rangi</Label>
+                <Label htmlFor="carColor">{t("trips.form.carColor")}</Label>
                 <Input id="carColor" name="carColor" value={form.carColor} onChange={handleChange} className="bg-white h-9" />
               </div>
             </div>
             <div className="grid w-full items-center gap-2">
-              <Label htmlFor="numberCar">Raqam</Label>
+              <Label htmlFor="numberCar">{t("trips.form.carNumber")}</Label>
               <Input id="numberCar" name="numberCar" className="uppercase bg-white h-9" value={form.numberCar} onChange={handleChange} />
             </div>
           </form>
           </div>
           <div className="flex gap-2 mt-2 pt-2 border-t">
             <DialogClose asChild>
-              <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">Bekor qilish</Button>
+              <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">{t("trips.form.cancel")}</Button>
             </DialogClose>
-            <Button type="submit" form="editTripForm" className="w-1/2 bg-primary text-primary-foreground rounded-2xl">Saqlash</Button>
+            <Button type="submit" form="editTripForm" className="w-1/2 bg-primary text-primary-foreground rounded-2xl">{t("profilePage.save")}</Button>
           </div>
         </DialogContent>
       </Dialog>
