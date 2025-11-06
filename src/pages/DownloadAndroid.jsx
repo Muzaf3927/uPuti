@@ -36,12 +36,13 @@ function DownloadAndroid() {
         </div>
 
         {/* Install button */}
-        <button
-          type="button"
-          className="mt-4 w-full bg-gradient-to-r from-[#3DDC84] to-[#2BB673] text-white font-semibold py-3 rounded-xl shadow-lg hover:brightness-110 transition"
+        <a
+          href="/apk/uputi.apk"
+          download="uputi.apk"
+          className="mt-4 w-full bg-gradient-to-r from-[#3DDC84] to-[#2BB673] text-white font-semibold py-3 rounded-xl shadow-lg hover:brightness-110 transition block text-center"
         >
           {installText}
-        </button>
+        </a>
       </div>
     </div>
   );
