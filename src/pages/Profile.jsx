@@ -117,12 +117,12 @@ function Profile() {
     <>
       <Link
         to="/"
-        className="flex items-center border-green-400 border rounded-2xl mb-5 w-40 p-1 bg-white/80 backdrop-blur-sm shadow"
+        className="flex items-center border rounded-2xl mb-5 w-40 p-1 bg-card/90 backdrop-blur-sm shadow"
       >
         <ArrowLeft />
         {t("profile.back")}
       </Link>
-      <Card className="mx-auto w-full shadow-sm border rounded-2xl bg-white">
+      <Card className="mx-auto w-full shadow-lg border rounded-2xl bg-card/95 backdrop-blur-sm">
         <CardHeader className="flex items-center gap-3 pb-1">
           <Avatar className="h-12 w-12 ring-2 ring-white shadow">
             <AvatarFallback className="uppercase text-xl">
@@ -135,7 +135,7 @@ function Profile() {
               {data.is_verified && (
                 <Tooltip>
                   <TooltipTrigger>
-                    <CheckCircle2 className="h-5 w-5 text-green-500" />
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
                   </TooltipTrigger>
                   <TooltipContent>{t("profilePage.verified")}</TooltipContent>
                 </Tooltip>
@@ -146,7 +146,7 @@ function Profile() {
             <Button 
               size="sm" 
               variant="outline" 
-              className="bg-white/80 text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 flex items-center gap-1"
+              className="bg-white/80 hover:bg-accent/60 text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 flex items-center gap-1"
               onClick={handleEdit}
               aria-label={t("profile.edit")}
             >
@@ -202,7 +202,7 @@ function Profile() {
                   <span>
                     <Star />
                   </span>
-                  <span className="font-medium text-green-600">{t("profile.rating")}</span>
+                  <span className="font-medium text-primary">{t("profile.rating")}</span>
                   <span className="flex items-center gap-1">
                     <span className="text-yellow-500 font-bold">{data?.rating}</span>
                     <span className="text-xs text-muted-foreground">

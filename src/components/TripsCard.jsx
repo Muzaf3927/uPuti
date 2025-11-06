@@ -180,13 +180,19 @@ function TripsCard({ trip }) {
 
   return (
     <>
-      <Card onClick={() => setIsExpanded((v) => !v)} className="shadow-sm rounded-3xl bg-white/80 backdrop-blur-sm cursor-pointer border-0 py-0">
+      <Card
+        onClick={() => setIsExpanded((v) => !v)}
+        className="shadow-lg rounded-3xl bg-card/90 backdrop-blur-sm cursor-pointer border py-0 ring-1 ring-blue-200/60 shadow-[0_10px_30px_rgba(59,130,246,0.15)] dark:bg-card/90"
+        style={{
+          backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.18), rgba(79,70,229,0.12))",
+        }}
+      >
         <CardContent className={`flex flex-col ${isExpanded ? 'p-3 sm:p-4 gap-2' : 'px-2 py-1 gap-1'}`}>
-          <div className="flex items-center justify-between gap-2 text-green-700 font-bold text-sm sm:text-lg">
+          <div className="flex items-center justify-between gap-2 text-primary font-bold text-sm sm:text-lg">
             <div className="flex items-center gap-2 min-w-0">
-              <MapPin className="text-green-600" />
+              <MapPin className="text-primary" />
               <span className="truncate max-w-[60vw] sm:max-w-none">{trip.from_city}</span>
-              <Route className="text-green-600" />
+              <Route className="text-primary" />
               <span className="truncate max-w-[60vw] sm:max-w-none">{trip.to_city}</span>
             </div>
             <div className="flex items-center gap-2">
@@ -207,10 +213,10 @@ function TripsCard({ trip }) {
           {/* Компактный блок: только дата, время и цена (на мобиле цена справа ниже) */}
           <div className={`grid grid-cols-2 ${isExpanded ? 'sm:grid-cols-4 gap-2 sm:gap-3' : 'gap-1'} text-sm`}>
             <div className="flex items-center gap-1 text-gray-700">
-              <Calendar size={16} className="text-green-600" /> {trip.date}
+              <Calendar size={16} className="text-primary" /> {trip.date}
             </div>
             <div className="flex items-center gap-1 text-gray-700">
-              <Clock size={16} className="text-green-600" /> {trip.time}
+              <Clock size={16} className="text-primary" /> {trip.time}
             </div>
             {isExpanded && (
               <>
@@ -218,7 +224,7 @@ function TripsCard({ trip }) {
                   <Users size={16} /> {trip.seats} {t("tripsCard.seats")}
                 </div>
                 <div className="flex items-center gap-1 text-gray-700">
-                  <Car size={16} className="text-green-600" /> {trip.carModel}
+                  <Car size={16} className="text-primary" /> {trip.carModel}
                 </div>
               </>
             )}
@@ -227,7 +233,7 @@ function TripsCard({ trip }) {
                 <span className="inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
               ) : (
                 <span className="inline-flex items-center gap-1 sm:hidden text-gray-700">
-                  <Car size={16} className="text-green-600" /> {trip.carModel || ""}
+                  <Car size={16} className="text-primary" /> {trip.carModel || ""}
                 </span>
               )}
               <div className="flex sm:hidden items-center gap-2">
@@ -263,7 +269,7 @@ function TripsCard({ trip }) {
                   <button
                     onClick={handleCancelBooking}
                     disabled={trip?.my_booking?.can_cancel === false}
-                    className="bg-red-600 disabled:bg-gray-300 disabled:text-gray-500 h-9 text-sm rounded-2xl text-white w-full"
+                    className="bg-destructive disabled:bg-gray-300 disabled:text-gray-500 h-9 text-sm rounded-2xl text-white w-full"
                   >
                     {t("tripsCard.cancel")}
                   </button>
@@ -271,13 +277,13 @@ function TripsCard({ trip }) {
                   <>
                     <button
                       onClick={openBookingDialog}
-                      className="bg-green-700 h-9 rounded-2xl text-white w-full text-xs sm:text-base px-2 whitespace-normal leading-tight"
+                      className="bg-primary h-9 rounded-2xl text-primary-foreground w-full text-xs sm:text-base px-2 whitespace-normal leading-tight"
                     >
                       {t("tripsCard.book")}
                     </button>
                     <button
                       onClick={openOfferDialog}
-                      className="w-full bg-white h-9 border-green-700 text-green-700 border-2 rounded-2xl text-xs sm:text-base px-2 whitespace-normal leading-tight"
+                      className="w-full bg-white h-9 border border-primary text-primary rounded-2xl text-xs sm:text-base px-2 whitespace-normal leading-tight"
                     >
                       {t("tripsCard.offer")}
                     </button>
@@ -292,7 +298,7 @@ function TripsCard({ trip }) {
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
         <DialogContent
           onClick={(e) => e.stopPropagation()}
-          className="bg-transparent border-0 shadow-none p-0"
+          className="p-0 rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm"
           style={{
             position: 'fixed',
             top: '20vh',
@@ -300,10 +306,11 @@ function TripsCard({ trip }) {
             transform: 'translateX(-50%)',
             zIndex: 9999,
             width: '90vw',
-            maxWidth: '400px'
+            maxWidth: '400px',
+            backgroundImage: 'linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))'
           }}
         >
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="rounded-2xl p-6">
             <DialogHeader>
               <DialogTitle className="text-center text-lg font-semibold mb-4">{t("tripsCard.bookingTitle")}</DialogTitle>
               <DialogDescription className="text-center text-sm text-gray-600 mb-4">
@@ -341,7 +348,7 @@ function TripsCard({ trip }) {
                     {t("tripsCard.cancelButton")}
                   </Button>
                 </DialogClose>
-                <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
+                <Button type="submit" className="w-1/2 bg-primary text-primary-foreground rounded-2xl">
                   {t("tripsCard.submitBooking")}
                 </Button>
               </div>
@@ -354,7 +361,7 @@ function TripsCard({ trip }) {
       <Dialog open={offerDialogOpen} onOpenChange={setOfferDialogOpen}>
         <DialogContent
           onClick={(e) => e.stopPropagation()}
-          className="bg-transparent border-0 shadow-none p-0"
+          className="p-0 rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm"
           style={{
             position: 'fixed',
             top: '20vh',
@@ -362,10 +369,11 @@ function TripsCard({ trip }) {
             transform: 'translateX(-50%)',
             zIndex: 9999,
             width: '90vw',
-            maxWidth: '400px'
+            maxWidth: '400px',
+            backgroundImage: 'linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))'
           }}
         >
-          <div className="bg-white rounded-2xl shadow-lg p-6 max-h-[60vh] overflow-y-auto">
+          <div className="rounded-2xl p-6 max-h-[60vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-center text-lg font-semibold mb-4">{t("tripsCard.offerTitle")}</DialogTitle>
               <DialogDescription className="text-center text-sm text-gray-600 mb-4">
@@ -412,7 +420,7 @@ function TripsCard({ trip }) {
                     setOfferedPrice(formatted);
                   }}
                   placeholder="100 000"
-                  className="pr-16 text-center"
+                  className="pr-16 text-center bg-white"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">сум</span>
               </div>
@@ -426,6 +434,7 @@ function TripsCard({ trip }) {
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder={t("tripsCard.commentPlaceholder")}
+                className="bg-white"
               />
             </div>
             
@@ -435,7 +444,7 @@ function TripsCard({ trip }) {
                   {t("tripsCard.cancelButton")}
                 </Button>
               </DialogClose>
-              <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">
+              <Button type="submit" className="w-1/2 bg-primary text-primary-foreground rounded-2xl">
                 {t("tripsCard.submitOffer")}
               </Button>
             </div>

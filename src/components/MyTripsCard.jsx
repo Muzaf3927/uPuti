@@ -4,9 +4,10 @@ import { safeLocalStorage } from "@/lib/localStorage";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import TimePicker from "@/components/ui/time-picker";
 import { Textarea } from "@/components/ui/textarea";
 
 import {
@@ -230,13 +231,19 @@ function MyTripsCard({ trip }) {
   }, []);
 
   return (
-    <Card onClick={() => setIsExpanded((v) => !v)} className="shadow-sm rounded-3xl bg-white/80 backdrop-blur-sm border-0 w-full cursor-pointer py-0">
+    <Card
+      onClick={() => setIsExpanded((v) => !v)}
+      className="shadow-lg rounded-3xl bg-card/90 backdrop-blur-sm border w-full cursor-pointer py-0 ring-1 ring-blue-200/60 shadow-[0_10px_30px_rgba(59,130,246,0.15)] dark:bg-card/90"
+      style={{
+        backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.18), rgba(79,70,229,0.12))",
+      }}
+    >
       <CardContent className={`flex flex-col ${isExpanded ? 'p-4 sm:p-5 gap-3 pb-0' : 'px-2 py-1 gap-1'}`}>
-        <div className="flex items-center justify-between gap-2 text-green-700 font-bold text-sm sm:text-lg">
+        <div className="flex items-center justify между gap-2 text-primary font-bold text-sm sm:text-lg">
           <div className="flex items-center gap-2 min-w-0">
-            <MapPin className="text-green-600" />
+            <MapPin className="text-primary" />
             <span className="truncate max-w-[70vw] sm:max-w-none">{trip.from_city}</span>
-            <Route className="text-green-600" />
+            <Route className="text-primary" />
             <span className="truncate max-w-[70vw] sm:max-w-none">{trip.to_city}</span>
           </div>
           {/* Expand indicator */}
@@ -248,19 +255,19 @@ function MyTripsCard({ trip }) {
           />
         </div>
         <div className={`grid grid-cols-2 ${isExpanded ? 'sm:grid-cols-4 gap-3' : 'gap-1'} text-sm text-gray-700`}>
-          <span className="flex items-center gap-1"><Calendar size={16} className="text-green-600" /> {trip.date}</span>
-          <span className="flex items-center gap-1"><Clock size={16} className="text-green-600" /> {trip.time}</span>
+          <span className="flex items-center gap-1"><Calendar size={16} className="text-primary" /> {trip.date}</span>
+          <span className="flex items-center gap-1"><Clock size={16} className="text-primary" /> {trip.time}</span>
           {isExpanded && (
             <>
               <span className="flex items-center gap-1"><Users size={16} /> {trip.seats_total} {t("tripsCard.seats")}</span>
-              <span className="flex items-center gap-1"><Car size={16} className="text-green-600" /> {trip.carModel}</span>
+              <span className="flex items-center gap-1"><Car size={16} className="text-primary" /> {trip.carModel}</span>
             </>
           )}
         </div>
         {/* В компактном виде показываем модель авто справа от даты/времени на мобильном */}
         {!isExpanded && (
           <div className="flex items-center justify-between text-gray-700">
-            <span className="inline-flex items-center gap-1 text-gray-700"><Car size={16} className="text-green-600" /> {trip.carModel || ""}</span>
+            <span className="inline-flex items-center gap-1 text-gray-700"><Car size={16} className="text-primary" /> {trip.carModel || ""}</span>
             <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm">{Number(trip.price).toLocaleString()} сум</span>
           </div>
         )}
@@ -285,7 +292,7 @@ function MyTripsCard({ trip }) {
             <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm">{Number(trip.price).toLocaleString()} сум</span>
           </div>
           <div className="grid grid-cols-2 gap-1">
-            <Button onClick={() => setRequestsOpen(true)} className="min-h-9 px-2 py-2 rounded-full bg-blue-600 text-white text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center">
+            <Button onClick={() => setRequestsOpen(true)} className="min-h-9 px-2 py-2 rounded-full bg-primary text-primary-foreground text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center">
               <Mail className="size-4" />
               <span>{t("myTripsCard.requests")}</span>
               {pendingRequests.length > 0 && (
@@ -294,7 +301,7 @@ function MyTripsCard({ trip }) {
                 </span>
               )}
             </Button>
-            <Button onClick={() => setBookingsOpen(true)} className="min-h-9 px-2 py-2 rounded-full bg-emerald-600 text-white text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center">
+            <Button onClick={() => setBookingsOpen(true)} className="min-h-9 px-2 py-2 rounded-full bg-secondary text-secondary-foreground text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center">
               <CircleCheck className="size-4" />
               <span>{t("myTripsCard.bookings")}</span>
               {confirmedBookings.length > 0 && (
@@ -303,16 +310,16 @@ function MyTripsCard({ trip }) {
                 </span>
               )}
             </Button>
-            <Button onClick={handleComplete} className="min-h-9 px-2 py-2 rounded-full bg-red-600 hover:bg-red-700 text-white text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center col-span-2">
+            <Button onClick={handleComplete} className="min-h-9 px-2 py-2 rounded-full bg-destructive hover:brightness-110 text-white text-[10px] leading-tight flex items-center gap-1 justify-center whitespace-normal text-center col-span-2">
               <CircleCheck className="size-4" />
               <span>{t("myTripsCard.complete")}</span>
             </Button>
           </div>
           <div className="flex items-center gap-2 justify-end">
-            <Button onClick={() => setEditOpen(true)} className="h-9 w-9 rounded-full bg-white border hover:bg-gray-50 flex items-center justify-center" aria-label={t("myTripsCard.edit")} title={t("myTripsCard.edit")}>
+            <Button onClick={() => setEditOpen(true)} className="h-9 w-9 rounded-full bg-white border hover:bg-accent/40 flex items-center justify-center" aria-label={t("myTripsCard.edit")} title={t("myTripsCard.edit")}>
               <Pencil className="size-5 text-gray-700" />
             </Button>
-            <Button onClick={handleDelete} className="h-9 w-9 rounded-full bg-white border border-red-300 text-red-600 hover:bg-red-50 flex items-center justify-center" aria-label={t("myTripsCard.delete")} title={t("myTripsCard.delete")}>
+            <Button onClick={handleDelete} className="h-9 w-9 rounded-full bg-white border border-destructive/40 text-destructive hover:bg-red-50 flex items-center justify-center" aria-label={t("myTripsCard.delete")} title={t("myTripsCard.delete")}>
               <Trash2 className="size-5" />
             </Button>
           </div>
@@ -324,7 +331,7 @@ function MyTripsCard({ trip }) {
             <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm mr-4">
               {Number(trip.price).toLocaleString()} сум
             </span>
-            <Button onClick={() => setRequestsOpen(true)} className="h-10 px-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 text-sm sm:text-base relative">
+            <Button onClick={() => setRequestsOpen(true)} className="h-10 px-3 rounded-full bg-primary text-primary-foreground hover:brightness-110 flex items-center gap-2 text-sm sm:text-base relative">
               <Mail className="size-4" />
               <span className="text-sm">{t("myTripsCard.requests")}</span>
               {pendingRequests.length > 0 && (
@@ -333,7 +340,7 @@ function MyTripsCard({ trip }) {
                 </span>
               )}
             </Button>
-            <Button onClick={() => setBookingsOpen(true)} className="h-10 px-3 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-2 text-sm sm:text-base relative">
+            <Button onClick={() => setBookingsOpen(true)} className="h-10 px-3 rounded-full bg-secondary text-secondary-foreground hover:brightness-110 flex items-center gap-2 text-sm sm:text-base relative">
               <CircleCheck className="size-4" />
               <span className="text-sm">{t("myTripsCard.bookings")}</span>
               {confirmedBookings.length > 0 && (
@@ -342,7 +349,7 @@ function MyTripsCard({ trip }) {
                 </span>
               )}
             </Button>
-            <Button onClick={handleComplete} className="h-10 px-3 rounded-full bg-red-600 text-white hover:bg-red-700 flex items-center gap-2 text-sm sm:text-base">
+            <Button onClick={handleComplete} className="h-10 px-3 rounded-full bg-destructive text-white hover:brightness-110 flex items-center gap-2 text-sm sm:text-base">
               <CircleCheck className="size-4" />
               <span className="text-sm">{t("myTripsCard.complete")}</span>
             </Button>
@@ -361,33 +368,34 @@ function MyTripsCard({ trip }) {
 
       {/* Edit Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4 overflow-hidden rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))" }}>
           <DialogHeader>
             <DialogTitle>Safarni tahrirlash</DialogTitle>
+            <DialogDescription className="sr-only">Trip edit dialog</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleUpdate} className="flex flex-col gap-3">
             <div className="grid w-full items-center gap-2">
               <Label htmlFor="from_city">Qayerdan</Label>
-              <Input id="from_city" name="from_city" value={form.from_city} onChange={handleChange} />
+              <Input id="from_city" name="from_city" value={form.from_city} onChange={handleChange} className="bg-white" />
             </div>
             <div className="grid w/full items-center gap-2">
               <Label htmlFor="to_city">Qayerga</Label>
-              <Input id="to_city" name="to_city" value={form.to_city} onChange={handleChange} />
+              <Input id="to_city" name="to_city" value={form.to_city} onChange={handleChange} className="bg-white" />
             </div>
             <div className="flex gap-2">
               <div className="grid w/full items-center gap-2">
                 <Label htmlFor="date">Sana</Label>
-                <Input id="date" name="date" type="date" value={form.date} onChange={handleChange} />
+                <Input id="date" name="date" type="date" value={form.date} onChange={handleChange} className="bg-white" min={new Date().toISOString().split('T')[0]} />
               </div>
               <div className="grid w/full items-center gap-2">
                 <Label htmlFor="time">Vaqt</Label>
-                <Input id="time" name="time" value={form.time} onChange={handleChange} />
+                <TimePicker id="time" value={form.time} onChange={(v) => setForm((prev) => ({ ...prev, time: v }))} className="w-full bg-white" />
               </div>
             </div>
             <div className="flex gap-2">
               <div className="grid w/full items-center gap-2">
                 <Label htmlFor="seats">O'rindiqlar</Label>
-                <Input id="seats" name="seats" value={form.seats} onChange={handleChange} />
+                <Input id="seats" name="seats" value={form.seats} onChange={handleChange} className="bg-white" />
               </div>
               <div className="grid w/full items-center gap-2">
                 <Label htmlFor="price">Narx</Label>
@@ -397,32 +405,32 @@ function MyTripsCard({ trip }) {
                     const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
                     handleChange({ target: { name: 'price', value: formatted } });
                   }}
-                  placeholder="100 000" className="pr-16" />
+                  placeholder="100 000" className="pr-16 bg-white" />
               </div>
             </div>
             <div className="grid w/full items-center gap-2">
               <Label htmlFor="note">Izoh</Label>
-              <Input id="note" name="note" value={form.note} onChange={handleChange} />
+              <Input id="note" name="note" value={form.note} onChange={handleChange} className="bg-white" />
             </div>
             <div className="flex gap-2">
               <div className="grid w/full items-center gap-2">
                 <Label htmlFor="carModel">Mashina</Label>
-                <Input id="carModel" name="carModel" value={form.carModel} onChange={handleChange} />
+                <Input id="carModel" name="carModel" value={form.carModel} onChange={handleChange} className="bg-white" />
               </div>
               <div className="grid w/full items-center gap-2">
                 <Label htmlFor="carColor">Rangi</Label>
-                <Input id="carColor" name="carColor" value={form.carColor} onChange={handleChange} />
+                <Input id="carColor" name="carColor" value={form.carColor} onChange={handleChange} className="bg-white" />
               </div>
             </div>
             <div className="grid w/full items-center gap-2">
               <Label htmlFor="numberCar">Raqam</Label>
-              <Input id="numberCar" name="numberCar" className="uppercase" value={form.numberCar} onChange={handleChange} />
+              <Input id="numberCar" name="numberCar" className="uppercase bg-white" value={form.numberCar} onChange={handleChange} />
             </div>
             <div className="w-full flex gap-2">
               <DialogClose asChild>
                 <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">Bekor qilish</Button>
               </DialogClose>
-              <Button type="submit" className="w-1/2 bg-green-600 rounded-2xl">Saqlash</Button>
+              <Button type="submit" className="w-1/2 bg-primary text-primary-foreground rounded-2xl">Saqlash</Button>
             </div>
           </form>
         </DialogContent>
@@ -430,11 +438,22 @@ function MyTripsCard({ trip }) {
 
       {/* Requests Dialog */}
       <Dialog open={requestsOpen} onOpenChange={setRequestsOpen}>
-        <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4">
-          <DialogHeader className="pb-2">
+        <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4 overflow-hidden rounded-2xl">
+          <DialogHeader className="pb-2 relative">
             <DialogTitle className="text-base sm:text-lg">
               {t("myTripsCard.requests")} ({pendingRequests.length})
             </DialogTitle>
+            <DialogDescription className="sr-only">Requests list dialog</DialogDescription>
+            <DialogClose asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute top-2 right-2 h-6 w-6 p-0 hover:bg-accent/50 rounded-full"
+                aria-label="Close"
+              >
+                <X className="h-3.5 w-3.5" />
+              </Button>
+            </DialogClose>
           </DialogHeader>
           <div className="flex flex-col gap-2 max-h-[50vh] sm:max-h-[60vh] overflow-y-auto">
             {tripBookingsLoading ? (
@@ -448,10 +467,14 @@ function MyTripsCard({ trip }) {
               </div>
             ) : (
               pendingRequests.map((request) => (
-                <div key={request.id} className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-2.5 sm:p-3 shadow-sm hover:shadow-md transition-shadow">
+                <div
+                  key={request.id}
+                  className="border border-blue-200 rounded-xl p-2.5 sm:p-3 shadow-[0_6px_18px_rgba(59,130,246,0.12)] ring-1 ring-blue-200/60 hover:shadow-[0_8px_22px_rgba(59,130,246,0.16)] transition-shadow"
+                  style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.14), rgba(79,70,229,0.1))" }}
+                >
                   <div className="flex items-center gap-2.5">
                     <Avatar className="size-8 sm:size-10 ring-1 ring-white shadow-sm">
-                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white font-semibold text-xs">
+                      <AvatarFallback className="font-semibold text-xs">
                         {getInitials(request.user?.name)}
                       </AvatarFallback>
                     </Avatar>
@@ -470,7 +493,7 @@ function MyTripsCard({ trip }) {
                       <div className="text-xs text-gray-600 mb-1.5">
                         <span className="font-medium">{request.seats} {t("tripsCard.seats")}</span>
                         {request.offered_price && (
-                          <span className="ml-2 text-green-600 font-semibold">
+                          <span className="ml-2 text-primary font-semibold">
                             {Number(request.offered_price).toLocaleString()} сум
                           </span>
                         )}
@@ -487,7 +510,7 @@ function MyTripsCard({ trip }) {
                       <div className="flex gap-1.5">
                         <Button
                           onClick={() => handleConfirm(request.id)}
-                          className="flex items-center justify-center gap-1 bg-green-600 hover:bg-green-700 text-white text-xs px-2.5 py-1.5 rounded-lg font-medium shadow-sm hover:shadow-md transition-all flex-1"
+                          className="flex items-center justify-center gap-1 bg-primary text-primary-foreground hover:brightness-110 text-xs px-2.5 py-1.5 rounded-lg font-medium shadow-sm hover:shadow-md transition-all flex-1"
                         >
                           <CircleCheck className="w-3.5 h-3.5" />
                           <span>{t("myTripsCard.accept")}</span>
@@ -512,11 +535,22 @@ function MyTripsCard({ trip }) {
 
       {/* Bookings Dialog */}
       <Dialog open={bookingsOpen} onOpenChange={setBookingsOpen}>
-        <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4">
-          <DialogHeader className="pb-2">
+        <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4 overflow-hidden rounded-2xl">
+          <DialogHeader className="pb-2 relative">
             <DialogTitle className="text-base sm:text-lg">
               {t("myTripsCard.bookings")} ({confirmedBookings.length})
             </DialogTitle>
+            <DialogDescription className="sr-only">Bookings list dialog</DialogDescription>
+            <DialogClose asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute top-2 right-2 h-6 w-6 p-0 hover:bg-accent/50 rounded-full"
+                aria-label="Close"
+              >
+                <X className="h-3.5 w-3.5" />
+              </Button>
+            </DialogClose>
           </DialogHeader>
           <div className="flex flex-col gap-2 max-h-[50vh] sm:max-h-[60vh] overflow-y-auto">
             {tripBookingsLoading ? (
@@ -530,10 +564,14 @@ function MyTripsCard({ trip }) {
               </div>
             ) : (
               confirmedBookings.map((passenger) => (
-                <div key={passenger.id} className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl p-2.5 sm:p-3 shadow-sm hover:shadow-md transition-shadow">
+                <div
+                  key={passenger.id}
+                  className="border border-blue-200 rounded-xl p-2.5 sm:p-3 shadow-[0_6px_18px_rgba(59,130,246,0.12)] ring-1 ring-blue-200/60 hover:shadow-[0_8px_22px_rgba(59,130,246,0.16)] transition-shadow"
+                  style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.14), rgba(79,70,229,0.1))" }}
+                >
                   <div className="flex items-start gap-2.5">
                     <Avatar className="size-8 sm:size-10 ring-1 ring-white shadow-sm mt-0.5">
-                      <AvatarFallback className="bg-gradient-to-br from-green-500 to-green-600 text-white font-semibold text-xs">
+                      <AvatarFallback className="font-semibold text-xs">
                         {getInitials(passenger.name)}
                       </AvatarFallback>
                     </Avatar>
@@ -553,7 +591,7 @@ function MyTripsCard({ trip }) {
                       
                       {/* Номер телефона и места */}
                       <div className="flex items-center gap-1.5 mb-1">
-                        <Phone className="w-2.5 h-2.5 text-green-600" />
+                        <Phone className="w-2.5 h-2.5 text-primary" />
                         <span className="text-xs font-medium text-gray-700">{passenger.phone}</span>
                       </div>
                       <div className="flex items-center gap-1.5 mb-2">
@@ -565,7 +603,7 @@ function MyTripsCard({ trip }) {
                       <div className="flex gap-2 -ml-8">
                         <Button
                           onClick={() => handleCall(passenger.phone)}
-                          className="flex items-center justify-center gap-1.5 bg-green-600 hover:bg-green-700 text-white text-xs px-2.5 py-1.5 rounded-lg font-medium shadow-sm hover:shadow-md transition-all flex-1"
+                          className="flex items-center justify-center gap-1.5 bg-primary text-primary-foreground hover:brightness-110 text-xs px-2.5 py-1.5 rounded-lg font-medium shadow-sm hover:shadow-md transition-all flex-1"
                         >
                           <Phone className="w-3.5 h-3.5" />
                           <span>{t("myTripsCard.callPassenger")}</span>
@@ -573,7 +611,7 @@ function MyTripsCard({ trip }) {
                         <Button
                           onClick={() => handleChat(passenger.id, passenger.name)}
                           variant="outline"
-                          className="flex items-center justify-center gap-1.5 border-green-600 text-green-600 hover:bg-green-50 text-xs px-2.5 py-1.5 rounded-lg font-medium shadow-sm hover:shadow-md transition-all flex-1"
+                          className="flex items-center justify-center gap-1.5 border-primary text-primary hover:bg-accent/50 text-xs px-2.5 py-1.5 rounded-lg font-medium shadow-sm hover:shadow-md transition-all flex-1"
                         >
                           <MessageCircle className="w-3.5 h-3.5" />
                           <span>{t("myTripsCard.writePassenger")}</span>

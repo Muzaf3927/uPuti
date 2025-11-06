@@ -47,7 +47,7 @@ function Navbar() {
   }
 
   return (
-    <div className="flex justify-between p-1 sm:p-2 rounded-3xl bg-white/70 backdrop-blur-sm border shadow-sm">
+    <div className="flex justify-between p-1 sm:p-2 rounded-3xl bg-gradient-to-tr from-white/70 to-cyan-50/70 dark:from-white/5 dark:to-white/10 backdrop-blur-md border shadow-md">
       {links.map((link) => {
         const isActive = location.pathname === link.path;
         return (
@@ -55,13 +55,13 @@ function Navbar() {
             key={link.path}
             to={link.path}
             className={`${
-              isActive ? "bg-green-500 text-white shadow" : "bg-white text-gray-700"
-            } text-center flex justify-center items-center flex-col w-[68px] sm:w-[88px] text-xs h-[60px] sm:h-[72px] border-2 border-green-200 rounded-2xl transition-all duration-300 hover:bg-green-100 hover:shadow-[0px_5px_15px_rgba(134,239,172,0.35)] relative`}
+              isActive ? "bg-gradient-to-tr from-primary to-cyan-400 text-primary-foreground shadow" : "bg-white/90 dark:bg-white/10 text-gray-700 dark:text-white"
+            } text-center flex justify-center items-center flex-col w-[68px] sm:w-[88px] text-xs h-[60px] sm:h-[72px] border border-border rounded-2xl transition-all duration-300 hover:bg-accent/60 hover:shadow-[0px_5px_15px_rgba(56,189,248,0.35)] relative`}
           >
             <div className="relative">
               {link.icon}
               {link.unreadCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                <span className="absolute -top-2 -right-2 bg-destructive text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                   {link.unreadCount > 9 ? '9+' : link.unreadCount}
                 </span>
               )}

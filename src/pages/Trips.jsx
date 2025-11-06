@@ -36,6 +36,7 @@ import TripsCardSkeleton from "@/components/TripsCardSkeleton";
 import { toast } from "sonner";
 import MyTripsCard from "@/components/MyTripsCard";
 import { useSmartRefresh } from "@/hooks/useSmartRefresh.jsx";
+import EmptyState from "@/components/EmptyState.jsx";
  
 
 function Trips() {
@@ -252,27 +253,28 @@ function Trips() {
 
   return (
     <div>
-      <div className="w-full flex text-green-600 gap-2.5 mb-5">
+      <div className="w-full flex text-primary gap-2.5 mb-5">
         <Dialog className="w-full" open={dialog} onOpenChange={setDialog}>
           <DialogTrigger className="w-full cursor-pointer">
-            <div className="border-2 w-full py-2 sm:px-10 sm:py-4 bg-green-50 rounded-3xl flex flex-col items-center">
+            <div className="border w-full py-2 sm:px-10 sm:py-4 rounded-3xl flex flex-col items-center ring-1 ring-blue-300/70 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))" }}>
               <Route className="md:size-6 size-4" />
               <h4 className="text-sm md:text-md font-bold">{t("trips.create")}</h4>
             </div>
           </DialogTrigger>
           <DialogContent
-            className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 overflow-hidden overscroll-contain touch-pan-y"
-            style={{ maxHeight: viewportHeight ? Math.min(860, viewportHeight - 4) : undefined }}
+            className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 overflow-hidden overscroll-contain touch-pan-y rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm"
+            style={{ maxHeight: viewportHeight ? Math.min(860, viewportHeight - 4) : undefined, backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))" }}
             preventOutsideClose
             showCloseButton={false}
           >
             <DialogHeader className="relative">
-              <DialogTitle className="text-center text-green-600 font-bold pr-8">{t("trips.create")}</DialogTitle>
+              <DialogTitle className="text-center text-primary font-bold pr-8">{t("trips.create")}</DialogTitle>
+            <DialogDescription className="sr-only">Create trip dialog</DialogDescription>
               <DialogClose asChild>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-gray-100 rounded-full"
+                  className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-accent/50 rounded-full"
                 >
                   <X className="h-3 w-3" />
                 </Button>
@@ -291,7 +293,7 @@ function Trips() {
                   name="from" 
                   placeholder={t("trips.form.fromPlaceholder")} 
                   required
-                  className={formErrors.from ? "border-red-500" : ""}
+                  className={`${formErrors.from ? "border-red-500" : ""} bg-white`}
                 />
                 {formErrors.from && <span className="text-red-500 text-xs">{formErrors.from}</span>}
               </div>
@@ -303,7 +305,7 @@ function Trips() {
                   name="to" 
                   placeholder={t("trips.form.toPlaceholder")} 
                   required
-                  className={formErrors.to ? "border-red-500" : ""}
+                  className={`${formErrors.to ? "border-red-500" : ""} bg-white`}
                 />
                 {formErrors.to && <span className="text-red-500 text-xs">{formErrors.to}</span>}
               </div>
@@ -315,7 +317,7 @@ function Trips() {
                   name="date" 
                   required
                   min={new Date().toISOString().split('T')[0]}
-                  className={formErrors.date || formErrors.dateTime ? "border-red-500" : ""}
+                  className={`${formErrors.date || formErrors.dateTime ? "border-red-500" : ""} bg-white`}
                 />
                 {formErrors.date && <span className="text-red-500 text-xs">{formErrors.date}</span>}
                 {formErrors.dateTime && <span className="text-red-500 text-xs">{formErrors.dateTime}</span>}
@@ -326,7 +328,7 @@ function Trips() {
                   id="time"
                   value={selectedTime}
                   onChange={setSelectedTime}
-                  className={`w-full ${formErrors.time || formErrors.dateTime ? "border-red-500" : ""}`}
+                  className={`w-full ${formErrors.time || formErrors.dateTime ? "border-red-500" : ""} bg-white`}
                 />
                 {formErrors.time && <span className="text-red-500 text-xs">{formErrors.time}</span>}
                 {formErrors.dateTime && <span className="text-red-500 text-xs">{formErrors.dateTime}</span>}
@@ -347,7 +349,7 @@ function Trips() {
                       const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
                       setCostInput(formatted);
                     }}
-                    className={`${formErrors.cost ? "border-red-500" : ""} pr-16`}
+                    className={`${formErrors.cost ? "border-red-500" : ""} pr-16 bg-white`}
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">сум</span>
                 </div>
@@ -361,7 +363,7 @@ function Trips() {
                   name="carSeats" 
                   placeholder={t("trips.form.carSeatsPlaceholder")} 
                   required
-                  className={formErrors.carSeats ? "border-red-500" : ""}
+                  className={`${formErrors.carSeats ? "border-red-500" : ""} bg-white`}
                 />
                 {formErrors.carSeats && <span className="text-red-500 text-xs">{formErrors.carSeats}</span>}
               </div>
@@ -373,7 +375,7 @@ function Trips() {
                   name="carModel" 
                   placeholder={t("trips.form.carModelPlaceholder")} 
                   required
-                  className={formErrors.carModel ? "border-red-500" : ""}
+                  className={`${formErrors.carModel ? "border-red-500" : ""} bg-white`}
                 />
                 {formErrors.carModel && <span className="text-red-500 text-xs">{formErrors.carModel}</span>}
               </div>
@@ -385,7 +387,7 @@ function Trips() {
                   name="carColor" 
                   placeholder={t("trips.form.carColorPlaceholder")} 
                   required
-                  className={formErrors.carColor ? "border-red-500" : ""}
+                  className={`${formErrors.carColor ? "border-red-500" : ""} bg-white`}
                 />
                 {formErrors.carColor && <span className="text-red-500 text-xs">{formErrors.carColor}</span>}
               </div>
@@ -396,7 +398,7 @@ function Trips() {
                   id="carNumber" 
                   name="carNumber" 
                   placeholder={t("trips.form.carNumberPlaceholder")} 
-                  className={`uppercase ${formErrors.carNumber ? "border-red-500" : ""}`}
+                  className={`uppercase ${formErrors.carNumber ? "border-red-500" : ""} bg-white`}
                   required
                   onChange={(e) => {
                     e.target.value = e.target.value.toUpperCase();
@@ -406,18 +408,18 @@ function Trips() {
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="note">{t("trips.form.note")}</Label>
-                <Input type="text" id="note" name="note" placeholder={t("trips.commentPlaceholder")} />
+                <Input type="text" id="note" name="note" placeholder={t("trips.commentPlaceholder")} className="bg-white" />
               </div>
               </div>
               {/* Footer outside of scroll area to avoid iOS sticky-bottom issues */}
-              <div className="flex gap-2 mt-2 w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 py-1" style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}>
+              <div className="flex gap-2 mt-2 w-full bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 py-1" style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}>
                 <DialogClose asChild>
                   <Button type="button" className="rounded-2xl w-1/2 h-9 text-xs sm:text-sm">{t("trips.form.cancel")}</Button>
                 </DialogClose>
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="bg-green-600 rounded-2xl w-1/2 h-9 text-xs sm:text-sm"
+                  className="bg-primary text-primary-foreground rounded-2xl w-1/2 h-9 text-xs sm:text-sm"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">
@@ -439,19 +441,21 @@ function Trips() {
           onOpenChange={setSearchDialog}
         >
           <DialogTrigger className="w-full cursor-pointer">
-            <div className="border-2 w-full py-2 sm:px-10 sm:py-4 bg-green-50 rounded-3xl flex flex-col items-center">
+            <div className="border w-full py-2 sm:px-10 sm:py-4 rounded-3xl flex flex-col items-center ring-1 ring-blue-300/70 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))" }}>
               <Search className="md:size-6 size-4" />
               <h4 className="text-sm md:text-md font-bold">{t("trips.searchForm.search")}</h4>
             </div>
           </DialogTrigger>
           <DialogContent 
-            style={{ maxHeight: viewportHeight ? Math.min(760, viewportHeight - 8) : undefined }}
+            className="overflow-hidden rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm"
+            style={{ maxHeight: viewportHeight ? Math.min(760, viewportHeight - 8) : undefined, backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))" }}
             showCloseButton={false}
           >
             <DialogHeader className="relative">
-              <DialogTitle className="text-center text-green-600 font-bold pr-8">
+              <DialogTitle className="text-center text-primary font-bold pr-8">
                 {t("trips.searchForm.search")}
               </DialogTitle>
+            <DialogDescription className="sr-only">Search trip dialog</DialogDescription>
               <DialogClose asChild>
                 <Button
                   variant="ghost"
@@ -472,6 +476,7 @@ function Trips() {
                   value={searchFilters.from}
                   onChange={(e) => setSearchFilters(prev => ({ ...prev, from: e.target.value }))}
                   placeholder={t("trips.searchForm.fromPlaceholder")}
+                  className="bg-white"
                 />
                 <div className="grid w-full items-center gap-3">
                 <Label htmlFor="to">{t("trips.searchForm.to")}</Label>
@@ -482,6 +487,7 @@ function Trips() {
                   value={searchFilters.to}
                   onChange={(e) => setSearchFilters(prev => ({ ...prev, to: e.target.value }))}
                   placeholder={t("trips.searchForm.toPlaceholder")}
+                  className="bg-white"
                 />
                 </div>
                 <div className="grid w-full items-center gap-3">
@@ -494,17 +500,18 @@ function Trips() {
                   onChange={(e) => setSearchFilters(prev => ({ ...prev, date: e.target.value }))}
                   min={new Date().toISOString().split('T')[0]}
                   placeholder={t("trips.searchForm.datePlaceholder")}
+                  className="bg-white"
                 />
                 </div>
               </div>
               {/* Footer outside of scroll area to avoid iOS sticky issues */}
-              <div className="w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 flex gap-2 mt-2 py-1" style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}>
+              <div className="w-full bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-white/70 flex gap-2 mt-2 py-1" style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}>
                 <DialogClose className="w-1/2" asChild>
                   <Button className="rounded-2xl h-9 text-xs sm:text-sm">
                     {t("trips.searchForm.cancel")}
                   </Button>
                 </DialogClose>
-                <Button className="bg-green-600 rounded-2xl w-1/2 h-9 text-xs sm:text-sm" type="submit">
+                <Button className="bg-primary text-primary-foreground rounded-2xl w-1/2 h-9 text-xs sm:text-sm" type="submit">
                   {t("trips.searchForm.search")}
                 </Button>
               </div>
@@ -512,8 +519,8 @@ function Trips() {
           </DialogContent>
         </Dialog>
       </div>
-      <Card className="px-0 rounded-3xl shadow-sm">
-        <CardContent className="px-0 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
+      <Card className="px-0 rounded-3xl shadow-lg border">
+        <CardContent className="px-0 rounded-3xl bg-card/90 backdrop-blur-sm">
           <Tabs defaultValue="allTrips" className="w-full">
             <TabsList className="px-1 sm:px-2 w-full mb-4 sm:mb-6">
               <TabsTrigger value="allTrips" className="text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">{t("trips.all")}</TabsTrigger>
@@ -521,8 +528,8 @@ function Trips() {
             </TabsList>
             {activeFilters.from && (
               <div className="px-4 mb-2">
-                <div className="flex items-center justify-between bg-blue-50 rounded-lg p-2">
-                  <div className="text-sm text-blue-700">
+                <div className="flex items-center justify-between bg-accent rounded-lg p-2">
+                  <div className="text-sm text-accent-foreground">
                     <span className="font-medium">Поиск:</span> {activeFilters.from} → {activeFilters.to}
                     {activeFilters.date && ` • ${activeFilters.date}`}
                   </div>
@@ -574,14 +581,12 @@ function Trips() {
                   .map((_, index) => <TripsCardSkeleton key={index} />)
               ) : (
                 <>
-                  {myTrips && myTripsList.length === 0 ? (
-                    <div className="flex flex-col items-center gap-3 py-8">
-                      <h2>{t("trips.empty")}</h2>
-                      <Button onClick={() => setDialog(true)} className="text-white bg-green-600 rounded-2xl cursor-pointer shadow">
-                        {t("trips.create")}
-                      </Button>
-                    </div>
-                  ) : (
+              {myTrips && myTripsList.length === 0 ? (
+                <EmptyState
+                  title={t("trips.empty")}
+                  action={<Button onClick={() => setDialog(true)} className="text-primary-foreground bg-primary rounded-2xl cursor-pointer shadow">{t("trips.create")}</Button>}
+                />
+              ) : (
                     <div className="p-3 space-y-3">
                       {myTrips &&
                         myTripsList

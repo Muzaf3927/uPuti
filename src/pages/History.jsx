@@ -11,6 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { History as HistoryIcon, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { useI18n } from "@/app/i18n.jsx";
+import EmptyState from "@/components/EmptyState.jsx";
 import { useLocation } from "react-router-dom";
 
 function History() {
@@ -107,27 +108,25 @@ function History() {
   }, [asDriver, confirmedBookings]);
 
   const Empty = () => (
-    <Card className="flex flex-col items-center bg-gradient-to-br from-gray-50 to-gray-100 py-20 rounded-3xl shadow-sm">
-      <div className="rounded-full bg-gray-500/6 w-20 h-20 flex items-center justify-center">
-        <HistoryIcon />
-      </div>
-      <h2>{t("history.empty")}</h2>
-    </Card>
+    <EmptyState title={t("history.empty")} />
   );
 
   const currency = (n) => `${Number(n || 0).toLocaleString("ru-RU")} сум`;
 
   const TripItem = ({ t: trip, showEarn = false, role = "driver" }) => (
-    <div className="border rounded-3xl p-3 sm:p-4 bg-white/80 backdrop-blur-sm shadow-sm">
+    <div
+      className="border rounded-3xl p-3 sm:p-4 bg-card/90 backdrop-blur-sm shadow-[0_6px_18px_rgba(59,130,246,0.12)] ring-1 ring-blue-200/60"
+      style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.14), rgba(79,70,229,0.1))" }}
+    >
       <div className="flex flex-col gap-2">
         {/* Route and Status Row */}
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 text-green-700 font-bold text-sm sm:text-base min-w-0">
+          <div className="flex items-center gap-2 text-primary font-bold text-sm sm:text-base min-w-0">
             <span className="truncate">{trip.from_city}</span>
-            <span className="text-green-600">→</span>
+            <span className="text-primary">→</span>
             <span className="truncate">{trip.to_city}</span>
           </div>
-          <span className="text-xs bg-green-700 text-white py-1 px-2 rounded-2xl whitespace-nowrap">{t("history.completed")}</span>
+          <span className="text-xs bg-primary text-primary-foreground py-1 px-2 rounded-2xl whitespace-nowrap">{t("history.completed")}</span>
         </div>
 
         {/* Date and Time */}
@@ -218,8 +217,8 @@ function History() {
   );
 
   return (
-    <Card>
-      <CardContent className="py-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
+    <Card className="shadow-lg border">
+      <CardContent className="py-6 rounded-3xl bg-card/90 backdrop-blur-sm">
         <Tabs defaultValue="asDriver" onValueChange={(value) => {
           // Сбрасываем страницы при переключении вкладок
           if (value === "asDriver") {
@@ -234,7 +233,7 @@ function History() {
           </TabsList>
           <TabsContent value="asDriver">
             {asDriver && asDriver.length > 0 ? (
-              <div className="mb-4 p-4 rounded-2xl border bg-white/80 backdrop-blur-sm text-green-800 shadow-sm">
+              <div className="mb-4 p-4 rounded-2xl border bg-white/80 backdrop-blur-sm text-primary shadow-sm">
                 <div className="text-sm">{t("history.totalEarn")}</div>
                 <div className="text-2xl font-bold">{currency(driverTotals.total)}</div>
               </div>

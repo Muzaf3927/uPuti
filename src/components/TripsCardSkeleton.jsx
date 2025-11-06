@@ -4,8 +4,8 @@ import { Card, CardContent } from "./ui/card";
 
 function TripsCardSkeleton() {
   return (
-    <Card className="flex gap-3">
-      <CardContent className="flex flex-col gap-4">
+    <Card className="flex gap-3 bg-card/90 backdrop-blur-sm rounded-2xl border shadow-lg">
+      <CardContent className="flex flex-col gap-4 px-4 py-3">
         <div className="flex gap-3">
           <Skeleton className="size-8 rounded-full" />
           <Skeleton className="h-8 rounded-2xl w-40" />

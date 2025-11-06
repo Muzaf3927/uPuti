@@ -69,7 +69,7 @@ function Booking() {
             <TabsTrigger value="fromMe" className="relative text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">
               {t("booking.myBookings")}
               {unreadCounts?.my_confirmed_unread > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] sm:text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold">
+                  <span className="absolute -top-1 -right-1 bg-destructive text-white text-[9px] sm:text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold">
                 {unreadCounts.my_confirmed_unread > 9 ? '9+' : unreadCounts.my_confirmed_unread}
               </span>
               )}
@@ -77,15 +77,15 @@ function Booking() {
             <TabsTrigger value="toMe" className="relative text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-center">
               {t("booking.toMe")}
               {unreadCounts?.to_my_trips_confirmed_unread > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] sm:text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold">
+                  <span className="absolute -top-1 -right-1 bg-destructive text-white text-[9px] sm:text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold">
                 {unreadCounts.to_my_trips_confirmed_unread > 9 ? '9+' : unreadCounts.to_my_trips_confirmed_unread}
               </span>
               )}
             </TabsTrigger>
           </TabsList>
           <TabsContent value="fromMe">
-            <Card className="rounded-3xl shadow-sm">
-              <CardContent className="flex flex-col gap-4 py-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
+            <Card className="rounded-3xl shadow-lg border bg-card/90 backdrop-blur-sm">
+              <CardContent className="flex flex-col gap-4 py-6 rounded-3xl">
                 {myConfirmedBookingsLoading ? (
                     <div>{t("booking.loading")}</div>
                 ) : myConfirmedBookingsError ? (
@@ -94,7 +94,11 @@ function Booking() {
                     <div>{t("booking.none")}</div>
                 ) : (
                     myConfirmedBookings.map((b) => (
-                        <div key={b.id} className="bg-white/90 border border-green-200 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow">
+                        <div
+                          key={b.id}
+                          className="border rounded-xl p-3 shadow-[0_6px_18px_rgba(59,130,246,0.12)] ring-1 ring-blue-200/60 hover:shadow-[0_8px_22px_rgba(59,130,246,0.16)] transition-shadow"
+                          style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.14), rgba(79,70,229,0.1))" }}
+                        >
                           <div className="flex flex-col sm:flex-row sm:items-start gap-3">
                             <div className="flex items-start gap-3 flex-1 min-w-0">
                               <Avatar className="size-10 sm:size-12 flex-shrink-0">
@@ -105,7 +109,7 @@ function Booking() {
                             <span className="font-semibold text-gray-900 text-sm sm:text-base">
                               {b.trip?.from_city} <ArrowRight size={14} className="inline" /> {b.trip?.to_city}
                             </span>
-                                  <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full w-fit">Подтверждено</span>
+                                  <span className="bg-secondary text-secondary-foreground text-xs px-2 py-0.5 rounded-full w-fit">Подтверждено</span>
                                 </div>
                                 <div className="text-xs sm:text-sm text-gray-600">
                                   {b.trip?.date} • {b.trip?.time}
@@ -134,7 +138,7 @@ function Booking() {
                             <div className="flex flex-row sm:flex-col gap-2 flex-shrink-0">
                               <Link
                                   to={`/chats?tripId=${b.trip?.id}&receiverId=${b.trip?.driver?.id}`}
-                                  className="flex items-center justify-center gap-1.5 bg-green-600 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-green-700 transition-colors shadow-sm hover:shadow-md flex-1 sm:flex-none"
+                                  className="flex items-center justify-center gap-1.5 bg-primary text-primary-foreground px-3 py-2 rounded-lg text-xs sm:text-sm font-medium hover:brightness-110 transition-colors shadow-sm hover:shadow-md flex-1 sm:flex-none"
                               >
                                 <MessageCircle size={14} />
                                 <span className="hidden sm:inline">{t("booking.write")}</span>
@@ -143,7 +147,7 @@ function Booking() {
                                   href={b.trip?.driver?.phone ? `tel:+998${b.trip.driver.phone}` : '#'}
                                   className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors shadow-sm hover:shadow-md flex-1 sm:flex-none ${
                                       b.trip?.driver?.phone
-                                          ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                          ? 'bg-secondary text-secondary-foreground hover:brightness-110'
                                           : 'bg-gray-400 text-white cursor-not-allowed'
                                   }`}
                                   onClick={!b.trip?.driver?.phone ? (e) => e.preventDefault() : undefined}
@@ -160,8 +164,8 @@ function Booking() {
             </Card>
           </TabsContent>
           <TabsContent value="toMe">
-            <Card className="rounded-3xl shadow-sm">
-              <CardContent className="flex flex-col gap-4 py-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl">
+            <Card className="rounded-3xl shadow-lg border bg-card/90 backdrop-blur-sm">
+              <CardContent className="flex flex-col gap-4 py-6 rounded-3xl">
                 {confirmedBookingsToMyTripsLoading ? (
                     <div>{t("booking.loading")}</div>
                 ) : confirmedBookingsToMyTripsError ? (
@@ -172,7 +176,11 @@ function Booking() {
                     Object.values(bookingsByTrip).map(({ trip, bookings }) => (
                         <div key={trip.id} className="flex flex-col gap-2">
                           {bookings.map((b) => (
-                              <div key={b.id} className="bg-white/90 border border-green-200 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow">
+                              <div
+                                key={b.id}
+                                className="border rounded-xl p-3 shadow-[0_6px_18px_rgba(59,130,246,0.12)] ring-1 ring-blue-200/60 hover:shadow-[0_8px_22px_rgba(59,130,246,0.16)] transition-shadow"
+                                style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.14), rgba(79,70,229,0.1))" }}
+                              >
                                 <div className="flex flex-col sm:flex-row sm:items-start gap-3">
                                   <div className="flex items-start gap-3 flex-1 min-w-0">
                                     <Avatar className="size-10 sm:size-12 flex-shrink-0">
@@ -183,7 +191,7 @@ function Booking() {
                                 <span className="font-semibold text-gray-900 text-sm sm:text-base">
                                   {trip.from_city} <ArrowRight size={14} className="inline" /> {trip.to_city}
                                 </span>
-                                        <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full w-fit">Подтверждено</span>
+                                        <span className="bg-secondary text-secondary-foreground text-xs px-2 py-0.5 rounded-full w-fit">Подтверждено</span>
                                       </div>
                                       <div className="text-xs sm:text-sm text-gray-600">
                                         {trip.date} • {trip.time}
@@ -217,7 +225,7 @@ function Booking() {
                                   <div className="flex flex-row sm:flex-col gap-2 flex-shrink-0">
                                     <Link
                                         to={`/chats?tripId=${trip.id}&receiverId=${b.user?.id}`}
-                                        className="flex items-center justify-center gap-1.5 bg-green-600 text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-green-700 transition-colors shadow-sm hover:shadow-md flex-1 sm:flex-none"
+                                        className="flex items-center justify-center gap-1.5 bg-primary text-primary-foreground px-3 py-2 rounded-lg text-xs sm:text-sm font-medium hover:brightness-110 transition-colors shadow-sm hover:shadow-md flex-1 sm:flex-none"
                                     >
                                       <MessageCircle size={14} />
                                       <span className="hidden sm:inline">{t("booking.write")}</span>
@@ -226,7 +234,7 @@ function Booking() {
                                         href={b.user?.phone ? `tel:+998${b.user.phone}` : '#'}
                                         className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors shadow-sm hover:shadow-md flex-1 sm:flex-none ${
                                             b.user?.phone
-                                                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                                ? 'bg-secondary text-secondary-foreground hover:brightness-110'
                                                 : 'bg-gray-400 text-white cursor-not-allowed'
                                         }`}
                                         onClick={!b.user?.phone ? (e) => e.preventDefault() : undefined}

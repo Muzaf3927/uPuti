@@ -41,14 +41,14 @@ function Onboarding({ onComplete, setLang }) {
   const currentContent = content[isUzbek ? "uz" : "ru"];
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-green-50 to-blue-50 z-50 flex items-center justify-center p-2 sm:p-4">
-      <Card className="w-full max-w-2xl shadow-xl border-0 bg-white/95 backdrop-blur-sm relative max-h-[95vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-[radial-gradient(700px_350px_at_-10%_-20%,_oklch(0.94_0.07_220)_0%,_transparent_60%),radial-gradient(900px_450px_at_110%_0%,_oklch(0.92_0.06_220)_0%,_transparent_60%)] z-50 flex items-center justify-center p-2 sm:p-4">
+      <Card className="w-full max-w-2xl shadow-xl border bg-card/95 backdrop-blur-sm relative max-h-[95vh] overflow-y-auto rounded-2xl">
         <CardContent className="p-4 sm:p-6 lg:p-8">
           {/* Кнопка переключения языков */}
           <button
             type="button"
             onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
-            className="absolute top-2 right-2 sm:top-4 sm:right-4 px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded-full border bg-white hover:bg-green-50 text-[10px] sm:text-xs font-medium shadow-sm"
+            className="absolute top-2 right-2 sm:top-4 sm:right-4 px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded-full border bg-white hover:bg-accent/60 text-[10px] sm:text-xs font-medium shadow-sm"
           >
             {lang === "uz" ? (
               <div className="flex gap-1 py-0">
@@ -71,10 +71,10 @@ function Onboarding({ onComplete, setLang }) {
                 className="h-12 sm:h-14 lg:h-16 w-auto object-contain mix-blend-multiply"
               />
             </div>
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-700 mb-2 sm:mb-3">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary mb-2 sm:mb-3">
               {currentContent.title}
             </h1>
-            <p className="text-base sm:text-lg text-gray-600 mb-1 sm:mb-2">
+            <p className="text-base sm:text-lg text-gray-700 mb-1 sm:mb-2">
               {currentContent.subtitle}
             </p>
             <p className="text-sm sm:text-base text-gray-500">
@@ -84,30 +84,30 @@ function Onboarding({ onComplete, setLang }) {
 
           <div className="space-y-3 sm:space-y-4 lg:space-y-6 mb-4 sm:mb-6 lg:mb-8">
             {/* Пассажиры */}
-            <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 bg-green-50 rounded-xl">
+            <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 bg-secondary rounded-xl">
               <div className="flex-shrink-0">
-                <Users className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-green-600" />
+                <Users className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-secondary-foreground" />
               </div>
               <div>
                 <h3 className="font-semibold text-gray-800 mb-1 text-sm sm:text-base">
                   {currentContent.passengerTitle}
                 </h3>
-                <p className="text-gray-600 text-xs sm:text-sm">
+                <p className="text-gray-700 text-xs sm:text-sm">
                   {currentContent.passengerDesc}
                 </p>
               </div>
             </div>
 
             {/* Водители */}
-            <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 bg-blue-50 rounded-xl">
+            <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 bg-accent rounded-xl">
               <div className="flex-shrink-0">
-                <Car className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-blue-600" />
+                <Car className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-accent-foreground" />
               </div>
               <div>
                 <h3 className="font-semibold text-gray-800 mb-1 text-sm sm:text-base">
                   {currentContent.driverTitle}
                 </h3>
-                <p className="text-gray-600 text-xs sm:text-sm">
+                <p className="text-gray-700 text-xs sm:text-sm">
                   {currentContent.driverDesc}
                 </p>
               </div>
@@ -123,7 +123,7 @@ function Onboarding({ onComplete, setLang }) {
           <div className="flex justify-center">
             <Button
               onClick={onComplete}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 sm:px-8 sm:py-3 rounded-full text-sm sm:text-base lg:text-lg font-semibold shadow-lg w-full sm:w-auto"
+              className="bg-primary hover:brightness-110 text-primary-foreground px-6 py-2 sm:px-8 sm:py-3 rounded-full text-sm sm:text-base lg:text-lg font-semibold shadow-lg w-full sm:w-auto"
             >
               {currentContent.button}
             </Button>

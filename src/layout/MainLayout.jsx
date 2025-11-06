@@ -58,11 +58,9 @@ function MainLayout() {
 
   // Проверяем, нужно ли показать онбординг
   React.useEffect(() => {
-    const shouldShowOnboarding = safeLocalStorage.getItem("showOnboarding");
-    if (shouldShowOnboarding === "true") {
-      setShowOnboarding(true);
-      safeLocalStorage.removeItem("showOnboarding");
-    }
+    // Disable onboarding popup globally
+    try { safeLocalStorage.removeItem("showOnboarding"); } catch (_) {}
+    setShowOnboarding(false);
   }, []);
 
   const logoutMutation = usePostData("/logout");
@@ -128,14 +126,14 @@ function MainLayout() {
   };
   return (
     <div className="flex flex-col min-h-screen ">
-      <header className="h-16 sm:h-20 sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b">
-        <div className="flex justify-between items-center py-2 sm:py-3 custom-container overflow-hidden">
+      <header className="h-14 sm:h-16 sticky top-0 z-50 bg-gradient-to-tr from-blue-100/85 to-cyan-200/75 dark:from-white/5 dark:to-white/10 backdrop-blur-md border-b">
+        <div className="flex justify-between items-center py-1 sm:py-2 custom-container overflow-hidden">
           <div className="flex gap-2 sm:gap-3 items-center">
             <Link className="rounded-2xl p-0" to="/">
               <img
                 src="/logo.png"
                 alt="UPuti"
-                className="h-10 sm:h-12 lg:h-14 w-auto object-contain-50 hover:opacity-100 transition-opacity mix-blend-multiply"
+              className="block h-10 sm:h-12 lg:h-14 w-auto object-contain hover:opacity-100 transition-opacity mix-blend-normal"
               />
             </Link>
           </div>
@@ -143,7 +141,7 @@ function MainLayout() {
             <button
               type="button"
               onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
-              className="px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded-full border bg-white/80 hover:bg-green-50 text-[10px] sm:text-xs"
+              className="px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded-full border bg-white/80 hover:bg-accent/60 text-[10px] sm:text-xs"
               title={lang === "uz" ? "RU" : "UZ"}
             >
               {lang === "uz" ? (
@@ -161,9 +159,9 @@ function MainLayout() {
             <div className="flex gap-2 sm:gap-3 items-center">
               <DropdownMenu>
                 <DropdownMenuTrigger className="relative">
-                  <Bell className="cursor-pointer text-gray-700 hover:text-green-600 transition w-5 h-5 sm:w-6 sm:h-6" />
+                  <Bell className="cursor-pointer text-gray-700 hover:text-primary transition w-5 h-5 sm:w-6 sm:h-6" />
                   {!!unread?.unread_count && (
-                    <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] sm:min-w-[18px] sm:h-[18px] px-1 rounded-full bg-red-600 text-white text-[9px] sm:text-[10px] flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] sm:min-w-[18px] sm:h-[18px] px-1 rounded-full bg-destructive text-white text-[9px] sm:text-[10px] flex items-center justify-center">
                       {unread.unread_count}
                     </span>
                   )}
@@ -176,7 +174,7 @@ function MainLayout() {
                     <button
                       disabled={markAll.isPending}
                       onClick={() => markAll.mutate()}
-                      className="text-xs text-green-700 hover:underline"
+                      className="text-xs text-primary hover:underline"
                     >
                       Прочитать все
                     </button>
@@ -226,14 +224,14 @@ function MainLayout() {
                 userRefetch();
               }}
             >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-xs sm:text-sm cursor-pointer hover:bg-green-700 transition">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-xs sm:text-sm cursor-pointer hover:brightness-110 transition">
                 {getInitials(userData?.name)}
               </div>
             </button>
           </div>
         </div>
       </header>
-      <div className="custom-container my-3 sm:my-5">
+      <div className="custom-container mb-3 sm:mb-5">
         <Navbar />
       </div>
       <main className="grow custom-container mb-6 sm:mb-10">
@@ -246,10 +244,10 @@ function MainLayout() {
             className="absolute inset-0 bg-black/40"
             onClick={() => setProfileOpen(false)}
           />
-          <div className="absolute right-1 top-1 sm:right-2 sm:top-2 h-auto max-h-[85vh] w-[85vw] max-w-[280px] bg-white shadow-xl rounded-2xl flex flex-col overflow-hidden">
+          <div className="absolute right-1 top-1 sm:right-2 sm:top-2 h-auto max-h-[85vh] w-[85vw] max-w-[280px] bg-card/95 backdrop-blur-sm shadow-xl rounded-2xl flex flex-col overflow-hidden border ring-1 ring-blue-200/60" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.12), rgba(79,70,229,0.1))" }}>
             <div className="p-3 sm:p-4 border-b flex items-center justify-between">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-sm">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
                   {(userData?.name || "U").slice(0, 1)}
                 </div>
                 <div className="flex flex-col">
@@ -301,18 +299,18 @@ function MainLayout() {
                 <Link
                   to="/profile"
                   onClick={() => setProfileOpen(false)}
-                  className="w-full flex items-center gap-2 hover:bg-gray-50 rounded-lg p-2 transition-colors"
+                  className="w-full flex items-center gap-2 hover:bg-accent/50 rounded-lg p-2 transition-colors"
                 >
-                  <User className="w-4 h-4 text-green-600" />
+                  <User className="w-4 h-4 text-primary" />
                   <span className="text-sm font-semibold text-gray-700">
                     {t("profilePanel.myProfile")}
                   </span>
                 </Link>
                 <button
                   onClick={() => setSupportOpen(true)}
-                  className="w-full flex items-center gap-2 hover:bg-gray-50 rounded-lg p-2 transition-colors"
+                  className="w-full flex items-center gap-2 hover:bg-accent/50 rounded-lg p-2 transition-colors"
                 >
-                  <Headphones className="w-4 h-4 text-green-600" />
+                  <Headphones className="w-4 h-4 text-primary" />
                   <span className="text-sm font-semibold text-gray-700">
                     {t("profilePanel.support")}
                   </span>
@@ -322,7 +320,7 @@ function MainLayout() {
             <div className="p-3 sm:p-4 border-t">
               <button
                 onClick={handleLogout}
-                className="w-full bg-red-600 text-white rounded-2xl py-2 flex items-center justify-center gap-2 text-sm"
+                className="w-full bg-destructive text-white rounded-2xl py-2 flex items-center justify-center gap-2 text-sm"
               >
                 <LogOut className="w-4 h-4" /> {t("profilePanel.logout")}
               </button>
@@ -331,12 +329,7 @@ function MainLayout() {
         </div>
       )}
 
-      {showOnboarding && (
-        <Onboarding
-          onComplete={() => setShowOnboarding(false)}
-          setLang={setLang}
-        />
-      )}
+      {/* Onboarding disabled */}
 
       {/* Support Modal */}
       {supportOpen && (
@@ -346,11 +339,18 @@ function MainLayout() {
             onClick={() => setSupportOpen(false)}
           />
           <div className="absolute inset-0 flex items-center justify-center p-4">
-            <div className="bg-white rounded-xl shadow-lg w-full max-w-[280px] p-4 text-center">
+            <div className="relative bg-card/95 backdrop-blur-sm rounded-xl shadow-lg w/full max-w-[280px] p-4 text-center border">
+              <button
+                onClick={() => setSupportOpen(false)}
+                className="absolute top-2 right-2 h-6 w-6 p-0 rounded-full hover:bg-accent/60"
+                aria-label="Close"
+              >
+                ✕
+              </button>
               <div className="mb-3">
                 <div className="relative w-12 h-12 mx-auto mb-2">
-                  <User className="w-10 h-10 text-green-600 absolute top-1 left-1" />
-                  <Headphones className="w-6 h-6 text-green-500 absolute -top-1 -right-1" />
+                  <User className="w-10 h-10 text-primary absolute top-1 left-1" />
+                  <Headphones className="w-6 h-6 text-primary absolute -top-1 -right-1" />
                 </div>
                 <h3 className="text-sm font-semibold text-gray-900 mb-1">
                   {t("support.title")}
@@ -364,7 +364,7 @@ function MainLayout() {
                   href="https://t.me/Khamroyev_3"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors text-xs font-medium"
+                  className="inline-flex items-center gap-1.5 bg-gradient-to-br from-blue-500 to-cyan-500 text-white px-3 py-1.5 rounded-lg hover:brightness-110 transition-colors text-xs font-medium"
                 >
                   {/* Telegram Icon */}
                   <svg viewBox="0 0 24 24" className="w-3 h-3" aria-hidden="true">
@@ -372,12 +372,6 @@ function MainLayout() {
                   </svg>
                   {t("support.button")}
                 </a>
-                <button
-                  onClick={() => setSupportOpen(false)}
-                  className="text-xs text-red-500 hover:text-red-700"
-                >
-                  {t("support.close")}
-                </button>
               </div>
             </div>
           </div>
