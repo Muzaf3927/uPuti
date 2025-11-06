@@ -1,14 +1,24 @@
 import React from "react";
 import { useI18n } from "@/app/i18n.jsx";
+import { useNavigate } from "react-router-dom";
 
 function DownloadAndroid() {
   const { lang } = useI18n();
+  const navigate = useNavigate();
 
   const installText = lang === "ru" ? "Установить для Android" : "Android uchun o'rnatish";
 
   return (
     <div className="min-h-screen pt-6 pb-10 px-3 flex flex-col items-center">
-      <div className="w-full max-w-md">
+      <div className="relative w-full max-w-md">
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="absolute -top-2 -right-2 h-8 w-8 rounded-full bg-white/80 border shadow-sm flex items-center justify-center text-gray-700 hover:bg-white"
+          aria-label={lang === "ru" ? "Закрыть" : "Yopish"}
+        >
+          ×
+        </button>
         <h1 className="text-center text-lg font-semibold mb-3">
           {lang === "ru" ? "Загрузка Android" : "Android yuklab olish"}
         </h1>
