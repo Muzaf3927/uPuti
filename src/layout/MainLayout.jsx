@@ -126,14 +126,14 @@ function MainLayout() {
   };
   return (
     <div className="flex flex-col min-h-screen ">
-      <header className="h-14 sm:h-16 sticky top-0 z-50 bg-gradient-to-tr from-blue-100/85 to-cyan-200/75 dark:from-white/5 dark:to-white/10 backdrop-blur-md border-b">
+      <header className="h-16 sm:h-20 sticky top-0 z-50 bg-gradient-to-tr from-blue-100/85 to-cyan-200/75 dark:from-white/5 dark:to-white/10 backdrop-blur-md border-b">
         <div className="flex justify-between items-center py-1 sm:py-2 custom-container overflow-hidden">
           <div className="flex gap-2 sm:gap-3 items-center">
             <Link className="rounded-2xl p-0" to="/">
               <img
                 src="/logo.png"
                 alt="UPuti"
-              className="block h-10 sm:h-12 lg:h-14 w-auto object-contain hover:opacity-100 transition-opacity mix-blend-normal"
+              className="block h-14 sm:h-16 lg:h-20 w-auto object-contain hover:opacity-100 transition-opacity mix-blend-normal"
               />
             </Link>
           </div>
@@ -231,7 +231,7 @@ function MainLayout() {
           </div>
         </div>
       </header>
-      <div className="custom-container mb-3 sm:mb-5">
+      <div className="custom-container mb-3 sm:mb-5 sticky top-16 sm:top-20 z-40">
         <Navbar />
       </div>
       <main className="grow custom-container mb-6 sm:mb-10">
