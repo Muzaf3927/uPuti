@@ -56,7 +56,7 @@ function DeleteAccount() {
   };
 
   return (
-    <div className="pt-2 pb-6 px-1 flex gap-3 flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="pt-2 pb-6 px-1 flex gap-3 flex-col items-center justify-center min-h-screen">
       {/* Header with back button */}
       <div className="w-full max-w-md mb-4">
         <button
@@ -69,7 +69,7 @@ function DeleteAccount() {
       </div>
 
       <div className="w-full max-w-md">
-        <Card className="w-full px-4">
+        <Card className="w-full px-4 border rounded-2xl ring-1 ring-blue-200/60 shadow-[0_8px_24px_rgba(59,130,246,0.12)]" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.14), rgba(79,70,229,0.1))" }}>
           <CardHeader className="relative p-0.5 sm:p-1">
             <CardTitle className="text-red-700 mx-auto text-lg sm:text-xl font-bold">
               {t("auth.deleteAccount.title")}
@@ -128,7 +128,7 @@ function DeleteAccount() {
                       e.clipboardData.setData("text/plain", digits);
                       e.preventDefault();
                     }}
-                    className="pl-20 sm:pl-24 font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-8 sm:h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm sm:text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-6 sm:file:h-7 file:border-0 file:bg-transparent file:text-xs sm:file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                    className="pl-20 sm:pl-24 font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-8 sm:h-9 w-full min-w-0 rounded-md border bg-blue-50/60 px-3 py-1 text-sm sm:text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-6 sm:file:h-7 file:border-0 file:bg-transparent file:text-xs sm:file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                   />
                   <p className="absolute left-8 sm:left-10 top-1.5 font-normal select-none text-sm">
                     +998
@@ -163,7 +163,7 @@ function DeleteAccount() {
                     type={showPassword ? "text" : "password"}
                     placeholder={t("auth.deleteAccount.passwordPlaceholder")}
                     required
-                    className="pl-10 h-8 sm:h-9 text-sm sm:text-base"
+                    className="pl-10 h-8 sm:h-9 text-sm sm:text-base bg-blue-50/60"
                   />
                 </div>
               </div>

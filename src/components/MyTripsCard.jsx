@@ -375,8 +375,8 @@ function MyTripsCard({ trip }) {
             <DialogTitle>Safarni tahrirlash</DialogTitle>
             <DialogDescription className="sr-only">Trip edit dialog</DialogDescription>
           </DialogHeader>
-          <div className="overflow-y-auto overflow-x-hidden pr-1 overscroll-contain touch-pan-y" style={{ maxHeight: viewportHeight ? viewportHeight - 120 : '70vh', paddingBottom: keyboardInset ? keyboardInset : undefined }}>
-          <form onSubmit={handleUpdate} className="flex flex-col gap-3">
+          <div className="overflow-y-auto overflow-x-hidden pr-1 overscroll-contain touch-pan-y" style={{ maxHeight: viewportHeight ? viewportHeight - 160 : '60vh' }}>
+          <form id="editTripForm" onSubmit={handleUpdate} className="flex flex-col gap-3">
             <div className="grid w-full items-center gap-2">
               <Label htmlFor="from_city">Qayerdan</Label>
               <Input id="from_city" name="from_city" value={form.from_city} onChange={handleChange} className="bg-white h-9" />
@@ -429,13 +429,13 @@ function MyTripsCard({ trip }) {
               <Label htmlFor="numberCar">Raqam</Label>
               <Input id="numberCar" name="numberCar" className="uppercase bg-white h-9" value={form.numberCar} onChange={handleChange} />
             </div>
-            <div className="w-full flex gap-2">
-              <DialogClose asChild>
-                <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">Bekor qilish</Button>
-              </DialogClose>
-              <Button type="submit" className="w-1/2 bg-primary text-primary-foreground rounded-2xl">Saqlash</Button>
-            </div>
           </form>
+          </div>
+          <div className="flex gap-2 mt-2 pt-2 border-t">
+            <DialogClose asChild>
+              <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">Bekor qilish</Button>
+            </DialogClose>
+            <Button type="submit" form="editTripForm" className="w-1/2 bg-primary text-primary-foreground rounded-2xl">Saqlash</Button>
           </div>
         </DialogContent>
       </Dialog>

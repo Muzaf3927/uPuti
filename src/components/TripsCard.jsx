@@ -373,14 +373,15 @@ function TripsCard({ trip }) {
             backgroundImage: 'linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))'
           }}
         >
-          <div className="rounded-2xl p-6 max-h-[60vh] overflow-y-auto">
+          <div className="rounded-2xl p-6">
             <DialogHeader>
               <DialogTitle className="text-center text-lg font-semibold mb-4">{t("tripsCard.offerTitle")}</DialogTitle>
               <DialogDescription className="text-center text-sm text-gray-600 mb-4">
                 Предложите свою цену и количество мест
               </DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleSubmitOffer} className="flex flex-col gap-4">
+            <div className="max-h-[50vh] overflow-y-auto overflow-x-hidden pr-1 overscroll-contain touch-pan-y">
+            <form id="offerForm" onSubmit={handleSubmitOffer} className="flex flex-col gap-4">
             <div className="flex flex-col items-center gap-3">
               <Label className="text-sm font-medium">{t("tripsCard.seatsLabel")}</Label>
               <div className="flex items-center gap-3">
@@ -437,18 +438,18 @@ function TripsCard({ trip }) {
                 className="bg-white"
               />
             </div>
-            
-            <div className="w-full flex gap-2 mt-2">
+          </form>
+            </div>
+            <div className="flex gap-2 mt-2 pt-2 border-t">
               <DialogClose asChild>
                 <Button type="button" variant="secondary" className="w-1/2 rounded-2xl">
                   {t("tripsCard.cancelButton")}
                 </Button>
               </DialogClose>
-              <Button type="submit" className="w-1/2 bg-primary text-primary-foreground rounded-2xl">
+              <Button type="submit" form="offerForm" className="w-1/2 bg-primary text-primary-foreground rounded-2xl">
                 {t("tripsCard.submitOffer")}
               </Button>
             </div>
-          </form>
           </div>
         </DialogContent>
       </Dialog>

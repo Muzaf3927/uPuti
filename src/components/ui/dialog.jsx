@@ -36,7 +36,7 @@ function DialogOverlay({
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
       className={cn(
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50 overscroll-contain touch-none",
         className
       )}
       {...props} />
@@ -51,9 +51,9 @@ function DialogContent({
   preventOutsideClose = true,
   // Scroll focused input into view inside dialog; disabled by default to avoid jumps on iOS
   autoFocusScroll = false,
-  // If true, жестко блокирует прокрутку фона (html/body). По умолчанию выкл.,
-  // так как это может мешать скроллу страницы после закрытия диалога.
-  lockBackgroundScroll = false,
+  // If true, жестко блокирует прокрутку фона (html/body). По умолчанию включено
+  // для предотвращения скролла фона при открытой модалке.
+  lockBackgroundScroll = true,
   ...props
 }) {
   // Optionally lock background scroll while dialog is open
@@ -133,7 +133,7 @@ function DialogContent({
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
       {/* Use full-screen flex container to avoid iOS visualViewport/translate glitches */}
-      <div className="fixed inset-0 z-50 flex items-start justify-center p-4" style={{ height: portalHeight ? `${portalHeight}px` : undefined }}>
+      <div className="fixed inset-0 z-50 flex items-start justify-center p-4 overscroll-contain touch-pan-y" style={{ height: portalHeight ? `${portalHeight}px` : undefined }}>
       <DialogPrimitive.Content
         ref={contentRef}
         data-slot="dialog-content"

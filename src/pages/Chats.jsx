@@ -129,17 +129,43 @@ function Chats() {
     }
   }, [selectedChat?.trip_id, selectedChat?.chat_partner_id, queryClient]);
 
+  // Блокируем скролл фона когда открыт чат
+  useEffect(() => {
+    if (!selectedChat) return;
+    const html = document.documentElement;
+    const body = document.body;
+    const scrollY = window.scrollY || window.pageYOffset;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    const prevBodyPosition = body.style.position;
+    const prevBodyTop = body.style.top;
+    const prevBodyWidth = body.style.width;
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+      body.style.position = prevBodyPosition;
+      body.style.top = prevBodyTop;
+      body.style.width = prevBodyWidth;
+      window.scrollTo(0, scrollY);
+    };
+  }, [selectedChat]);
+
   // Если выбран чат, показываем интерфейс чата
   if (selectedChat) {
     return (
       <>
         {/* Затемненный фон */}
         <div 
-          className="fixed inset-0 bg-black/30 z-40"
+          className="fixed inset-0 bg-black/30 z-40 overscroll-contain touch-none"
           onClick={handleBackToList}
         />
         {/* Чат */}
-        <Card className="h-[50vh] border py-0 relative rounded-3xl overflow-hidden shadow-lg fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-md z-50">
+        <Card className="h-[60dvh] sm:h-[50vh] border py-0 relative rounded-3xl overflow-hidden shadow-lg fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-md z-50">
         <CardContent className="flex flex-col h-full bg-card/90 backdrop-blur-sm" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.10), rgba(79,70,229,0.08))" }}>
           {/* Заголовок чата */}
           <div className="flex items-center justify-between px-3 py-2 border-b bg-card/95 backdrop-blur-sm sticky top-0 z-10">
@@ -173,7 +199,7 @@ function Chats() {
           <div
             className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5 ring-1 ring-blue-200/60"
             style={{
-              maxHeight: 'calc(50vh - 120px)',
+              maxHeight: viewportHeight ? Math.max(120, viewportHeight - (keyboardInset || 0) - 120) : 'calc(60dvh - 120px)',
               backgroundImage: 'linear-gradient(135deg, rgba(59,130,246,0.10), rgba(79,70,229,0.06))',
             }}
           >
@@ -224,7 +250,7 @@ function Chats() {
           </div>
 
           {/* Поле ввода */}
-          <div className="border-t bg-card/95 backdrop-blur-sm px-2 py-1.5 sticky bottom-0" style={{ paddingBottom: keyboardInset ? keyboardInset : undefined }}>
+          <div className="border-t bg-card/95 backdrop-blur-sm px-2 py-1.5 sticky bottom-0" style={{ paddingBottom: keyboardInset ? Math.max(4, keyboardInset - 12) : undefined }}>
             <div className="flex items-center gap-1.5">
               <Input
                 type="text"
