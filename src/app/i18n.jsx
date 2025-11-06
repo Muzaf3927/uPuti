@@ -284,6 +284,10 @@ const dict = {
       button: "Yozish",
       close: "Yopish",
     },
+    download: {
+      android: "Yuklab olish",
+      ios: "Yuklab olish",
+    },
   },
   ru: {
     nav: {
@@ -564,6 +568,10 @@ const dict = {
       description: "Есть вопросы? Свяжитесь  Тех поддержкой",
       button: "Написать",
       close: "Закрыть",
+    },
+    download: {
+      android: "Скачать",
+      ios: "Скачать",
     },
   },
 };

@@ -47,6 +47,7 @@ import { usePostData } from "@/api/api";
 import { toast } from "sonner";
 import { useI18n } from "@/app/i18n.jsx";
 import { safeLocalStorage } from "@/lib/localStorage";
+import DownloadButtons from "@/components/DownloadButtons";
 
 function Register() {
   const { t, lang, setLang } = useI18n();
@@ -448,6 +449,8 @@ function Register() {
           </a>
         </div>
       </div>
+      {/* Download Buttons */}
+      <DownloadButtons />
     </div>
   );
 }

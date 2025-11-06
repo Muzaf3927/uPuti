@@ -45,6 +45,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useI18n } from "@/app/i18n.jsx";
+import DownloadButtons from "@/components/DownloadButtons";
 
 function FogotPassword() {
   const { t, lang, setLang } = useI18n();
@@ -419,6 +420,8 @@ function FogotPassword() {
           </a>
         </div>
       </div>
+      {/* Download Buttons */}
+      <DownloadButtons />
     </div>
   );
 }

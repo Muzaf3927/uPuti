@@ -20,6 +20,7 @@ import { useI18n } from "@/app/i18n.jsx";
 import Onboarding from "@/components/Onboarding";
 import { safeLocalStorage } from "@/lib/localStorage";
 import { sessionManager } from "@/lib/sessionManager";
+import DownloadButtons from "@/components/DownloadButtons";
 
 function Login() {
   const { t, lang, setLang } = useI18n();
@@ -362,6 +363,8 @@ function Login() {
           </a>
         </div>
       </div>
+      {/* Download Buttons */}
+      <DownloadButtons />
     </div>
   );
 }
