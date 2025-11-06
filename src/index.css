@@ -6,6 +6,7 @@ body,
 #root {
   height: 100%;
   min-height: 100dvh; /* Better on mobile WebView */
+  overflow-y: auto; /* ensure vertical scroll available */
 }
 
 /* Aurora Theme Overrides */

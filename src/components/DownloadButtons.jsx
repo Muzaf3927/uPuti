@@ -1,5 +1,6 @@
 import React from "react";
 import { useI18n } from "@/app/i18n.jsx";
+import { Link } from "react-router-dom";
 
 // Android Icon SVG
 const AndroidIcon = ({ className }) => (
@@ -27,13 +28,12 @@ const IOSIcon = ({ className }) => (
 
 function DownloadButtons() {
   const { t } = useI18n();
+  const appStoreUrl = "https://apps.apple.com/uz/app/uputi/id6753739028";
 
   return (
-    <div className="w-full max-w-md mt-3 flex flex-col gap-2">
-      <a
-        href="#"
-        target="_blank"
-        rel="noopener noreferrer"
+    <div className="w-full max-w-md mt-2 flex flex-col gap-2">
+      <Link
+        to="/download/android"
         className="group flex items-center gap-3 bg-gradient-to-r from-[#3DDC84] to-[#2BB673] hover:from-[#2BB673] hover:to-[#3DDC84] text-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
       >
         <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-white/20 rounded-lg group-hover:bg-white/30 transition-colors">
@@ -56,10 +56,10 @@ function DownloadButtons() {
             d="M9 5l7 7-7 7"
           />
         </svg>
-      </a>
+      </Link>
 
       <a
-        href="#"
+        href={appStoreUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="group flex items-center gap-3 bg-gradient-to-r from-[#000000] to-[#1a1a1a] hover:from-[#1a1a1a] hover:to-[#000000] text-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"

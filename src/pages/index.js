@@ -8,3 +8,4 @@ export { default as Booking } from "./Booking";
 export { default as FogotPassword } from "./FogotPassword";
 export { default as Profile } from "./Profile";
 export { default as DeleteAccount } from "./DeleteAccount";
+export { default as DownloadAndroid } from "./DownloadAndroid";

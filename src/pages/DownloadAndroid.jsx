@@ -1,0 +1,42 @@
+import React from "react";
+import { useI18n } from "@/app/i18n.jsx";
+
+function DownloadAndroid() {
+  const { lang } = useI18n();
+
+  const installText = lang === "ru" ? "Установить для Android" : "Android uchun o'rnatish";
+
+  return (
+    <div className="min-h-screen pt-6 pb-10 px-3 flex flex-col items-center">
+      <div className="w-full max-w-md">
+        <h1 className="text-center text-lg font-semibold mb-3">
+          {lang === "ru" ? "Загрузка Android" : "Android yuklab olish"}
+        </h1>
+
+        {/* Placeholder for video (screen recording) */}
+        <div className="w-full bg-white/80 border rounded-2xl shadow-sm overflow-hidden">
+          <div className="w-full aspect-video bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center text-gray-400">
+            {lang === "ru" ? "Здесь будет видео" : "Bu yerda video bo'ladi"}
+          </div>
+          <div className="p-3 text-xs text-gray-500">
+            {lang === "ru"
+              ? "Под видео будет описание/инструкции (при необходимости)."
+              : "Video ostida kerak bo'lsa, tavsif/ko'rsatmalar bo'ladi."}
+          </div>
+        </div>
+
+        {/* Install button */}
+        <button
+          type="button"
+          className="mt-4 w-full bg-gradient-to-r from-[#3DDC84] to-[#2BB673] text-white font-semibold py-3 rounded-xl shadow-lg hover:brightness-110 transition"
+        >
+          {installText}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default DownloadAndroid;
+
+

@@ -163,7 +163,7 @@ function FogotPassword() {
   };
 
   return (
-    <div className="pt-0 pb-6 px-1 flex gap-3 flex-col items-center justify-start min-h-screen">
+    <div className="pt-6 pb-6 px-1 flex gap-3 flex-col items-center justify-start min-h-screen">
       
       <h1 className="flex items-center justify-center text-primary font-bold">
         <img
@@ -403,25 +403,10 @@ function FogotPassword() {
           </div>
         </div>
       )}
-      {/* Support for non-authenticated users */}
-      <div className="w-full max-w-md mt-2 text-center">
-        <div className="bg-white/80 border rounded-xl p-3">
-          <p className="text-xs text-gray-600 mb-2">{t("support.description")}</p>
-          <a
-            href="https://t.me/Khamroyev_3"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 bg-gradient-to-br from-blue-500 to-cyan-500 text-white px-3 py-1.5 rounded-lg hover:brightness-110 transition-colors text-xs font-medium"
-          >
-            <svg viewBox="0 0 24 24" className="w-3 h-3" aria-hidden="true">
-              <path fill="currentColor" d="M9.04 15.49 8.88 19c.27 0 .39-.12.54-.27l1.93-2.33 3.99 2.91c.73.4 1.26.19 1.45-.68l2.63-12.36c.27-1.25-.45-1.74-1.25-1.43L3.34 9.5c-1.2.47-1.19 1.14-.21 1.45l4.63 1.44 10.77-6.8c.51-.31.98-.14.59.2z" />
-            </svg>
-            {t("support.button")}
-          </a>
-        </div>
-      </div>
       {/* Download Buttons */}
-      <DownloadButtons />
+      <div className="-mt-2">
+        <DownloadButtons />
+      </div>
     </div>
   );
 }

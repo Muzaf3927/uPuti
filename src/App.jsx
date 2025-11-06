@@ -12,6 +12,7 @@ import {
   FogotPassword,
   Profile,
   DeleteAccount,
+  DownloadAndroid,
 } from "./pages";
 import MainLayout from "./layout/MainLayout";
 import {
@@ -48,6 +49,11 @@ function App() {
     {
       path: "/register",
       element: user ? <Navigate to="/" /> : <Register />,
+      errorElement: <ErrorElement />,
+    },
+    {
+      path: "/download/android",
+      element: <DownloadAndroid />,
       errorElement: <ErrorElement />,
     },
     {
