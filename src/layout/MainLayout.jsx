@@ -159,7 +159,7 @@ function MainLayout() {
             <div className="flex gap-2 sm:gap-3 items-center">
               <DropdownMenu>
                 <DropdownMenuTrigger className="relative">
-                  <Bell className="cursor-pointer text-gray-700 hover:text-primary transition w-5 h-5 sm:w-6 sm:h-6" />
+                  <Bell className="cursor-pointer text-gray-700 hover:text-primary transition w-6 h-6 sm:w-7 sm:h-7" />
                   {!!unread?.unread_count && (
                     <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] sm:min-w-[18px] sm:h-[18px] px-1 rounded-full bg-destructive text-white text-[9px] sm:text-[10px] flex items-center justify-center">
                       {unread.unread_count}
@@ -224,7 +224,7 @@ function MainLayout() {
                 userRefetch();
               }}
             >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-xs sm:text-sm cursor-pointer hover:brightness-110 transition">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm sm:text-base cursor-pointer hover:brightness-110 transition">
                 {getInitials(userData?.name)}
               </div>
             </button>
