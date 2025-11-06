@@ -20,7 +20,7 @@ function DownloadAndroid() {
           ×
         </button>
         <h1 className="text-center text-lg font-semibold mb-3">
-          {lang === "ru" ? "Загрузка Android" : "Android yuklab olish"}
+          {lang === "ru" ? "Загрузка для Android" : "Android uchun yuklash"}
         </h1>
 
         {/* Placeholder for video (screen recording) */}
