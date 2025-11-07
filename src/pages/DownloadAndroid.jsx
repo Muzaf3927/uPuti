@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/app/i18n.jsx";
 import { useNavigate } from "react-router-dom";
 
@@ -6,6 +6,7 @@ function DownloadAndroid() {
   const { lang } = useI18n();
   const navigate = useNavigate();
   const videoRef = useRef(null);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
   const installText =
     lang === "ru" ? "Установить для Android" : "Android uchun o'rnatish";
@@ -29,6 +30,25 @@ function DownloadAndroid() {
     }
   };
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) {
+      return;
+    }
+
+    const handleLoadedData = () => {
+      setIsVideoReady(true);
+    };
+
+    video.addEventListener("loadeddata", handleLoadedData);
+    video.preload = "auto";
+    video.load();
+
+    return () => {
+      video.removeEventListener("loadeddata", handleLoadedData);
+    };
+  }, []);
+
   const handleClose = () => {
     if (window.opener) {
       window.close();
@@ -48,7 +68,7 @@ function DownloadAndroid() {
         <button
           type="button"
           onClick={handleClose}
-          className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/90 border shadow-sm flex items-center justify-center text-gray-700 hover:bg-white"
+          className="absolute top-3 right-3 z-20 h-10 w-10 rounded-full bg-gray-900/90 text-white border border-white/40 shadow-md flex items-center justify-center text-lg hover:bg-gray-900"
           aria-label={lang === "ru" ? "Закрыть" : "Yopish"}
         >
           ×
@@ -62,12 +82,24 @@ function DownloadAndroid() {
               className="h-full w-full object-contain"
               src="/video/screen.MOV"
               controls
+              preload="auto"
               playsInline
+              onLoadedData={() => setIsVideoReady(true)}
             >
               {lang === "ru"
                 ? "Ваш браузер не поддерживает воспроизведение видео."
                 : "Brauzeringiz videoni qo'llab-quvvatlamaydi."}
             </video>
+
+            {!isVideoReady && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black">
+                <div className="text-white text-sm opacity-80">
+                  {lang === "ru"
+                    ? "Загружаем видео..."
+                    : "Video yuklanmoqda..."}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
