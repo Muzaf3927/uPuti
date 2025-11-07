@@ -303,6 +303,21 @@ export const useBookingsUnreadCount = () =>
     cacheTime: 300000 // Кэш хранится 5 минут
   });
 
+// Download count tracking API
+export const downloadCountApi = {
+  trackDownload: (type) => postData("/count/download", { type }),
+};
+
+export const useTrackDownloadCount = () => {
+  return useMutation({
+    mutationFn: (type) => downloadCountApi.trackDownload(type),
+    onError: (error) => {
+      // Не показываем ошибку пользователю, просто логируем
+      console.error("Failed to track download count:", error);
+    },
+  });
+};
+
 // ? HOW TO USE EXAMPLES:
 
 // * 1. GET DATA (useGetData hook)
