@@ -63,7 +63,7 @@ function App() {
     },
     {
       path: "/",
-      element: user ? <MainLayout /> : <Navigate to="/login" />,
+      element: user ? <MainLayout /> : <Navigate to="/register" />,
       errorElement: <ErrorElement />,
       children: [
         {
