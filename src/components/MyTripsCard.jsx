@@ -326,41 +326,41 @@ function MyTripsCard({ trip }) {
             </Button>
           </div>
         </div>
-        {/* Desktop ≥ 640px: previous inline layout */}
-        <div className="w-full hidden sm:flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            {/* Цена для больших экранов */}
-            <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm mr-4">
+        {/* Desktop ≥ 640px: flex-wrap layout to ensure all buttons are visible */}
+        <div className="w-full hidden sm:block">
+          <div className="flex items-center justify-between mb-2">
+            <span className="inline-flex items-center gap-1 border rounded-md px-2 py-0.5">{trip.numberCar || "Bo'sh"}</span>
+            <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm">
               {Number(trip.price).toLocaleString()} сум
             </span>
-            <Button onClick={() => setRequestsOpen(true)} className="h-10 px-3 rounded-full bg-primary text-primary-foreground hover:brightness-110 flex items-center gap-2 text-sm sm:text-base relative">
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button onClick={() => setRequestsOpen(true)} className="h-10 px-3 rounded-full bg-primary text-primary-foreground hover:brightness-110 flex items-center gap-2 text-sm relative flex-shrink-0">
               <Mail className="size-4" />
-              <span className="text-sm">{t("myTripsCard.requests")}</span>
+              <span className="text-sm whitespace-nowrap">{t("myTripsCard.requests")}</span>
               {pendingRequests.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                   {pendingRequests.length}
                 </span>
               )}
             </Button>
-            <Button onClick={() => setBookingsOpen(true)} className="h-10 px-3 rounded-full bg-secondary text-secondary-foreground hover:brightness-110 flex items-center gap-2 text-sm sm:text-base relative">
+            <Button onClick={() => setBookingsOpen(true)} className="h-10 px-3 rounded-full bg-secondary text-secondary-foreground hover:brightness-110 flex items-center gap-2 text-sm relative flex-shrink-0">
               <CircleCheck className="size-4" />
-              <span className="text-sm">{t("myTripsCard.bookings")}</span>
+              <span className="text-sm whitespace-nowrap">{t("myTripsCard.bookings")}</span>
               {confirmedBookings.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                   {confirmedBookings.length}
                 </span>
               )}
             </Button>
-            <Button onClick={handleComplete} className="h-10 px-3 rounded-full bg-destructive text-white hover:brightness-110 flex items-center gap-2 text-sm sm:text-base">
+            <Button onClick={handleComplete} className="h-10 px-3 rounded-full bg-destructive text-white hover:brightness-110 flex items-center gap-2 text-sm flex-shrink-0">
               <CircleCheck className="size-4" />
-              <span className="text-sm">{t("myTripsCard.complete")}</span>
+              <span className="text-sm whitespace-nowrap">{t("myTripsCard.complete")}</span>
             </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button onClick={() => setEditOpen(true)} className="h-10 w-10 rounded-full bg-white border hover:bg-gray-50 flex items-center justify-center" aria-label={t("myTripsCard.edit")} title={t("myTripsCard.edit")}>
+            <Button onClick={() => setEditOpen(true)} className="h-10 w-10 rounded-full bg-white border hover:bg-gray-50 flex items-center justify-center flex-shrink-0 ml-auto" aria-label={t("myTripsCard.edit")} title={t("myTripsCard.edit")}>
               <Pencil className="size-5 text-gray-700" />
             </Button>
-            <Button onClick={handleDelete} className="h-10 w-10 rounded-full bg-white border border-red-300 text-red-600 hover:bg-red-50 flex items-center justify-center" aria-label={t("myTripsCard.delete")} title={t("myTripsCard.delete")}>
+            <Button onClick={handleDelete} className="h-10 w-10 rounded-full bg-white border border-red-300 text-red-600 hover:bg-red-50 flex items-center justify-center flex-shrink-0" aria-label={t("myTripsCard.delete")} title={t("myTripsCard.delete")}>
               <Trash2 className="size-5" />
             </Button>
           </div>
