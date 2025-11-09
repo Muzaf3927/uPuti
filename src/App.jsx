@@ -1,6 +1,19 @@
-import React, { useEffect, Suspense, lazy } from "react";
+import React, { useEffect } from "react";
 import { safeLocalStorage } from "@/lib/localStorage";
 import { sessionManager } from "@/lib/sessionManager";
+import {
+  Login,
+  Register,
+  Trips,
+  Requests,
+  Chats,
+  Booking,
+  History,
+  FogotPassword,
+  Profile,
+  DeleteAccount,
+  DownloadAndroid,
+} from "./pages";
 import MainLayout from "./layout/MainLayout";
 import {
   createBrowserRouter,
@@ -9,20 +22,7 @@ import {
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "./app/userSlice/userSlice";
-
-// Lazy load page components for code splitting
-const Login = lazy(() => import("./pages/Login"));
-const Register = lazy(() => import("./pages/Register"));
-const Trips = lazy(() => import("./pages/Trips"));
-const Requests = lazy(() => import("./pages/Requests"));
-const Chats = lazy(() => import("./pages/Chats"));
-const Booking = lazy(() => import("./pages/Booking"));
-const History = lazy(() => import("./pages/History"));
-const FogotPassword = lazy(() => import("./pages/FogotPassword"));
-const Profile = lazy(() => import("./pages/Profile"));
-const DeleteAccount = lazy(() => import("./pages/DeleteAccount"));
-const DownloadAndroid = lazy(() => import("./pages/DownloadAndroid"));
-const UserProfile = lazy(() => import("./pages/UserProfile"));
+import UserProfile from "./pages/UserProfile";
 
 function App() {
   const { user, isAuth } = useSelector((store) => store.user);
@@ -35,67 +35,30 @@ function App() {
     </div>
   );
 
-  const LoadingFallback = () => (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      minHeight: '100vh' 
-    }}>
-      <div>Loading...</div>
-    </div>
-  );
-
-  const LazyWrapper = ({ children }) => (
-    <Suspense fallback={<LoadingFallback />}>
-      {children}
-    </Suspense>
-  );
-
   const routes = createBrowserRouter([
     {
       path: "/login",
-      element: user ? <Navigate to="/" /> : (
-        <LazyWrapper>
-          <Login />
-        </LazyWrapper>
-      ),
+      element: user ? <Navigate to="/" /> : <Login />,
       errorElement: <ErrorElement />,
     },
     {
       path: "/fogotPassword",
-      element: user ? <Navigate to="/" /> : (
-        <LazyWrapper>
-          <FogotPassword />
-        </LazyWrapper>
-      ),
+      element: user ? <Navigate to="/" /> : <FogotPassword />,
       errorElement: <ErrorElement />,
     },
     {
       path: "/register",
-      element: user ? <Navigate to="/" /> : (
-        <LazyWrapper>
-          <Register />
-        </LazyWrapper>
-      ),
+      element: user ? <Navigate to="/" /> : <Register />,
       errorElement: <ErrorElement />,
     },
     {
       path: "/download/android",
-      element: (
-        <LazyWrapper>
-          <DownloadAndroid />
-        </LazyWrapper>
-      ),
+      element: <DownloadAndroid />,
       errorElement: <ErrorElement />,
     },
     {
       path: "/delete",
-      element: (
-        <LazyWrapper>
-          <DeleteAccount />
-        </LazyWrapper>
-      ),
+      element: <DeleteAccount />,
       errorElement: <ErrorElement />,
     },
     {
@@ -105,65 +68,38 @@ function App() {
       children: [
         {
           index: true,
-          element: (
-            <LazyWrapper>
-              <Trips />
-            </LazyWrapper>
-          ),
+          element: <Trips />,
           errorElement: <ErrorElement />,
         },
         {
           path: "/requests",
-          element: (
-            <LazyWrapper>
-              <Requests />
-            </LazyWrapper>
-          ),
+          element: <Requests />,
           errorElement: <ErrorElement />,
         },
         {
           path: "/booking",
-          element: (
-            <LazyWrapper>
-              <Booking />
-            </LazyWrapper>
-          ),
+          element: <Booking />,
           errorElement: <ErrorElement />,
         },
         {
           path: "/history",
-          element: (
-            <LazyWrapper>
-              <History />
-            </LazyWrapper>
-          ),
+          element: <History />,
           errorElement: <ErrorElement />,
         },
         {
           path: "/chats",
-          element: (
-            <LazyWrapper>
-              <Chats />
-            </LazyWrapper>
-          ),
+          element: <Chats />,
           errorElement: <ErrorElement />,
         },
         {
           path: "/profile",
-          element: (
-            <LazyWrapper>
-              <Profile />
-            </LazyWrapper>
-          ),
+          element: <Profile />,
           errorElement: <ErrorElement />,
         },
+
         {
           path: "/user/:id",
-          element: (
-            <LazyWrapper>
-              <UserProfile />
-            </LazyWrapper>
-          ),
+          element: <UserProfile />,
           errorElement: <ErrorElement />,
         },
       ],

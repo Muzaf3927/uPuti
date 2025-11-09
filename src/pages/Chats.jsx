@@ -45,7 +45,6 @@ function Chats() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [message, setMessage] = useState("");
   const chatEndRef = useRef(null);
-  const messagesContainerRef = useRef(null);
   const inputRef = useRef(null);
   const queryClient = useQueryClient();
   
@@ -119,39 +118,9 @@ function Chats() {
     navigate('/chats', { replace: true });
   };
 
-  // Скролл к концу чата при изменении сообщений
   useEffect(() => {
-    if (!selectedChat || messages.length === 0) return;
-    // Используем requestAnimationFrame для гарантии, что DOM обновлен
-    const scrollToBottom = () => {
-      requestAnimationFrame(() => {
-        if (messagesContainerRef.current) {
-          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-        } else if (chatEndRef.current) {
-          chatEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-        }
-      });
-    };
-    // Небольшая задержка для гарантии рендера
-    const timeoutId = setTimeout(scrollToBottom, 100);
-    return () => clearTimeout(timeoutId);
-  }, [messages, selectedChat]);
-
-  // Скролл к концу при открытии чата
-  useEffect(() => {
-    if (!selectedChat) return;
-    const scrollToBottom = () => {
-      requestAnimationFrame(() => {
-        if (messagesContainerRef.current) {
-          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-        } else if (chatEndRef.current) {
-          chatEndRef.current.scrollIntoView({ behavior: "auto", block: "end" });
-        }
-      });
-    };
-    const timeoutId = setTimeout(scrollToBottom, 200);
-    return () => clearTimeout(timeoutId);
-  }, [selectedChat?.trip_id, selectedChat?.chat_partner_id]);
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   // После открытия чата — обновим список чатов, чтобы обнулить непрочитанные
   useEffect(() => {
@@ -160,19 +129,29 @@ function Chats() {
     }
   }, [selectedChat?.trip_id, selectedChat?.chat_partner_id, queryClient]);
 
-  // Блокируем скролл фона когда открыт чат (упрощенная версия без position: fixed)
+  // Блокируем скролл фона когда открыт чат
   useEffect(() => {
     if (!selectedChat) return;
     const html = document.documentElement;
     const body = document.body;
+    const scrollY = window.scrollY || window.pageYOffset;
     const prevHtmlOverflow = html.style.overflow;
     const prevBodyOverflow = body.style.overflow;
-    // Просто блокируем overflow, не используя position: fixed для избежания скачков
+    const prevBodyPosition = body.style.position;
+    const prevBodyTop = body.style.top;
+    const prevBodyWidth = body.style.width;
     html.style.overflow = "hidden";
     body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
     return () => {
       html.style.overflow = prevHtmlOverflow;
       body.style.overflow = prevBodyOverflow;
+      body.style.position = prevBodyPosition;
+      body.style.top = prevBodyTop;
+      body.style.width = prevBodyWidth;
+      window.scrollTo(0, scrollY);
     };
   }, [selectedChat]);
 
@@ -186,17 +165,10 @@ function Chats() {
           onClick={handleBackToList}
         />
         {/* Чат */}
-        <Card className="border py-0 relative rounded-3xl overflow-hidden shadow-lg fixed left-1/2 -translate-x-1/2 w-[95vw] max-w-md z-50" style={keyboardInset ? {
-          bottom: `${keyboardInset + 8}px`,
-          top: 'auto',
-          transform: 'translateX(-50%)',
-          maxHeight: viewportHeight ? `${Math.min(viewportHeight - keyboardInset - 32, 90)}vh` : '90vh',
-          height: viewportHeight ? `${Math.min(viewportHeight - keyboardInset - 32, 90)}vh` : '85vh',
-        } : {
-          top: '50%',
-          transform: 'translate(-50%, -50%)',
-          maxHeight: viewportHeight ? `${Math.min(viewportHeight - 32, 90)}vh` : '90vh',
-          height: '85vh',
+        <Card className="border py-0 relative rounded-3xl overflow-hidden shadow-lg fixed left-1/2 -translate-x-1/2 w-[95vw] max-w-md z-50" style={{ 
+          bottom: keyboardInset ? `${keyboardInset + 8}px` : '8px',
+          maxHeight: viewportHeight ? `${Math.min(viewportHeight - (keyboardInset || 0) - 16, 90)}vh` : '90vh',
+          height: viewportHeight && keyboardInset ? `${viewportHeight - keyboardInset - 16}px` : '85vh'
         }}>
         <CardContent className="flex flex-col h-full bg-card/90 backdrop-blur-sm" style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.10), rgba(79,70,229,0.08))" }}>
           {/* Заголовок чата */}
@@ -229,11 +201,9 @@ function Chats() {
 
           {/* Область сообщений */}
           <div
-            ref={messagesContainerRef}
             className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5 ring-1 ring-blue-200/60 overscroll-contain touch-pan-y"
             style={{
               backgroundImage: 'linear-gradient(135deg, rgba(59,130,246,0.10), rgba(79,70,229,0.06))',
-              WebkitOverflowScrolling: 'touch',
             }}
           >
             
