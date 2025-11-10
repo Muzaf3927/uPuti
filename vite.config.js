@@ -14,10 +14,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://blablajava.vercel.app",
+        target: "https://api.uputi.net",
         changeOrigin: true,
         secure: true,
-        rewrite: (path) => path.replace(/^\/api/, "/api/proxy"),
       },
     },
   },

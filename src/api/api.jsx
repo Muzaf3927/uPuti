@@ -5,7 +5,7 @@ import { safeLocalStorage } from "@/lib/localStorage";
 const { VITE_API_BASE } = import.meta.env;
 
 const api = axios.create({
-  baseURL: VITE_API_BASE || "https://blabla-main.laravel.cloud/api",
+  baseURL: VITE_API_BASE || "https://api.uputi.net/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -28,7 +28,7 @@ const refreshAccessToken = async () => {
   if (!refreshToken) throw new Error("No refresh token available");
 
   const { data } = await axios.post(
-    `${VITE_API_BASE || "https://blabla-main.laravel.cloud/api"}/refresh-token`,
+    `${VITE_API_BASE || "https://api.uputi.net/api"}/refresh-token`,
     { refresh_token: refreshToken }
   );
 

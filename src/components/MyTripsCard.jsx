@@ -106,7 +106,7 @@ function MyTripsCard({ trip }) {
     } catch (_e) {}
     try {
       // Основной DELETE
-      const res = await fetch((import.meta.env.VITE_API_BASE || "https://blabla-main.laravel.cloud/api") + `/trips/${trip.id}`, {
+      const res = await fetch((import.meta.env.VITE_API_BASE || "https://api.uputi.net/api") + `/trips/${trip.id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
