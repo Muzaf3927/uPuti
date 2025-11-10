@@ -327,8 +327,8 @@ function MyTripsCard({ trip }) {
           </div>
         </div>
         {/* Desktop ≥ 640px: previous inline layout */}
-        <div className="w-full hidden sm:flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
+        <div className="w-full hidden sm:flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[260px]">
             {/* Цена для больших экранов */}
             <span className="font-extrabold text-gray-900 whitespace-nowrap text-sm mr-4">
               {Number(trip.price).toLocaleString()} сум
@@ -356,7 +356,7 @@ function MyTripsCard({ trip }) {
               <span className="text-sm">{t("myTripsCard.complete")}</span>
             </Button>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-auto">
             <Button onClick={() => setEditOpen(true)} className="h-10 w-10 rounded-full bg-white border hover:bg-gray-50 flex items-center justify-center" aria-label={t("myTripsCard.edit")} title={t("myTripsCard.edit")}>
               <Pencil className="size-5 text-gray-700" />
             </Button>
