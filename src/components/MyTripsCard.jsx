@@ -388,11 +388,11 @@ function MyTripsCard({ trip }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="grid w-full items-center gap-2">
                 <Label htmlFor="date">{t("trips.form.date")}</Label>
-                <Input id="date" name="date" type="date" value={form.date} onChange={handleChange} className="bg-white h-9" min={new Date().toISOString().split('T')[0]} />
+                <Input id="date" name="date" type="date" value={form.date} onChange={handleChange} className="bg-white h-8 text-sm" min={new Date().toISOString().split('T')[0]} />
               </div>
               <div className="grid w-full items-center gap-2">
                 <Label htmlFor="time">{t("trips.form.time")}</Label>
-                <TimePicker id="time" value={form.time} onChange={(v) => setForm((prev) => ({ ...prev, time: v }))} className="w-full bg-white" />
+                <TimePicker id="time" value={form.time} onChange={(v) => setForm((prev) => ({ ...prev, time: v }))} size="sm" dropdownMaxHeight={112} className="w-full bg-white" />
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

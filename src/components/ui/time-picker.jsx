@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { Button } from "./button";
 
-const TimePicker = ({ id, value = "12:00", onChange, className = "" }) => {
+const TimePicker = ({ id, value = "12:00", onChange, className = "", size = "md", dropdownMaxHeight }) => {
   const [hours, setHours] = useState(12);
   const [minutes, setMinutes] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -42,6 +42,7 @@ const TimePicker = ({ id, value = "12:00", onChange, className = "" }) => {
 
   const hourOptions = Array.from({ length: 24 }, (_, i) => i);
   const minuteOptions = Array.from({ length: 12 }, (_, i) => i * 5); // 0, 5, 10, 15, ..., 55
+  const resolvedDropdownMax = dropdownMaxHeight ?? (size === "sm" ? 128 : 192); // px
 
   return (
     <div className={`relative ${className}`}>
@@ -49,27 +50,27 @@ const TimePicker = ({ id, value = "12:00", onChange, className = "" }) => {
         id={id}
         type="button"
         variant="outline"
-        className={`w-full justify-between h-9 px-3 rounded-md border-input bg-white text-left focus-visible:ring-ring/50 focus-visible:ring-[3px] focus-visible:border-ring ${className}`}
+        className={`w-full justify-between ${size === "sm" ? "h-8 px-2 text-sm" : "h-9 px-3"} rounded-md border-input bg-white text-left focus-visible:ring-ring/50 focus-visible:ring-[3px] focus-visible:border-ring ${className}`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{formatTime()}</span>
-        <ChevronDown className="h-4 w-4 opacity-50" />
+        <ChevronDown className={`${size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4"} opacity-50`} />
       </Button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white border border-input rounded-md shadow-lg">
+        <div className={`absolute top-full left-0 right-0 z-50 mt-1 bg-white border border-input rounded-md shadow-lg ${size === "sm" ? "text-sm" : ""}`}>
           <div className="flex">
             {/* Часы */}
             <div className="flex-1 border-r">
-              <div className="text-center py-2 text-sm font-medium text-gray-500 border-b">
+              <div className={`text-center ${size === "sm" ? "py-1.5 text-xs" : "py-2 text-sm"} font-medium text-gray-500 border-b`}>
                 Часы
               </div>
-              <div className="max-h-48 overflow-y-auto">
+              <div className="overflow-y-auto" style={{ maxHeight: resolvedDropdownMax }}>
                 {hourOptions.map((hour) => (
                   <button
                     key={hour}
                     type="button"
-                    className={`w-full py-2 text-sm hover:bg-gray-100 ${
+                    className={`w-full ${size === "sm" ? "py-1 text-xs" : "py-2 text-sm"} hover:bg-gray-100 ${
                       hour === hours ? 'bg-primary/10 text-primary' : ''
                     }`}
                     onClick={() => handleHourChange(hour)}
@@ -82,15 +83,15 @@ const TimePicker = ({ id, value = "12:00", onChange, className = "" }) => {
 
             {/* Минуты */}
             <div className="flex-1">
-              <div className="text-center py-2 text-sm font-medium text-gray-500 border-b">
+              <div className={`text-center ${size === "sm" ? "py-1.5 text-xs" : "py-2 text-sm"} font-medium text-gray-500 border-b`}>
                 Минуты
               </div>
-              <div className="max-h-48 overflow-y-auto">
+              <div className="overflow-y-auto" style={{ maxHeight: resolvedDropdownMax }}>
                 {minuteOptions.map((minute) => (
                   <button
                     key={minute}
                     type="button"
-                    className={`w-full py-2 text-sm hover:bg-gray-100 ${
+                    className={`w-full ${size === "sm" ? "py-1 text-xs" : "py-2 text-sm"} hover:bg-gray-100 ${
                       minute === minutes ? 'bg-primary/10 text-primary' : ''
                     }`}
                     onClick={() => handleMinuteChange(minute)}

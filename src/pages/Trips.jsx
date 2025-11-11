@@ -317,7 +317,7 @@ function Trips() {
                   name="date" 
                   required
                   min={new Date().toISOString().split('T')[0]}
-                  className={`${formErrors.date || formErrors.dateTime ? "border-red-500" : ""} bg-white h-9 w-full min-w-0`}
+                  className={`${formErrors.date || formErrors.dateTime ? "border-red-500" : ""} bg-white h-8 text-sm w-full min-w-0`}
                 />
                 {formErrors.date && <span className="text-red-500 text-xs">{formErrors.date}</span>}
                 {formErrors.dateTime && <span className="text-red-500 text-xs">{formErrors.dateTime}</span>}
@@ -328,6 +328,8 @@ function Trips() {
                   id="time"
                   value={selectedTime}
                   onChange={setSelectedTime}
+                  size="sm"
+                  dropdownMaxHeight={112}
                   className={`w-full ${formErrors.time || formErrors.dateTime ? "border-red-500" : ""} bg-white`}
                 />
                 {formErrors.time && <span className="text-red-500 text-xs">{formErrors.time}</span>}
