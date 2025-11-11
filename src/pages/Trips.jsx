@@ -449,7 +449,7 @@ function Trips() {
             </div>
           </DialogTrigger>
           <DialogContent 
-            className="overflow-hidden rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm max-h-[calc(100svh-2rem)]"
+            className="overflow-hidden rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm max-h-none"
             style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))" }}
             autoFocusScroll
             showCloseButton={false}
@@ -470,7 +470,7 @@ function Trips() {
               </DialogClose>
             </DialogHeader>
             <form onSubmit={handleSearch} className="flex flex-col gap-3">
-              <div className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1 max-h-[60svh]">
+              <div className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1 max-h-[45svh]">
                 <Label htmlFor="from">{t("trips.searchForm.from")}</Label>
                 <Input
                   type="text"

@@ -134,7 +134,7 @@ const dict = {
         costPlaceholder: "50000",
         carModelPlaceholder: "Nexia",
         carColorPlaceholder: "Oq",
-        carNumberPlaceholder: "01A123BC",
+        carNumberPlaceholder: "01A123BA",
         carSeatsPlaceholder: "4",
         validationError: "Iltimos, barcha majburiy maydonlarni to'ldiring",
         successMessage: "Safar yaratildi.",
