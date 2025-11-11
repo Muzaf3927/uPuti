@@ -262,8 +262,8 @@ function Trips() {
             </div>
           </DialogTrigger>
           <DialogContent
-            className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 overflow-hidden overscroll-contain touch-pan-y rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm"
-            style={{ maxHeight: viewportHeight ? Math.min(860, viewportHeight - 4) : undefined, backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))" }}
+            className="w-[95vw] sm:max-w-[760px] p-4 sm:p-6 overflow-hidden overscroll-contain touch-pan-y rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm max-h-[calc(100svh-2rem)]"
+            style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))" }}
             preventOutsideClose
             showCloseButton={false}
             autoFocusScroll
@@ -282,8 +282,7 @@ function Trips() {
               </DialogClose>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto overflow-x-hidden pr-1 touch-pan-y overscroll-contain"
-                   style={{ maxHeight: viewportHeight ? Math.max(240, viewportHeight - (keyboardInset || 0) - 150) : undefined }}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 overflow-y-auto overflow-x-hidden pr-1 touch-pan-y overscroll-contain max-h-[60svh]"
                    onTouchMove={(e) => e.stopPropagation()}
               >
               <div className="col-span-1 sm:col-span-1 grid items-center gap-1.5">
@@ -448,8 +447,8 @@ function Trips() {
             </div>
           </DialogTrigger>
           <DialogContent 
-            className="overflow-hidden rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm"
-            style={{ maxHeight: viewportHeight ? Math.min(760, viewportHeight - 8) : undefined, backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))" }}
+            className="overflow-hidden rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm max-h-[calc(100svh-2rem)]"
+            style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))" }}
             autoFocusScroll
             showCloseButton={false}
           >
@@ -469,7 +468,7 @@ function Trips() {
               </DialogClose>
             </DialogHeader>
             <form onSubmit={handleSearch} className="flex flex-col gap-3">
-              <div className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1" style={{ maxHeight: viewportHeight ? Math.max(220, viewportHeight - (keyboardInset || 0) - 160) : undefined }}>
+              <div className="grid w-full items-center gap-3 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain pr-1 max-h-[60svh]">
                 <Label htmlFor="from">{t("trips.searchForm.from")}</Label>
                 <Input
                   type="text"

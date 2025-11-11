@@ -298,17 +298,8 @@ function TripsCard({ trip }) {
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
         <DialogContent
           onClick={(e) => e.stopPropagation()}
-          className="p-0 rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm"
-          style={{
-            position: 'fixed',
-            top: '20vh',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 9999,
-            width: '90vw',
-            maxWidth: '400px',
-            backgroundImage: 'linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))'
-          }}
+          className="p-0 rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm max-w-[400px] w-[90vw] max-h-[calc(100svh-2rem)] overflow-y-auto"
+          style={{ backgroundImage: 'linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))' }}
         >
           <div className="rounded-2xl p-6">
             <DialogHeader>
@@ -361,17 +352,8 @@ function TripsCard({ trip }) {
       <Dialog open={offerDialogOpen} onOpenChange={setOfferDialogOpen}>
         <DialogContent
           onClick={(e) => e.stopPropagation()}
-          className="p-0 rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm"
-          style={{
-            position: 'fixed',
-            top: '20vh',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 9999,
-            width: '90vw',
-            maxWidth: '400px',
-            backgroundImage: 'linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))'
-          }}
+          className="p-0 rounded-2xl ring-1 ring-blue-200/60 shadow-[0_10px_28px_rgba(59,130,246,0.18)] bg-card/90 backdrop-blur-sm max-w-[400px] w-[90vw] max-h-[calc(100svh-2rem)] overflow-y-auto"
+          style={{ backgroundImage: 'linear-gradient(135deg, rgba(59,130,246,0.20), rgba(79,70,229,0.14))' }}
         >
           <div className="rounded-2xl p-6">
             <DialogHeader>

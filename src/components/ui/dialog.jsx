@@ -3,6 +3,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { XIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { useKeyboardInsets } from "@/hooks/useKeyboardInsets"
 
 function Dialog({
   ...props
@@ -84,6 +85,7 @@ function DialogContent({
 
   // Use visualViewport height to size the portal container on iOS to avoid jumps
   const [portalHeight, setPortalHeight] = React.useState(null);
+  const { keyboardInset } = useKeyboardInsets();
   React.useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
@@ -133,12 +135,22 @@ function DialogContent({
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
       {/* Use full-screen flex container to avoid iOS visualViewport/translate glitches */}
-      <div className="fixed inset-0 z-50 flex items-start justify-center p-4 overscroll-contain touch-pan-y" style={{ height: portalHeight ? `${portalHeight}px` : undefined }}>
+      <div
+        className="fixed inset-0 z-50 flex items-start justify-center p-4 overscroll-contain touch-pan-y"
+        style={{
+          // Prefer stable viewport height to avoid shrinking on keyboard open
+          height: "100svh",
+          // Fallback for environments without svh support
+          minHeight: portalHeight ? `${portalHeight}px` : undefined,
+          // Provide safe space for on-screen keyboard overlap when needed
+          paddingBottom: keyboardInset ? `${keyboardInset}px` : undefined,
+        }}
+      >
       <DialogPrimitive.Content
         ref={contentRef}
         data-slot="dialog-content"
         className={cn(
-          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg mt-4 sm:mt-8",
+          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg mt-4 sm:mt-8 max-h-[calc(100svh-2rem)] overflow-y-auto",
           className
         )}
         // Avoid closing when tapping outside (iOS can fire this when dismissing keyboard)
