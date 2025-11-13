@@ -16,6 +16,7 @@ import {
   Clock,
   MapPin,
   MoveRight,
+  Phone,
   Route,
   Users,
 } from "lucide-react";
@@ -39,6 +40,17 @@ function TripsCard({ trip }) {
   const [seats, setSeats] = useState("1");
   const [offeredPrice, setOfferedPrice] = useState("");
   const [comment, setComment] = useState("");
+  const shouldStackCities = React.useMemo(() => {
+    const fromLength = trip?.from_city?.length ?? 0;
+    const toLength = trip?.to_city?.length ?? 0;
+    return fromLength > 18 || toLength > 18 || fromLength + toLength > 30;
+  }, [trip?.from_city, trip?.to_city]);
+  const driverPhone = React.useMemo(() => {
+    if (!trip?.driver?.phone) return null;
+    const raw = String(trip.driver.phone);
+    if (raw.startsWith("+")) return raw;
+    return raw.startsWith("998") ? `+${raw}` : `+998${raw}`;
+  }, [trip?.driver?.phone]);
 
   const queryClient = useQueryClient();
   const tripPostMutation = usePostData(`/trips/${trip?.id}/booking`);
@@ -189,11 +201,27 @@ function TripsCard({ trip }) {
       >
         <CardContent className={`flex flex-col ${isExpanded ? 'p-3 sm:p-4 gap-2' : 'px-2 py-1 gap-1'}`}>
           <div className="flex items-center justify-between gap-2 text-primary font-bold text-sm sm:text-lg">
-            <div className="flex items-center gap-2 min-w-0">
-              <MapPin className="text-primary" />
-              <span className="truncate max-w-[60vw] sm:max-w-none">{trip.from_city}</span>
-              <Route className="text-primary" />
-              <span className="truncate max-w-[60vw] sm:max-w-none">{trip.to_city}</span>
+            <div
+              className={`flex items-center gap-2 min-w-0 ${
+                shouldStackCities ? "flex-wrap" : "flex-nowrap"
+              }`}
+            >
+              <MapPin className="text-primary self-start" />
+              <span
+                className={`whitespace-normal break-words ${
+                  shouldStackCities ? "basis-full max-w-full" : "max-w-[60vw] sm:max-w-none"
+                }`}
+              >
+                {trip.from_city}
+              </span>
+              <Route className="text-primary self-start" />
+              <span
+                className={`whitespace-normal break-words ${
+                  shouldStackCities ? "basis-full max-w-full" : "max-w-[60vw] sm:max-w-none"
+                }`}
+              >
+                {trip.to_city}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               {/* Price near route on desktop */}
@@ -257,6 +285,21 @@ function TripsCard({ trip }) {
                   <span className="text-gray-600">⭐ {trip.driver.rating}</span>
                 </div>
               </div>
+          <div className="flex items-center gap-2 text-sm text-gray-800">
+            <Phone size={16} className="text-primary" />
+            <span className="font-medium text-gray-600">{t("tripsCard.phoneLabel")}:</span>
+            {driverPhone ? (
+              <a
+                href={`tel:${driverPhone}`}
+                onClick={(e) => e.stopPropagation()}
+                className="text-primary underline decoration-primary/30 underline-offset-4"
+              >
+                {driverPhone}
+              </a>
+            ) : (
+              <span className="text-gray-500">{t("tripsCard.phoneNotAvailable")}</span>
+            )}
+          </div>
 
               {trip.note ? (
                 <div className="text-xs sm:text-sm text-gray-700 bg-white rounded-2xl p-3 border">

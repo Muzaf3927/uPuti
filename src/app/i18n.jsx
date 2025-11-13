@@ -64,6 +64,8 @@ const dict = {
       seatsPlaceholder: "1-4 o'rin",
       priceLabel: "Taklif narxi (so'm)",
       commentLabel: "Izoh",
+      phoneLabel: "Telefon",
+      phoneNotAvailable: "Raqam ko'rsatilmagan",
       submitBooking: "Yuborish",
       submitOffer: "Yuborish",
       cancelButton: "Bekor qilish",
@@ -115,6 +117,7 @@ const dict = {
       search: "Safar qidirish",
       empty: "Sizda safarlar yo'q.",
       commentPlaceholder: "Samarqand orqali ketaman",
+      searchEmpty: "Hozircha siz tanlagan yo'nalishda safar yo'q, keyinroq urinib ko'ring.",
       form: {
         from: "Qayerdan",
         to: "Qayerga",
@@ -351,6 +354,8 @@ const dict = {
       seatsPlaceholder: "1-4 места",
       priceLabel: "Предложенная цена (сум)",
       commentLabel: "Комментарий",
+      phoneLabel: "Телефон",
+      phoneNotAvailable: "Номер не указан",
       submitBooking: "Отправить",
       submitOffer: "Отправить",
       cancelButton: "Отмена",
@@ -401,6 +406,7 @@ const dict = {
       create: "Создать поездку",
       search: "Поиск поездки",
       empty: "Пока у вас нет поездок.",
+      searchEmpty: "Пока что по вашему маршруту нету поездки, попробуйте позже.",
       commentPlaceholder: "Поеду через Самарканд",
       form: {
         from: "Откуда",

@@ -125,6 +125,15 @@ function Trips() {
 
   const tripPostMutation = usePostData("/trip");
 
+  const filteredTrips = Array.isArray(data?.data)
+    ? data.data
+        .filter((trip) => trip.status !== "completed")
+        .filter((trip) => Boolean(trip?.driver))
+    : [];
+
+  const hasActiveSearch = Boolean(activeFilters.from || activeFilters.to || activeFilters.date || activeFilters.time);
+  const showSearchEmptyState = hasActiveSearch && !isLoading && filteredTrips.length === 0;
+
 
   // Функция валидации формы
   const validateForm = (formData) => {
@@ -549,18 +558,17 @@ function Trips() {
             )}
             <TabsContent value="allTrips">
               <div className="p-3 space-y-3">
-                {isLoading
-                  ? Array(4)
-                      .fill(1)
-                      .map((_, index) => <TripsCardSkeleton key={index} />)
-                  : Array.isArray(data?.data)
-                      ? data.data
-                          .filter((trip) => trip.status !== "completed")
-                          .filter((trip) => Boolean(trip?.driver))
-                          .map((trip) => (
-                            <TripsCard trip={trip} key={trip.id} />
-                          ))
-                      : null}
+                {isLoading ? (
+                  Array(4)
+                    .fill(1)
+                    .map((_, index) => <TripsCardSkeleton key={index} />)
+                ) : showSearchEmptyState ? (
+                  <div className="text-center text-sm sm:text-base text-gray-600 bg-white/70 border border-dashed border-primary/30 rounded-2xl px-4 py-6">
+                    {t("trips.searchEmpty")}
+                  </div>
+                ) : (
+                  filteredTrips.map((trip) => <TripsCard trip={trip} key={trip.id} />)
+                )}
               </div>
               <div className="flex items-center justify-center gap-3 px-4 py-2">
                 <Button variant="outline" disabled={allPage === 1} onClick={() => setAllPage((p) => Math.max(1, p - 1))} aria-label="Prev page">
