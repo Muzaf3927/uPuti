@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useI18n } from "@/app/i18n.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { useTrackDownloadCount } from "@/api/api";
@@ -32,6 +32,36 @@ function DownloadButtons() {
   const navigate = useNavigate();
   const trackDownload = useTrackDownloadCount();
   const appStoreUrl = "https://apps.apple.com/uz/app/uputi/id6753739028";
+  const [isWebView, setIsWebView] = useState(false);
+
+  // Проверяем, открыто ли приложение в webView через user agent
+  useEffect(() => {
+    const checkWebView = () => {
+      try {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera || "";
+        // Проверяем наличие "AndroidUPuti" в user agent
+        const isWebViewApp = /AndroidUPuti/i.test(userAgent);
+        
+        setIsWebView(isWebViewApp);
+        
+        // Сохраняем флаг для быстрого доступа
+        if (isWebViewApp) {
+          sessionStorage.setItem("isWebView", "true");
+        } else {
+          sessionStorage.removeItem("isWebView");
+        }
+      } catch (e) {
+        setIsWebView(false);
+      }
+    };
+
+    checkWebView();
+  }, []);
+
+  // Если мы в webView, не показываем кнопки скачивания
+  if (isWebView) {
+    return null;
+  }
 
   const handleAndroidClick = (e) => {
     e.preventDefault();
