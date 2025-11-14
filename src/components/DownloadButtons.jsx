@@ -39,8 +39,8 @@ function DownloadButtons() {
     const checkWebView = () => {
       try {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera || "";
-        // Проверяем наличие "AndroidUPuti" в user agent
-        const isWebViewApp = /AndroidUPuti/i.test(userAgent);
+        // Проверяем наличие "AndroidUPuti" для Android или "UputiIOS" для iOS в user agent
+        const isWebViewApp = /AndroidUPuti|UputiIOS/i.test(userAgent);
         
         setIsWebView(isWebViewApp);
         
