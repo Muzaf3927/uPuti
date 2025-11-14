@@ -102,9 +102,6 @@ function MyTripsCard({ trip }) {
   const handleDelete = async () => {
     if (!confirm("Rostdan ham o'chirmoqchimisiz?")) return;
     try {
-      await postData(`/trips/${trip.id}/delete-proxy`, {});
-    } catch (_e) {}
-    try {
       // Основной DELETE
       const res = await fetch((import.meta.env.VITE_API_BASE || "https://api.uputi.net/api") + `/trips/${trip.id}`, {
         method: "DELETE",
