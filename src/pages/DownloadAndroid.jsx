@@ -1,18 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/app/i18n.jsx";
 import { useNavigate } from "react-router-dom";
+import { useTrackDownloadCount } from "@/api/api";
 
 function DownloadAndroid() {
   const { lang } = useI18n();
   const navigate = useNavigate();
   const videoRef = useRef(null);
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const trackDownload = useTrackDownloadCount();
 
   const installText =
     lang === "ru" ? "Установить для Android" : "Android uchun o'rnatish";
 
-  const handleInstall = () => {
-    // 1️⃣ Начать скачивание APK
+  const handleInstall = async () => {
+    // 1️⃣ Отправить запрос на бек для отслеживания скачивания
+    try {
+      await trackDownload.mutateAsync("android");
+    } catch (error) {
+      // Ошибка отслеживания не должна блокировать скачивание
+      console.error("Failed to track Android download:", error);
+    }
+
+    // 2️⃣ Начать скачивание APK
     const link = document.createElement("a");
     link.href = "/apk/uputi.apk";
     link.download = "uputi.apk";
@@ -20,7 +30,7 @@ function DownloadAndroid() {
     link.click();
     document.body.removeChild(link);
 
-    // 2️⃣ Запустить видео
+    // 3️⃣ Запустить видео
     if (videoRef.current) {
       videoRef.current.play();
       videoRef.current.scrollIntoView({

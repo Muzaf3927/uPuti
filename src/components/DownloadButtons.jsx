@@ -33,14 +33,10 @@ function DownloadButtons() {
   const trackDownload = useTrackDownloadCount();
   const appStoreUrl = "https://apps.apple.com/uz/app/uputi/id6753739028";
 
-  const handleAndroidClick = async (e) => {
+  const handleAndroidClick = (e) => {
     e.preventDefault();
-    try {
-      await trackDownload.mutateAsync("android");
-    } catch (error) {
-      // Ошибка отслеживания не должна блокировать переход
-      console.error("Failed to track Android download:", error);
-    }
+    // Для Android просто переходим на страницу загрузки
+    // Запрос на бек будет отправлен при нажатии на кнопку установки на странице DownloadAndroid
     navigate("/download/android");
   };
 
