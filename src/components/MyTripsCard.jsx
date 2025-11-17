@@ -4,13 +4,14 @@ import { safeLocalStorage } from "@/lib/localStorage";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import TimePicker from "@/components/ui/time-picker";
 import { Textarea } from "@/components/ui/textarea";
 
 import {
+  AlertTriangle,
   ArrowRight,
   Calendar,
   Car,
@@ -46,6 +47,7 @@ function MyTripsCard({ trip }) {
   const [editOpen, setEditOpen] = useState(false);
   const [requestsOpen, setRequestsOpen] = useState(false);
   const [bookingsOpen, setBookingsOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   // Временно закомментирована функциональность оценки пассажиров
   // const [ratePassengersOpen, setRatePassengersOpen] = useState(false);
   // const [ratingValue, setRatingValue] = useState(5);
@@ -99,8 +101,11 @@ function MyTripsCard({ trip }) {
     }
   };
 
-  const handleDelete = async () => {
-    if (!confirm("Rostdan ham o'chirmoqchimisiz?")) return;
+  const handleDelete = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
     try {
       // Основной DELETE
       const res = await fetch((import.meta.env.VITE_API_BASE || "https://api.uputi.net/api") + `/trips/${trip.id}`, {
@@ -112,6 +117,7 @@ function MyTripsCard({ trip }) {
       });
       if (!res.ok) throw new Error("Delete failed");
       toast.success("Safar o'chirildi.");
+      setDeleteDialogOpen(false);
       // Обновляем все возможные запросы поездок (включая с фильтрами)
       queryClient.invalidateQueries({ queryKey: ["data"] });
     } catch (err) {
@@ -624,6 +630,37 @@ function MyTripsCard({ trip }) {
               ))
             )}
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="max-w-sm sm:max-w-md mx-2 sm:mx-4 overflow-hidden rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <AlertTriangle className="h-5 w-5" />
+              {t("myTripsCard.confirmDelete")}
+            </DialogTitle>
+            <DialogDescription className="text-left pt-2">
+              {t("myTripsCard.confirmDeleteMessage")}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-2 sm:gap-0">
+            <Button 
+              variant="outline" 
+              onClick={() => setDeleteDialogOpen(false)}
+              className="flex-1 rounded-2xl"
+            >
+              {t("trips.form.cancel")}
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={confirmDelete}
+              className="flex-1 rounded-2xl"
+            >
+              {t("myTripsCard.delete")}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 

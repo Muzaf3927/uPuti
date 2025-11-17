@@ -256,6 +256,8 @@ const dict = {
       message: "Xabar",
       callPassenger: "Qo'ng'iroq",
       writePassenger: "Yozish",
+      confirmDelete: "O'chirishni tasdiqlash",
+      confirmDeleteMessage: "Rostdan ham bu safarni o'chirmoqchimisiz? Bu amalni qaytarib bo'lmaydi.",
     },
     requests: {
       mineTab: "Junatilqan so'rovlar",
@@ -546,6 +548,8 @@ const dict = {
       message: "Сообщение",
       callPassenger: "Позвонить",
       writePassenger: "Написать",
+      confirmDelete: "Подтверждение удаления",
+      confirmDeleteMessage: "Вы уверены, что хотите удалить эту поездку? Это действие нельзя отменить.",
     },
     requests: {
       mineTab: "Мои заявки",
