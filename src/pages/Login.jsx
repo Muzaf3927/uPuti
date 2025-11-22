@@ -243,20 +243,17 @@ function Login() {
       
       <div className="relative w-full max-w-md -mt-2 md:mt-1">
       <Card
-        className="w-full px-4 border rounded-2xl ring-1 ring-blue-200/60 shadow-[0_9px_24px_rgba(59,130,246,0.15)]"
+        className="w-full px-4 py-3 sm:py-4 border rounded-2xl ring-1 ring-blue-200/60 shadow-[0_9px_24px_rgba(59,130,246,0.15)] gap-2 sm:gap-3"
         style={{ backgroundImage: "linear-gradient(135deg, rgba(59,130,246,0.18), rgba(79,70,229,0.12))" }}
       >
-        <CardHeader className="relative p-0.5 sm:p-1 ">
+        <CardHeader className="relative p-0 pb-2 sm:pb-3">
           <CardTitle className="text-primary mx-auto text-lg sm:text-xl font-bold">
             {t("auth.loginTitle")}
           </CardTitle>
-          <p className="text-gray-700 mx-auto text-sm">
-            {t("auth.loginSubtitle")}
-          </p>
           <button
             type="button"
             onClick={() => setLang(lang === "uz" ? "ru" : "uz")}
-            className="absolute top-2 right-2 sm:top-4 sm:right-4 px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded-full border bg-white hover:bg-accent/60 text-[10px] sm:text-xs"
+            className="absolute top-1.5 right-1.5 sm:top-3 sm:right-3 px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded-full border bg-white hover:bg-accent/60 text-[10px] sm:text-xs"
           >
             {lang === "uz" ? (
               <div className="flex gap-1 py-0">
@@ -271,8 +268,8 @@ function Login() {
             )}
           </button>
         </CardHeader>
-        <CardContent className="px-6 sm:p-1">
-          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+        <CardContent className="px-0 pt-0 pb-0">
+          <form onSubmit={handleSubmit} className="space-y-2.5 sm:space-y-3">
             <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
               <Label htmlFor="name" className="text-sm">
                 {t("auth.nameLabel")}
@@ -334,7 +331,7 @@ function Login() {
             <Button
               type="submit"
               disabled={startAuthMutation.isPending}
-              className="w-full bg-primary text-primary-foreground h-8 sm:h-9 text-sm sm:text-base"
+              className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 h-8 sm:h-9 text-sm sm:text-base"
             >
               {startAuthMutation.isPending ? (
                 <span className="flex items-center justify-center gap-2">
@@ -348,16 +345,8 @@ function Login() {
           </form>
         </CardContent>
       </Card>
-      {/* floating support button (fixed chat-style) */}
-      <button
-        type="button"
-        onClick={() => setSupportOpen(true)}
-        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 bg-gradient-to-br from-blue-500 to-cyan-500 text-white hover:brightness-110 shadow-lg rounded-full w-12 h-12 flex items-center justify-center"
-        aria-label={t("profilePanel.support")}
-      >
-        <Headphones className="w-6 h-6" />
-      </button>
       </div>
+
 
       {supportOpen && (
         <div className="fixed inset-0 z-50">
@@ -466,6 +455,21 @@ function Login() {
       {/* Download Buttons */}
       <div className="-mt-2">
         <DownloadButtons />
+      </div>
+      
+      {/* Support button - positioned under download buttons */}
+      <div className="w-full max-w-md flex items-center justify-end gap-2 mt-2">
+        <p className="text-sm sm:text-base text-gray-700 font-medium">
+          {lang === "ru" ? "Для вопросов и предложений" : "Talab va takliflar uchun"}
+        </p>
+        <button
+          type="button"
+          onClick={() => setSupportOpen(true)}
+          className="bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 shadow-lg rounded-full w-12 h-12 flex items-center justify-center"
+          aria-label={t("profilePanel.support")}
+        >
+          <Headphones className="w-6 h-6" />
+        </button>
       </div>
     </div>
   );
