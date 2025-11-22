@@ -3,13 +3,11 @@ import { safeLocalStorage } from "@/lib/localStorage";
 import { sessionManager } from "@/lib/sessionManager";
 import {
   Login,
-  Register,
   Trips,
   Requests,
   Chats,
   Booking,
   History,
-  FogotPassword,
   Profile,
   DeleteAccount,
   DownloadAndroid,
@@ -42,16 +40,6 @@ function App() {
       errorElement: <ErrorElement />,
     },
     {
-      path: "/fogotPassword",
-      element: user ? <Navigate to="/" /> : <FogotPassword />,
-      errorElement: <ErrorElement />,
-    },
-    {
-      path: "/register",
-      element: user ? <Navigate to="/" /> : <Register />,
-      errorElement: <ErrorElement />,
-    },
-    {
       path: "/download/android",
       element: <DownloadAndroid />,
       errorElement: <ErrorElement />,
@@ -63,7 +51,7 @@ function App() {
     },
     {
       path: "/",
-      element: user ? <MainLayout /> : <Navigate to="/register" />,
+      element: user ? <MainLayout /> : <Navigate to="/login" />,
       errorElement: <ErrorElement />,
       children: [
         {

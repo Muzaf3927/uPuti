@@ -4,8 +4,15 @@ import React, { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Car, MapPin, Users, User, Lock, EyeOff, Eye, Headphones } from "lucide-react";
+import { Car, MapPin, Users, User, Phone, Headphones, Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 // redux toolkit
 import { useDispatch } from "react-redux";
@@ -24,109 +31,183 @@ import DownloadButtons from "@/components/DownloadButtons";
 
 function Login() {
   const { t, lang, setLang } = useI18n();
-  const [showPassword, setShowPassword] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
   const [showDeletedModal, setShowDeletedModal] = useState(false);
   const [formError, setFormError] = useState("");
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [verificationId, setVerificationId] = useState(null);
+  const [otpCode, setOtpCode] = useState("");
+  const [otpError, setOtpError] = useState("");
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  const loginMutation = usePostData("/login");
+  const startAuthMutation = usePostData("/auth/start");
+  const verifyAuthMutation = usePostData("/auth/verify");
   const dispatch = useDispatch();
 
   const mobileRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormError("");
 
     const formData = new FormData(e.target);
 
+    const name = formData.get("name");
     const phone = formData.get("phone");
-    const password = formData.get("password");
 
-    // Clean phone number - remove formatting and add +998 prefix
+    if (!name || !phone) {
+      const errorMessage = lang === "ru"
+        ? "Пожалуйста, заполните все поля"
+        : "Iltimos, barcha maydonlarni to'ldiring";
+      setFormError(errorMessage);
+      toast.error(errorMessage);
+      return;
+    }
+
+    // Clean phone number - remove all non-digits, then extract only 9 digits (without 998)
     const cleanPhone = phone.replace(/\D/g, ""); // Remove all non-digits
-    const formattedPhone = cleanPhone.startsWith("998")
-      ? cleanPhone
-      : `${cleanPhone}`;
+    // Remove 998 prefix if present, keep only 9 digits
+    const phoneWithoutPrefix = cleanPhone.startsWith("998")
+      ? cleanPhone.slice(3)
+      : cleanPhone;
 
-    //
+    if (phoneWithoutPrefix.length !== 9) {
+      const errorMessage = lang === "ru"
+        ? "Номер телефона должен содержать 9 цифр"
+        : "Telefon raqami 9 raqamdan iborat bo'lishi kerak";
+      setFormError(errorMessage);
+      toast.error(errorMessage);
+      return;
+    }
 
     try {
-      // Try with the first phone format first
       const requestData = {
-        phone: formattedPhone,
-        password,
+        name: name.trim(),
+        phone: phoneWithoutPrefix,
       };
 
-      const res = await loginMutation.mutateAsync(requestData);
-      if (res.message === "Вход выполнен успешно") {
-        toast.success("Tizimga muvaffaqiyatli kirdingiz!");
-      }
-
-      // Принудительно завершаем все предыдущие сессии
-      sessionManager.forceLogoutAllSessions();
-
-      // Создаем новую сессию
-      sessionManager.createSession(res, res.access_token);
-      dispatch(login(res));
-      // Disabled onboarding popup after login
-    } catch (err) {
-      console.error("Login error:", err);
+      const res = await startAuthMutation.mutateAsync(requestData);
       
-      // Показываем ошибку пользователю
+      if (res.verification_id) {
+        setVerificationId(res.verification_id);
+        setShowOtpModal(true);
+        setOtpCode("");
+        setOtpError("");
+        toast.success(
+          lang === "ru"
+            ? "Код отправлен на ваш номер телефона"
+            : "Kodingiz telefon raqamingizga yuborildi"
+        );
+      }
+    } catch (err) {
+      console.error("Start auth error:", err);
+      
       let errorMessage = "";
       
-      if (err.response?.status === 401) {
-        errorMessage = lang === "ru" 
-          ? "Неверный номер телефона или пароль" 
-          : "Telefon raqami yoki parol noto'g'ri";
-      } else if (err.response?.status === 422) {
-        errorMessage = lang === "ru"
+      if (err.response?.status === 422) {
+        errorMessage = err.response?.data?.message || (lang === "ru"
           ? "Проверьте правильность введенных данных"
-          : "Kiritilgan ma'lumotlarni tekshiring";
+          : "Kiritilgan ma'lumotlarni tekshiring");
+      } else if (err.response?.status === 500) {
+        errorMessage = err.response?.data?.message || (lang === "ru"
+          ? "Ошибка отправки SMS. Попробуйте ещё раз"
+          : "SMS yuborishda xatolik. Qaytadan urinib ko'ring");
       } else if (err.response?.data?.message) {
         errorMessage = err.response.data.message;
       } else if (err.message) {
         errorMessage = err.message;
       } else {
         errorMessage = lang === "ru"
-          ? "Ошибка входа. Попробуйте ещё раз"
-          : "Kirishda xatolik. Qaytadan urinib ko'ring";
+          ? "Ошибка. Попробуйте ещё раз"
+          : "Xatolik. Qaytadan urinib ko'ring";
       }
       
       toast.error(errorMessage);
       setFormError(errorMessage);
+    }
+  };
 
-      // If backend is broken, try mock login for development
-      if (
-        err.response?.status === 500 &&
-        err.response?.data?.error === "Invalid JSON response from backend"
-      ) {
-        try {
-          const mockResponse = {
-            access_token: "mock_token_" + Date.now(),
-            user: {
-              id: 1,
-              name: "Test User",
-              phone: formattedPhone,
-              email: "test@example.com",
-            },
-          };
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setOtpError("");
 
-          // Принудительно завершаем все предыдущие сессии
-          sessionManager.forceLogoutAllSessions();
+    if (!otpCode || otpCode.length !== 6) {
+      const errorMessage = lang === "ru"
+        ? "Введите 6-значный код"
+        : "6 raqamli kodni kiriting";
+      setOtpError(errorMessage);
+      return;
+    }
 
-          // Создаем новую сессию
-          sessionManager.createSession(mockResponse, mockResponse.access_token);
-          dispatch(login(mockResponse));
-          // Disabled onboarding popup after login
-        } catch (mockError) {
-          console.error("Mock login error:", mockError);
-        }
+    if (!verificationId) {
+      setOtpError(lang === "ru" ? "Ошибка верификации" : "Tekshirish xatosi");
+      return;
+    }
+
+    try {
+      const requestData = {
+        verification_id: verificationId,
+        code: otpCode,
+      };
+
+      const res = await verifyAuthMutation.mutateAsync(requestData);
+      
+      if (res.access_token && res.user) {
+        toast.success(
+          lang === "ru"
+            ? "Вход выполнен успешно"
+            : "Tizimga muvaffaqiyatli kirdingiz!"
+        );
+
+        // Принудительно завершаем все предыдущие сессии
+        sessionManager.forceLogoutAllSessions();
+
+        // Сохраняем токен
+        safeLocalStorage.setItem("token", res.access_token);
+        
+        // Создаем новую сессию с данными пользователя
+        sessionManager.createSession(res.user, res.access_token);
+        dispatch(login(res.user));
+        
+        setShowOtpModal(false);
+        setOtpCode("");
+        setVerificationId(null);
       }
+    } catch (err) {
+      console.error("Verify OTP error:", err);
+      
+      let errorMessage = "";
+      
+      if (err.response?.status === 422) {
+        const backendMessage = err.response?.data?.message;
+        if (backendMessage === "Invalid code" || backendMessage === "Verification expired") {
+          errorMessage = backendMessage === "Invalid code"
+            ? (lang === "ru" ? "Неверный код" : "Noto'g'ri kod")
+            : (lang === "ru" ? "Код истёк. Запросите новый" : "Kod muddati tugadi. Yangi kod so'rang");
+        } else if (backendMessage === "Too many attempts") {
+          errorMessage = lang === "ru"
+            ? "Слишком много попыток. Запросите новый код"
+            : "Juda ko'p urinishlar. Yangi kod so'rang";
+        } else {
+          errorMessage = backendMessage || (lang === "ru"
+            ? "Ошибка верификации"
+            : "Tekshirish xatosi");
+        }
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      } else {
+        errorMessage = lang === "ru"
+          ? "Ошибка верификации. Попробуйте ещё раз"
+          : "Tekshirish xatosi. Qaytadan urinib ko'ring";
+      }
+      
+      toast.error(errorMessage);
+      setOtpError(errorMessage);
     }
   };
 
@@ -191,15 +272,32 @@ function Login() {
           </button>
         </CardHeader>
         <CardContent className="px-6 sm:p-1">
-          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y -px-10">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+            <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
+              <Label htmlFor="name" className="text-sm">
+                {t("auth.nameLabel")}
+              </Label>
+              <div className="relative">
+                <Input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder={lang === "ru" ? "Введите ваше имя" : "Ismingizni kiriting"}
+                  required
+                  autoComplete="name"
+                  className="pl-10 h-8 sm:h-9 text-sm sm:text-base bg-blue-50/60"
+                />
+                <User
+                  className="absolute left-2 top-2 text-gray-400"
+                  size={16}
+                />
+              </div>
+            </div>
             <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
               <Label htmlFor="phone" className="text-sm">
                 {t("auth.phoneLabel")}
               </Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  <User size={16} className="sm:w-5 sm:h-5" />
-                </span>
                 <InputMask
                   mask="__ ___ __ __"
                   replacement={{ _: /\d/ }}
@@ -218,75 +316,35 @@ function Login() {
                   }}
                   className="pl-20 sm:pl-24 font-normal file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-8 sm:h-9 w-full min-w-0 rounded-md border bg-blue-50/60 px-3 py-1 text-sm sm:text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-6 sm:file:h-7 file:border-0 file:bg-transparent file:text-xs sm:file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                 />
+                <Phone
+                  className="absolute left-2 top-2 text-gray-400"
+                  size={16}
+                />
                 <p className="absolute left-8 sm:left-10 top-1.5 font-normal select-none text-sm">
                   +998
                 </p>
               </div>
             </div>
-            <div className="grid w-full max-w-sm items-center gap-2 sm:gap-3">
-              <Label htmlFor="password" className="text-sm">
-                {t("auth.passwordLabel")}
-              </Label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  <Lock size={16} className="sm:w-5 sm:h-5" />
-                </span>
-                <button
-                  type="button"
-                  className="absolute right-2 top-2 text-gray-500"
-                  onClick={() => setShowPassword((v) => !v)}
-                  tabIndex={-1}
-                >
-                  {showPassword ? (
-                    <EyeOff size={16} className="sm:w-4 sm:h-4" />
-                  ) : (
-                    <Eye size={16} className="sm:w-4 sm:h-4" />
-                  )}
-                </button>
-                <Input
-                  autoComplete="current-password"
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
-                  required
-                  className="pl-10 h-8 sm:h-9 text-sm sm:text-base bg-blue-50/60"
-                />
-              </div>
-            </div>
 
-            {(formError || loginMutation.error) && (
+            {formError && (
               <div className="text-red-500 text-xs sm:text-sm">
-                {formError || loginMutation.error?.message ||
-                  (lang === "ru"
-                    ? "Ошибка входа. Попробуйте ещё раз."
-                    : "Kirishda xatolik. Qaytadan urinib ko'ring.")}
+                {formError}
               </div>
             )}
             <Button
               type="submit"
-              disabled={loginMutation.isPending}
+              disabled={startAuthMutation.isPending}
               className="w-full bg-primary text-primary-foreground h-8 sm:h-9 text-sm sm:text-base"
             >
-              {loginMutation.isPending
-                ? t("auth.loginLoading")
-                : t("auth.loginBtn")}
+              {startAuthMutation.isPending ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="animate-spin" size={16} />
+                  {lang === "ru" ? "Отправка..." : "Yuborilmoqda..."}
+                </span>
+              ) : (
+                t("auth.loginBtn")
+              )}
             </Button>
-
-            <div className="flex justify-between items-center text-xs sm:text-sm">
-              <Link to="/fogotPassword" className="underline">
-                {t("auth.forgot")}
-              </Link>
-              <p className="text-center">
-                {t("auth.needAccount")} {" "}
-                <Link
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-secondary text-secondary-foreground font-semibold underline decoration-2 hover:brightness-110 transition-colors shadow-sm ring-1 ring-secondary text-sm sm:text-base"
-                  to="/register"
-                >
-                  {t("auth.register")}
-                </Link>
-              </p>
-            </div>
           </form>
         </CardContent>
       </Card>
@@ -346,6 +404,65 @@ function Login() {
           </div>
         </div>
       )}
+      {/* OTP Verification Modal */}
+      <Dialog open={showOtpModal} onOpenChange={setShowOtpModal}>
+        <DialogContent preventOutsideClose={true}>
+          <DialogHeader>
+            <DialogTitle>
+              {lang === "ru" ? "Подтверждение номера" : "Raqamni tasdiqlash"}
+            </DialogTitle>
+            <DialogDescription>
+              {lang === "ru"
+                ? "Введите 6-значный код, отправленный на ваш номер телефона"
+                : "Telefon raqamingizga yuborilgan 6 raqamli kodni kiriting"}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleVerifyOtp} className="space-y-4">
+            <div className="grid w-full items-center gap-2">
+              <Label htmlFor="otpCode">
+                {lang === "ru" ? "Код подтверждения" : "Tasdiqlash kodi"}
+              </Label>
+              <InputMask
+                mask="______"
+                replacement={{ _: /\d/ }}
+                value={otpCode}
+                onChange={(e) => {
+                  setOtpCode(e.target.value);
+                  setOtpError("");
+                }}
+                id="otpCode"
+                name="otpCode"
+                type="text"
+                inputMode="numeric"
+                placeholder="000000"
+                required
+                maxLength={6}
+                className="text-center text-2xl font-mono tracking-widest h-12 text-lg bg-blue-50/60"
+              />
+            </div>
+            {otpError && (
+              <div className="text-red-500 text-xs sm:text-sm">
+                {otpError}
+              </div>
+            )}
+            <Button
+              type="submit"
+              disabled={verifyAuthMutation.isPending}
+              className="w-full"
+            >
+              {verifyAuthMutation.isPending ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="animate-spin" size={16} />
+                  {lang === "ru" ? "Проверка..." : "Tekshirilmoqda..."}
+                </span>
+              ) : (
+                lang === "ru" ? "Подтвердить" : "Tasdiqlash"
+              )}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       {/* Download Buttons */}
       <div className="-mt-2">
         <DownloadButtons />

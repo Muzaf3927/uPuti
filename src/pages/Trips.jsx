@@ -318,65 +318,70 @@ function Trips() {
                 />
                 {formErrors.to && <span className="text-red-500 text-xs">{formErrors.to}</span>}
               </div>
-              <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="date">{t("trips.form.date")} *</Label>
-                <Input 
-                  type="date" 
-                  id="date" 
-                  name="date" 
-                  required
-                  min={new Date().toISOString().split('T')[0]}
-                  className={`${formErrors.date || formErrors.dateTime ? "border-red-500" : ""} bg-white h-8 text-sm w-full min-w-0`}
-                />
-                {formErrors.date && <span className="text-red-500 text-xs">{formErrors.date}</span>}
-                {formErrors.dateTime && <span className="text-red-500 text-xs">{formErrors.dateTime}</span>}
-              </div>
-              <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="time">{t("trips.form.time")} *</Label>
-                <TimePicker
-                  id="time"
-                  value={selectedTime}
-                  onChange={setSelectedTime}
-                  size="sm"
-                  dropdownMaxHeight={112}
-                  className={`w-full ${formErrors.time || formErrors.dateTime ? "border-red-500" : ""} bg-white`}
-                />
-                {formErrors.time && <span className="text-red-500 text-xs">{formErrors.time}</span>}
-                {formErrors.dateTime && <span className="text-red-500 text-xs">{formErrors.dateTime}</span>}
-              </div>
-              <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="cost">{t("trips.form.cost")} *</Label>
-                <div className="relative">
+              <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-2 sm:gap-4">
+                <div className="grid items-center gap-1.5">
+                  <Label htmlFor="date">{t("trips.form.date")} *</Label>
                   <Input 
-                    type="text" 
-                    id="cost" 
-                    name="cost" 
-                    inputMode="numeric"
-                    placeholder={t("trips.form.costPlaceholder")} 
+                    type="date" 
+                    id="date" 
+                    name="date" 
                     required
-                    value={costInput}
-                    onChange={(e) => {
-                      const digits = e.target.value.replace(/\D/g, "");
-                      const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-                      setCostInput(formatted);
-                    }}
-                    className={`${formErrors.cost ? "border-red-500" : ""} pr-16 bg-white`}
+                    min={new Date().toISOString().split('T')[0]}
+                    className={`${formErrors.date || formErrors.dateTime ? "border-red-500" : ""} bg-white h-8 text-sm w-full min-w-0`}
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">сум</span>
+                  {formErrors.date && <span className="text-red-500 text-xs">{formErrors.date}</span>}
+                  {formErrors.dateTime && <span className="text-red-500 text-xs">{formErrors.dateTime}</span>}
                 </div>
-                {formErrors.cost && <span className="text-red-500 text-xs">{formErrors.cost}</span>}
+                <div className="grid items-center gap-1.5">
+                  <Label htmlFor="time">{t("trips.form.time")} *</Label>
+                  <TimePicker
+                    id="time"
+                    value={selectedTime}
+                    onChange={setSelectedTime}
+                    size="sm"
+                    dropdownMaxHeight={112}
+                    className={`w-full ${formErrors.time || formErrors.dateTime ? "border-red-500" : ""} bg-white`}
+                  />
+                  {formErrors.time && <span className="text-red-500 text-xs">{formErrors.time}</span>}
+                  {formErrors.dateTime && <span className="text-red-500 text-xs">{formErrors.dateTime}</span>}
+                </div>
               </div>
-              <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="carSeats">{t("trips.form.carSeats")} *</Label>
-                <Input 
-                  type="number" 
-                  id="carSeats" 
-                  name="carSeats" 
-                  placeholder={t("trips.form.carSeatsPlaceholder")} 
-                  required
-                  className={`${formErrors.carSeats ? "border-red-500" : ""} bg-white`}
-                />
-                {formErrors.carSeats && <span className="text-red-500 text-xs">{formErrors.carSeats}</span>}
+              <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-2 sm:gap-4">
+                <div className="grid items-center gap-1.5">
+                  <Label htmlFor="cost">{t("trips.form.cost")} *</Label>
+                  <div className="relative">
+                    <Input 
+                      type="text" 
+                      id="cost" 
+                      name="cost" 
+                      inputMode="numeric"
+                      placeholder={t("trips.form.costPlaceholder")} 
+                      required
+                      value={costInput}
+                      onChange={(e) => {
+                        const digits = e.target.value.replace(/\D/g, "");
+                        const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                        setCostInput(formatted);
+                      }}
+                      className={`${formErrors.cost ? "border-red-500" : ""} pr-16 bg-white`}
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">сум</span>
+                  </div>
+                  {formErrors.cost && <span className="text-red-500 text-xs">{formErrors.cost}</span>}
+                </div>
+                <div className="grid items-center gap-1.5">
+                  <Label htmlFor="carSeats">{t("trips.form.carSeats")} *</Label>
+                  <Input 
+                    type="number" 
+                    id="carSeats" 
+                    name="carSeats" 
+                    defaultValue="3"
+                    placeholder={t("trips.form.carSeatsPlaceholder")} 
+                    required
+                    className={`${formErrors.carSeats ? "border-red-500" : ""} bg-white`}
+                  />
+                  {formErrors.carSeats && <span className="text-red-500 text-xs">{formErrors.carSeats}</span>}
+                </div>
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="car">{t("trips.form.carModel")} *</Label>
@@ -390,32 +395,34 @@ function Trips() {
                 />
                 {formErrors.carModel && <span className="text-red-500 text-xs">{formErrors.carModel}</span>}
               </div>
-              <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="carColor">{t("trips.form.carColor")} *</Label>
-                <Input 
-                  type="text" 
-                  id="carColor" 
-                  name="carColor" 
-                  placeholder={t("trips.form.carColorPlaceholder")} 
-                  required
-                  className={`${formErrors.carColor ? "border-red-500" : ""} bg-white`}
-                />
-                {formErrors.carColor && <span className="text-red-500 text-xs">{formErrors.carColor}</span>}
-              </div>
-              <div className="col-span-1 grid items-center gap-1.5">
-                <Label htmlFor="carNumber">{t("trips.form.carNumber")} *</Label>
-                <Input
-                  type="text" 
-                  id="carNumber" 
-                  name="carNumber" 
-                  placeholder={t("trips.form.carNumberPlaceholder")} 
-                  className={`uppercase ${formErrors.carNumber ? "border-red-500" : ""} bg-white`}
-                  required
-                  onChange={(e) => {
-                    e.target.value = e.target.value.toUpperCase();
-                  }}
-                />
-                {formErrors.carNumber && <span className="text-red-500 text-xs">{formErrors.carNumber}</span>}
+              <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-2 sm:gap-4">
+                <div className="grid items-center gap-1.5">
+                  <Label htmlFor="carColor">{t("trips.form.carColor")} *</Label>
+                  <Input 
+                    type="text" 
+                    id="carColor" 
+                    name="carColor" 
+                    placeholder={t("trips.form.carColorPlaceholder")} 
+                    required
+                    className={`${formErrors.carColor ? "border-red-500" : ""} bg-white`}
+                  />
+                  {formErrors.carColor && <span className="text-red-500 text-xs">{formErrors.carColor}</span>}
+                </div>
+                <div className="grid items-center gap-1.5">
+                  <Label htmlFor="carNumber">{t("trips.form.carNumber")} *</Label>
+                  <Input
+                    type="text" 
+                    id="carNumber" 
+                    name="carNumber" 
+                    placeholder={t("trips.form.carNumberPlaceholder")} 
+                    className={`uppercase ${formErrors.carNumber ? "border-red-500" : ""} bg-white`}
+                    required
+                    onChange={(e) => {
+                      e.target.value = e.target.value.toUpperCase();
+                    }}
+                  />
+                  {formErrors.carNumber && <span className="text-red-500 text-xs">{formErrors.carNumber}</span>}
+                </div>
               </div>
               <div className="col-span-1 grid items-center gap-1.5">
                 <Label htmlFor="note">{t("trips.form.note")}</Label>

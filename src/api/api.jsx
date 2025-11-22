@@ -46,6 +46,8 @@ const isAuthPath = (url = "") => {
       "/login",
       "/register",
       "/verify",
+      "/auth/start",
+      "/auth/verify",
       "/reset-password/step-one",
       "/reset-password/step-two",
       "/delete-account/by-credentials",
