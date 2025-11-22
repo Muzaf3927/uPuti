@@ -51,6 +51,8 @@ const isAuthPath = (url = "") => {
       "/reset-password/step-one",
       "/reset-password/step-two",
       "/delete-account/by-credentials",
+      "/account/delete/send-otp",
+      "/account/delete/verify",
     ].some((p) => url.includes(p));
   } catch {
     return false;
@@ -157,6 +159,8 @@ export const useDeleteData = (url) => {
 export const userApi = {
   deleteAccount: () => deleteData("/user/delete-account"),
   deleteAccountByCredentials: (credentials) => postData("/delete-account/by-credentials", credentials),
+  sendDeleteOtp: (phone) => postData("/account/delete/send-otp", { phone }),
+  verifyDeleteOtp: (data) => postData("/account/delete/verify", data),
   updateProfile: (data) => postData("/user", data),
 };
 
@@ -188,6 +192,26 @@ export const useDeleteAccountByCredentials = () => {
       safeLocalStorage.removeItem("user");
       // Redirect to login page
       window.location.href = "/login";
+    },
+  });
+};
+
+export const useSendDeleteOtp = () => {
+  return useMutation({
+    mutationFn: (phone) => userApi.sendDeleteOtp(phone),
+  });
+};
+
+export const useVerifyDeleteOtp = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => userApi.verifyDeleteOtp(data),
+    onSuccess: () => {
+      // Clear all cached data and tokens
+      queryClient.clear();
+      safeLocalStorage.removeItem("token");
+      safeLocalStorage.removeItem("reFreshToken");
+      safeLocalStorage.removeItem("user");
     },
   });
 };
