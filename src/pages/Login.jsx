@@ -91,6 +91,27 @@ function Login() {
 
       const res = await startAuthMutation.mutateAsync(requestData);
       
+      // Если пришел токен напрямую (тестовый пользователь), логиним сразу
+      if (res.access_token && res.user) {
+        toast.success(
+          lang === "ru"
+            ? "Вход выполнен успешно"
+            : "Tizimga muvaffaqiyatli kirdingiz!"
+        );
+
+        // Принудительно завершаем все предыдущие сессии
+        sessionManager.forceLogoutAllSessions();
+
+        // Сохраняем токен
+        safeLocalStorage.setItem("token", res.access_token);
+        
+        // Создаем новую сессию с данными пользователя
+        sessionManager.createSession(res.user, res.access_token);
+        dispatch(login(res.user));
+        return;
+      }
+      
+      // Обычный поток с OTP
       if (res.verification_id) {
         setVerificationId(res.verification_id);
         setShowOtpModal(true);

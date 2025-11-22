@@ -319,28 +319,28 @@ function Trips() {
                 {formErrors.to && <span className="text-red-500 text-xs">{formErrors.to}</span>}
               </div>
               <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-2 sm:gap-4">
-                <div className="grid items-center gap-1.5">
-                  <Label htmlFor="date">{t("trips.form.date")} *</Label>
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="date" className="text-sm">{t("trips.form.date")} *</Label>
                   <Input 
                     type="date" 
                     id="date" 
                     name="date" 
                     required
                     min={new Date().toISOString().split('T')[0]}
-                    className={`${formErrors.date || formErrors.dateTime ? "border-red-500" : ""} bg-white h-8 text-sm w-full min-w-0`}
+                    className={`${formErrors.date || formErrors.dateTime ? "border-red-500" : ""} bg-white h-8 sm:h-9 text-sm w-full min-w-0`}
                   />
                   {formErrors.date && <span className="text-red-500 text-xs">{formErrors.date}</span>}
                   {formErrors.dateTime && <span className="text-red-500 text-xs">{formErrors.dateTime}</span>}
                 </div>
-                <div className="grid items-center gap-1.5">
-                  <Label htmlFor="time">{t("trips.form.time")} *</Label>
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="time" className="text-sm">{t("trips.form.time")} *</Label>
                   <TimePicker
                     id="time"
                     value={selectedTime}
                     onChange={setSelectedTime}
                     size="sm"
                     dropdownMaxHeight={112}
-                    className={`w-full ${formErrors.time || formErrors.dateTime ? "border-red-500" : ""} bg-white`}
+                    className={`w-full h-8 sm:h-9 ${formErrors.time || formErrors.dateTime ? "border-red-500" : ""} bg-white`}
                   />
                   {formErrors.time && <span className="text-red-500 text-xs">{formErrors.time}</span>}
                   {formErrors.dateTime && <span className="text-red-500 text-xs">{formErrors.dateTime}</span>}
