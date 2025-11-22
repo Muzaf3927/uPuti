@@ -81,21 +81,21 @@ function DownloadButtons() {
   };
 
   return (
-    <div className="w-full max-w-md mt-2 flex flex-col gap-2">
+    <div className="w-full max-w-md mt-2 flex flex-row gap-2">
       <Link
         to="/download/android"
         onClick={handleAndroidClick}
-        className="group flex items-center gap-3 bg-gradient-to-r from-[#3DDC84] to-[#2BB673] hover:from-[#2BB673] hover:to-[#3DDC84] text-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+        className="group flex-1 flex items-center gap-2 bg-gradient-to-r from-[#3DDC84] to-[#2BB673] hover:from-[#2BB673] hover:to-[#3DDC84] text-white px-3 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
       >
-        <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-white/20 rounded-lg group-hover:bg-white/30 transition-colors">
-          <AndroidIcon className="w-5 h-5" />
+        <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center bg-white/20 rounded-lg group-hover:bg-white/30 transition-colors">
+          <AndroidIcon className="w-4 h-4" />
         </div>
-        <div className="flex-1 text-left">
-          <div className="text-xs opacity-90">Google Play</div>
-          <div className="text-sm font-semibold">{t("download.android")}</div>
+        <div className="flex-1 text-left min-w-0">
+          <div className="text-[10px] opacity-90 leading-tight">Google Play</div>
+          <div className="text-xs font-semibold leading-tight">{t("download.android")}</div>
         </div>
         <svg
-          className="w-5 h-5 opacity-80 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
+          className="w-4 h-4 opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all flex-shrink-0"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -114,17 +114,17 @@ function DownloadButtons() {
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleIOSClick}
-        className="group flex items-center gap-3 bg-gradient-to-r from-[#000000] to-[#1a1a1a] hover:from-[#1a1a1a] hover:to-[#000000] text-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+        className="group flex-1 flex items-center gap-2 bg-gradient-to-r from-[#000000] to-[#1a1a1a] hover:from-[#1a1a1a] hover:to-[#000000] text-white px-3 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
       >
-        <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-white/20 rounded-lg group-hover:bg-white/30 transition-colors">
-          <IOSIcon className="w-5 h-5" />
+        <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center bg-white/20 rounded-lg group-hover:bg-white/30 transition-colors">
+          <IOSIcon className="w-4 h-4" />
         </div>
-        <div className="flex-1 text-left">
-          <div className="text-xs opacity-90">App Store</div>
-          <div className="text-sm font-semibold">{t("download.ios")}</div>
+        <div className="flex-1 text-left min-w-0">
+          <div className="text-[10px] opacity-90 leading-tight">App Store</div>
+          <div className="text-xs font-semibold leading-tight">{t("download.ios")}</div>
         </div>
         <svg
-          className="w-5 h-5 opacity-80 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
+          className="w-4 h-4 opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all flex-shrink-0"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

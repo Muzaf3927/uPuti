@@ -73,7 +73,7 @@ function DownloadAndroid() {
   };
 
   return (
-    <div className="min-h-screen pt-6 pb-10 px-3 flex flex-col items-center">
+    <div className="min-h-screen pt-4 pb-4 px-3 flex flex-col items-center">
       <div className="relative w-full max-w-md">
         <button
           type="button"
@@ -85,7 +85,7 @@ function DownloadAndroid() {
         </button>
 
         {/* Video */}
-        <div className="w-full h-[500px] bg-white/80 border rounded-2xl shadow-sm overflow-hidden flex items-center justify-center">
+        <div className="w-full h-[350px] bg-white/80 border rounded-2xl shadow-sm overflow-hidden flex items-center justify-center">
           <div className="relative w-full h-full bg-black">
             <video
               ref={videoRef}
@@ -116,7 +116,7 @@ function DownloadAndroid() {
         {/* Install button — скачивание + воспроизведение видео */}
         <button
           onClick={handleInstall}
-          className="mt-4 w-full bg-gradient-to-r from-[#3DDC84] to-[#2BB673] text-white font-semibold py-3 rounded-xl shadow-lg hover:brightness-110 transition block"
+          className="mt-3 w-full bg-gradient-to-r from-[#3DDC84] to-[#2BB673] text-white font-semibold py-2.5 rounded-xl shadow-lg hover:brightness-110 transition block"
         >
           {installText}
         </button>
